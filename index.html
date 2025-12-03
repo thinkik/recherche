@@ -407,7 +407,7 @@
             // Check AI Warning
             if(data.isAi) {
                 pendingAiElement = newTool;
-                new bootstrap.Modal(document.getElementById('aiWarningModal')).show();
+                aiModal.show();
             } else {
                 saveState();
             }
