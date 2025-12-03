@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche-Cockpit | Version 2.0</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; }
+        
+        /* Layout Styles */
+        .hangar-area { background: #ffffff; height: 100vh; overflow-y: auto; border-right: 1px solid #dee2e6; padding: 15px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+        .cockpit-area { padding: 20px; height: 100vh; overflow-y: auto; }
+        
+        /* Category Header */
+        .cat-header {
+            font-size: 0.75rem; font-weight: 800; color: #adb5bd; text-transform: uppercase; 
+            letter-spacing: 1px; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px;
+        }
+
+        /* Tool Card Styles */
+        .tool-card {
+            background: white; border: 1px solid #e0e0e0; border-radius: 6px;
+            padding: 8px; margin-bottom: 8px; cursor: grab;
+            display: flex; align-items: center; gap: 8px;
+            transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            font-size: 0.9rem; position: relative;
+        }
+        .tool-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-color: #0d6efd; z-index: 10; }
+        .tool-card:active { cursor: grabbing; }
+        
+        .tool-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 4px; color: #555; font-size: 0.8rem; }
+        
+        /* Special Status Colors */
+        .is-ai { border-left: 3px solid #8e44ad; } /* Lila für KI */
+        .is-library { border-left: 3px solid #198754; } /* Grün für Bibliothek */
+
+        /* Link Button on Card */
+        .tool-link {
+            color: #adb5bd; margin-left: auto; padding: 2px 6px; border-radius: 4px; transition: 0.2s;
+        }
+        .tool-link:hover { background-color: #e9ecef; color: #0d6efd; }
+
+        /* Phase Columns (5 Columns) */
+        .phase-col {
+            background: #eef2f7; border-radius: 12px; min-height: 65vh;
+            padding: 10px; border: 2px dashed #cbd5e0; transition: background 0.3s;
+        }
+        .phase-col.drag-over { background: #dbeafe; border-color: #3b82f6; }
+        
+        .phase-header { 
+            font-weight: 700; text-align: center; margin-bottom: 15px; 
+            color: #495057; font-size: 0.85rem; min-height: 40px; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .step-number { 
+            background: #6c757d; color: white; border-radius: 50%; width: 20px; height: 20px; 
+            display: inline-flex; align-items: center; justify-content: center; margin-right: 6px; font-size: 0.75rem;
+        }
+
+        /* Delete Area */
+        .delete-zone {
+            margin-top: 20px; border: 2px solid #dc3545; color: #dc3545;
+            border-radius: 8px; padding: 15px; text-align: center; border-style: dotted; transition: 0.2s;
+        }
+        .delete-zone.drag-over { background: #dc3545; color: white; transform: scale(1.02); }
+
+        /* Print Styles */
+        @media print {
+            .hangar-area, .no-print, .delete-zone, .tool-link, .modal { display: none !important; }
+            .cockpit-area { width: 100% !important; height: auto !important; overflow: visible; padding: 0;}
+            .phase-col { border: 1px solid #ccc; min-height: 150px; page-break-inside: avoid; }
+            .row { display: flex !important; flex-wrap: nowrap !important; } 
+            .col, .col-md-2 { flex: 1 !important; width: 20% !important; }
+            body { background: white; -webkit-print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3 hangar-area d-flex flex-column">
+            <h5 class="mb-3"><i class="fas fa-warehouse"></i> Hangar</h5>
+            <p class="text-muted small" style="line-height: 1.2;">Ziehen Sie die Instrumente in die 5 Phasen. <br>
+            <span class="text-success fw-bold">▐</span> = Uni-Lizenz | <span style="color:#8e44ad; font-weight:bold;">▐</span> = KI-Tool</p>
+            
+            <div id="tool-pool">
+                </div>
+
+            <button class="btn btn-sm btn-outline-primary w-100 mt-3 no-print" data-bs-toggle="modal" data-bs-target="#customToolModal">
+                <i class="fas fa-plus"></i> Eigenes Tool
+            </button>
+            
+            <div class="mt-auto no-print">
+                <div class="delete-zone" id="delete-zone">
+                    <i class="fas fa-trash"></i> Hierher ziehen zum Löschen
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9 cockpit-area">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3><i class="fas fa-plane-departure"></i> Mein Recherche-Cockpit</h3>
+                <div class="no-print">
+                    <button class="btn btn-sm btn-warning me-2" onclick="resetCockpit()"><i class="fas fa-undo"></i> Reset</button>
+                    <button class="btn btn-sm btn-success" onclick="window.print()"><i class="fas fa-file-pdf"></i> Als PDF speichern</button>
+                </div>
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-5 g-2">
+                
+                <div class="col">
+                    <div class="phase-header"><span class="step-number">1</span> Thema eingrenzen</div>
+                    <div class="phase-col" id="phase-1" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                </div>
+                
+                <div class="col">
+                    <div class="phase-header"><span class="step-number">2</span> Suchbegriffe</div>
+                    <div class="phase-col" id="phase-2" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                </div>
+
+                <div class="col">
+                    <div class="phase-header"><span class="step-number">3</span> Datenbank-Suche</div>
+                    <div class="phase-col" id="phase-3" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                </div>
+
+                <div class="col">
+                    <div class="phase-header"><span class="step-number">4</span> Literatur bewerten</div>
+                    <div class="phase-col" id="phase-4" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                </div>
+                
+                <div class="col">
+                    <div class="phase-header"><span class="step-number">5</span> Literatur lesen</div>
+                    <div class="phase-col" id="phase-5" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="aiWarningModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog border-danger">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title"><i class="fas fa-robot"></i> Co-Pilot Warnung (KI)</h5>
+            </div>
+            <div class="modal-body">
+                <p class="fw-bold">Sie setzen Künstliche Intelligenz ein.</p>
+                <div class="alert alert-light border">
+                    <i class="fas fa-exclamation-triangle text-warning"></i> 
+                    KI-Modelle können Fakten halluzinieren und Quellen erfinden.
+                </div>
+                <p>Verpflichten Sie sich, alle KI-Ergebnisse mit Primärquellen zu verifizieren?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="cancelAiUse">Abbrechen</button>
+                <button type="button" class="btn btn-warning" id="confirmAiUse">Ja, ich verifiziere.</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="customToolModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Neues Instrument bauen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="customToolName" class="form-control mb-2" placeholder="Name (z.B. Experten-Interview)">
+                <input type="text" id="customToolInfo" class="form-control mb-2" placeholder="Beschreibung für Mouseover">
+                <input type="text" id="customToolUrl" class="form-control" placeholder="URL (optional)">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="addCustomTool()">Hinzufügen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // --- KONFIGURATION DER TOOLS ---
+    // Kategorien basierend auf Ihrem Bild
+    const categories = {
+        'Assistants': 'fa-lightbulb',
+        'Finders': 'fa-search',
+        'Connectors': 'fa-project-diagram',
+        'Analyzers': 'fa-microscope',
+        'Writers': 'fa-pen-nib',
+        'Presenters': 'fa-desktop',
+        'Grafiktools': 'fa-image',
+        'Verwaltung': 'fa-folder-open',
+        'Evaluation': 'fa-check-double' // Für Scite/Consensus "Publikationsformen"
+    };
+
+    // Tool Datenbank (angereichert mit Links und Kategorien)
+    const initialTools = [
+        // ASSISTANTS
+        { id: 't1', name: 'ChatGPT', cat: 'Assistants', url: 'https://chat.openai.com', isAi: true, info: 'Brainstorming & Gliederung' },
+        { id: 't2', name: 'Jenni AI', cat: 'Assistants', url: 'https://jenni.ai', isAi: true, info: 'KI-Schreibassistent' },
+        { id: 't3', name: 'Mimir', cat: 'Assistants', url: 'https://mimir.ai', isAi: true, info: 'Recherche-Assistent' },
+        
+        // FINDERS
+        { id: 't4', name: 'Swisscovery', cat: 'Finders', url: 'https://swisscovery.slsp.ch', isAi: false, info: 'Bibliothekskatalog Schweiz', isLib: true },
+        { id: 't5', name: 'Elicit', cat: 'Finders', url: 'https://elicit.org', isAi: true, info: 'Findet Paper und extrahiert Kernaussagen' },
+        { id: 't6', name: 'Google Scholar', cat: 'Finders', url: 'https://scholar.google.com', isAi: false, info: 'Breite Suche nach wissenschaftlichen Texten' },
+        { id: 't7', name: 'EconBiz', cat: 'Finders', url: 'https://www.econbiz.de', isAi: false, info: 'Fachportal Wirtschaft', isLib: true },
+
+        // CONNECTORS
+        { id: 't8', name: 'ResearchRabbit', cat: 'Connectors', url: 'https://researchrabbit.ai', isAi: true, info: 'Visualisiert Literatur-Netzwerke' },
+        { id: 't9', name: 'Connected Papers', cat: 'Connectors', url: 'https://www.connectedpapers.com', isAi: false, info: 'Zeigt verwandte Arbeiten grafisch an' },
+
+        // ANALYZERS
+        { id: 't10', name: 'Explainpaper', cat: 'Analyzers', url: 'https://www.explainpaper.com', isAi: true, info: 'Erklärt komplexe Textstellen' },
+        { id: 't11', name: 'Humata', cat: 'Analyzers', url: 'https://humata.ai', isAi: true, info: 'Chatte mit deinen PDFs' },
+        { id: 't12', name: 'PDF.ai', cat: 'Analyzers', url: 'https://pdf.ai', isAi: true, info: 'PDF Analyse Tool' },
+
+        // WRITERS
+        { id: 't13', name: 'Writefull', cat: 'Writers', url: 'https://writefull.com', isAi: true, info: 'Akademische Sprachprüfung' },
+        { id: 't14', name: 'Paperpal', cat: 'Writers', url: 'https://paperpal.com', isAi: true, info: 'Echtzeit-Schreibfeedback' },
+        { id: 't15', name: 'DeepL Write', cat: 'Writers', url: 'https://www.deepl.com/write', isAi: true, info: 'Sprachoptimierung' },
+
+        // PRESENTERS & GRAFIK
+        { id: 't16', name: 'Gamma.app', cat: 'Presenters', url: 'https://gamma.app', isAi: true, info: 'KI-Präsentationen' },
+        { id: 't17', name: 'BioRender / Canva', cat: 'Grafiktools', url: 'https://www.canva.com', isAi: false, info: 'Wissenschaftliche Grafiken' },
+
+        // VERWALTUNG
+        { id: 't18', name: 'Zotero', cat: 'Verwaltung', url: 'https://www.zotero.org', isAi: false, info: 'Literaturverwaltung (Open Source)' },
+        { id: 't19', name: 'Citavi', cat: 'Verwaltung', url: 'https://www.citavi.com', isAi: false, info: 'Literaturverwaltung' },
+
+        // EVALUATION / PUBLIKATIONSFORMEN
+        { id: 't20', name: 'Scite_', cat: 'Evaluation', url: 'https://scite.ai', isAi: true, info: 'Smart Citations - wie wurde zitiert?', isLib: true },
+        { id: 't21', name: 'Consensus', cat: 'Evaluation', url: 'https://consensus.app', isAi: true, info: 'Wissenschaftlicher Konsens finden', isLib: true }
+    ];
+
+    let currentDragElement = null;
+    let pendingAiElement = null; 
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderHangar();
+        loadState();
+        initTooltips();
+        
+        // --- DELETE ZONE LOGIC FIX ---
+        const deleteZone = document.getElementById('delete-zone');
+        deleteZone.addEventListener('dragover', (e) => { 
+            e.preventDefault(); 
+            deleteZone.classList.add('drag-over'); 
+        });
+        deleteZone.addEventListener('dragleave', () => { 
+            deleteZone.classList.remove('drag-over'); 
+        });
+        
+        deleteZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            deleteZone.classList.remove('drag-over');
+            
+            const rawData = e.dataTransfer.getData("text/plain");
+            if(!rawData) return;
+            
+            const data = JSON.parse(rawData);
+
+            // Nur löschen, wenn es aus dem Cockpit kommt
+            if(data.origin === 'cockpit') {
+                const elementToDelete = document.getElementById(data.uniqueId);
+                if(elementToDelete) {
+                    elementToDelete.remove();
+                    saveState();
+                }
+            }
+        });
+
+        // AI Confirmation Logic
+        const aiModalEl = document.getElementById('aiWarningModal');
+        const aiModal = new bootstrap.Modal(aiModalEl);
+
+        document.getElementById('confirmAiUse').addEventListener('click', () => {
+            if(pendingAiElement) {
+                aiModal.hide();
+                pendingAiElement = null;
+                saveState();
+            }
+        });
+        
+        document.getElementById('cancelAiUse').addEventListener('click', () => {
+             aiModal.hide();
+        });
+
+        aiModalEl.addEventListener('hidden.bs.modal', () => {
+            if(pendingAiElement) {
+                // Wenn Modal geschlossen wird (ohne Bestätigung), Element entfernen
+                pendingAiElement.remove();
+                pendingAiElement = null;
+            }
+        });
+    });
+
+    // --- RENDER FUNKTIONEN ---
+    function renderHangar() {
+        const pool = document.getElementById('tool-pool');
+        pool.innerHTML = '';
+        
+        // Gruppen bilden
+        Object.keys(categories).forEach(catKey => {
+            const catTools = initialTools.filter(t => t.cat === catKey);
+            if(catTools.length > 0) {
+                // Header einfügen
+                const header = document.createElement('div');
+                header.className = 'cat-header';
+                header.innerHTML = `<i class="fas ${categories[catKey]} me-2"></i> ${catKey}`;
+                pool.appendChild(header);
+
+                // Tools einfügen
+                catTools.forEach(tool => {
+                    pool.appendChild(createToolElement(tool, 'hangar'));
+                });
+            }
+        });
+    }
+
+    function createToolElement(toolData, origin) {
+        const div = document.createElement('div');
+        // Klassen für Farben setzen
+        let classes = 'tool-card';
+        if(toolData.isAi) classes += ' is-ai';
+        if(toolData.isLib) classes += ' is-library';
+        
+        div.className = classes;
+        div.draggable = true;
+        
+        // ID Generierung
+        const uniqueId = origin === 'hangar' ? toolData.id : toolData.uniqueId || 'c-' + Date.now() + Math.random().toString(16).slice(2);
+        div.id = uniqueId;
+        
+        // Icon bestimmen (wenn keine Kategorie-Icon, dann Standard)
+        const iconClass = categories[toolData.cat] || 'fa-tools';
+
+        div.innerHTML = `
+            <div class="tool-icon"><i class="fas ${iconClass}"></i></div>
+            <div class="flex-grow-1 text-truncate fw-bold">${toolData.name}</div>
+            <i class="fas fa-info-circle text-muted" style="cursor:help;" data-bs-toggle="tooltip" title="${toolData.info}"></i>
+            <a href="${toolData.url}" target="_blank" class="tool-link" onclick="event.stopPropagation()" title="Tool öffnen">
+                <i class="fas fa-external-link-alt"></i>
+            </a>
+        `;
+
+        // Re-Init Tooltips
+        setTimeout(() => initTooltips(), 100);
+
+        // Drag Events
+        div.addEventListener('dragstart', (e) => {
+            const transferData = {
+                ...toolData,
+                uniqueId: uniqueId,
+                origin: origin
+            };
+            e.dataTransfer.setData("text/plain", JSON.stringify(transferData));
+            e.dataTransfer.effectAllowed = origin === 'hangar' ? 'copy' : 'move';
+        });
+
+        return div;
+    }
+
+    // --- DRAG & DROP LOGIC ---
+    function allowDrop(e) { e.preventDefault(); }
+    
+    function dragEnter(e) {
+        let target = e.target.closest('.phase-col');
+        if(target) target.classList.add('drag-over');
+    }
+    
+    function dragLeave(e) {
+        let target = e.target.closest('.phase-col');
+        if(target) target.classList.remove('drag-over');
+    }
+
+    function drop(e) {
+        e.preventDefault();
+        let target = e.target.closest('.phase-col');
+        if(!target) return;
+        
+        target.classList.remove('drag-over');
+
+        const rawData = e.dataTransfer.getData("text/plain");
+        if(!rawData) return;
+        
+        const data = JSON.parse(rawData);
+
+        if (data.origin === 'hangar') {
+            // COPY: Neues Element erstellen
+            const newTool = createToolElement(data, 'cockpit');
+            target.appendChild(newTool);
+            
+            // Check AI Warning
+            if(data.isAi) {
+                pendingAiElement = newTool;
+                new bootstrap.Modal(document.getElementById('aiWarningModal')).show();
+            } else {
+                saveState();
+            }
+        } else {
+            // MOVE: Vorhandenes Element verschieben
+            const existingEl = document.getElementById(data.uniqueId);
+            if(existingEl) {
+                target.appendChild(existingEl);
+                saveState();
+            }
+        }
+    }
+
+    // --- CUSTOM TOOL ---
+    function addCustomTool() {
+        const name = document.getElementById('customToolName').value;
+        const info = document.getElementById('customToolInfo').value;
+        const url = document.getElementById('customToolUrl').value;
+        
+        if(!name) return;
+
+        const newTool = {
+            id: 'cust' + Date.now(),
+            name: name,
+            cat: 'Verwaltung', // Default Cat
+            url: url || '#',
+            info: info || 'Benutzerdefiniert',
+            isAi: false
+        };
+        
+        initialTools.push(newTool);
+        renderHangar();
+        
+        bootstrap.Modal.getInstance(document.getElementById('customToolModal')).hide();
+        // Clear fields
+        document.getElementById('customToolName').value = '';
+        document.getElementById('customToolInfo').value = '';
+        document.getElementById('customToolUrl').value = '';
+    }
+
+    // --- STORAGE ---
+    function saveState() {
+        const state = {};
+        for(let i=1; i<=5; i++) {
+            const phase = document.getElementById(`phase-${i}`);
+            const tools = [];
+            phase.querySelectorAll('.tool-card').forEach(card => {
+                const name = card.querySelector('.fw-bold').innerText;
+                // Um es einfach zu halten, speichern wir hier nur die ID oder den Namen
+                // und rekonstruieren beim Laden.
+                // Da wir die URL und Cats brauchen, suchen wir das Original.
+                // Wir speichern uniqueId um Duplikate zu unterscheiden
+                tools.push({ name: name, uniqueId: card.id });
+            });
+            state[`phase-${i}`] = tools;
+        }
+        localStorage.setItem('cockpitState_v2', JSON.stringify(state));
+    }
+
+    function loadState() {
+        const state = JSON.parse(localStorage.getItem('cockpitState_v2'));
+        if(!state) return;
+
+        for(let i=1; i<=5; i++) {
+            const phase = document.getElementById(`phase-${i}`);
+            if(!phase) continue;
+            
+            phase.innerHTML = ''; 
+            const tools = state[`phase-${i}`] || [];
+            
+            tools.forEach(savedItem => {
+                // Finde Originaldaten
+                let original = initialTools.find(it => it.name === savedItem.name);
+                
+                // Falls es ein Custom Tool war das nicht mehr im initialTools ist (nach reload),
+                // erstellen wir ein Dummy-Objekt, damit es nicht verschwindet.
+                if(!original) {
+                    original = { 
+                        id: 'restored', name: savedItem.name, cat: 'Verwaltung', 
+                        url: '#', info: 'Wiederhergestellt', isAi: false 
+                    };
+                }
+
+                // Wichtig: UniqueID vom gespeicherten State übernehmen
+                const restoredTool = { ...original, uniqueId: savedItem.uniqueId };
+                phase.appendChild(createToolElement(restoredTool, 'cockpit'));
+            });
+        }
+    }
+
+    function resetCockpit() {
+        if(confirm('Wirklich alles löschen?')) {
+            localStorage.removeItem('cockpitState_v2');
+            location.reload();
+        }
+    }
+
+    function initTooltips() {
+        // Zerstöre alte Tooltips um Ghosts zu vermeiden
+        const oldTooltips = document.querySelectorAll('.tooltip');
+        oldTooltips.forEach(t => t.remove());
+
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    }
+</script>
+
+</body>
+</html>
