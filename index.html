@@ -330,12 +330,15 @@
         let classes = 'tool-card';
         if(toolData.isAi) classes += ' is-ai';
         if(toolData.isLib) classes += ' is-library';
-        
+
         div.className = classes;
         div.draggable = true;
-        
+
         // ID Generierung
-        const uniqueId = origin === 'hangar' ? toolData.id : toolData.uniqueId || 'c-' + Date.now() + Math.random().toString(16).slice(2);
+        const uniqueId = toolData.uniqueId
+            || (origin === 'hangar'
+                ? toolData.id
+                : 'c-' + Date.now() + Math.random().toString(16).slice(2));
         div.id = uniqueId;
         
         // Icon bestimmen (wenn keine Kategorie-Icon, dann Standard)
@@ -389,12 +392,16 @@
 
         const rawData = e.dataTransfer.getData("text/plain");
         if(!rawData) return;
-        
+
         const data = JSON.parse(rawData);
 
         if (data.origin === 'hangar') {
             // COPY: Neues Element erstellen
-            const newTool = createToolElement(data, 'cockpit');
+            const newTool = createToolElement({
+                ...data,
+                // Immer eine frische ID vergeben, damit Delete/Move zuverlässig funktionieren
+                uniqueId: 'c-' + Date.now() + Math.random().toString(16).slice(2)
+            }, 'cockpit');
             target.appendChild(newTool);
             
             // Check AI Warning
