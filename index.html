@@ -240,7 +240,8 @@
     ];
 
     let currentDragElement = null;
-    let pendingAiElement = null; 
+    let pendingAiElement = null;
+    let aiModal = null;
 
     document.addEventListener('DOMContentLoaded', () => {
         renderHangar();
@@ -278,7 +279,7 @@
 
         // AI Confirmation Logic
         const aiModalEl = document.getElementById('aiWarningModal');
-        const aiModal = new bootstrap.Modal(aiModalEl);
+        aiModal = new bootstrap.Modal(aiModalEl);
 
         document.getElementById('confirmAiUse').addEventListener('click', () => {
             if(pendingAiElement) {
