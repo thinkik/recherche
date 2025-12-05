@@ -83,6 +83,29 @@
         }
         .delete-zone.drag-over { background: #dc3545; color: white; transform: scale(1.02); }
 
+        /* Deleted Items */
+        .deleted-wrapper {
+            border: 1px dashed #ced4da;
+            border-radius: 8px;
+            padding: 10px;
+            background: #f8f9fa;
+        }
+        .deleted-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 6px 8px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        .deleted-item:last-child { margin-bottom: 0; }
+        .deleted-item .meta { color: #6c757d; font-size: 0.8rem; }
+        .deleted-empty { color: #adb5bd; font-style: italic; font-size: 0.9rem; }
+
         /* Print Styles */
         @media print {
             .hangar-area, .no-print, .delete-zone, .tool-link, .modal { display: none !important; }
@@ -114,6 +137,15 @@
             <div class="mt-auto no-print">
                 <div class="delete-zone" id="delete-zone">
                     <i class="fas fa-trash"></i> Hierher ziehen zum Löschen
+                </div>
+                <div class="mt-3 deleted-wrapper">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="fw-bold"><i class="fas fa-trash-undo me-2"></i>Gelöschte Tools</div>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="restoreAllDeleted()" title="Alle zurückholen">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                    </div>
+                    <div id="deleted-list" class="deleted-empty">Noch nichts gelöscht</div>
                 </div>
             </div>
         </div>
@@ -281,13 +313,110 @@
     let currentDragElement = null;
     let pendingAiElement = null;
     let aiModal = null;
+    let deletedTools = [];
 
     const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5', 'phase-global'];
+
+    // Papierkorb
+    function sanitizeToolData(toolData) {
+        return {
+            id: toolData.id || toolData.uniqueId || ('restored-' + Date.now()),
+            name: toolData.name || 'Unbenanntes Tool',
+            cats: Array.isArray(toolData.cats) && toolData.cats.length ? toolData.cats : ['Verwaltung'],
+            url: toolData.url || '#',
+            info: toolData.info || 'Gelöscht',
+            isAi: !!toolData.isAi,
+            isLib: !!toolData.isLib,
+            isCustom: !!toolData.isCustom
+        };
+    }
+
+    function renderDeletedList() {
+        const container = document.getElementById('deleted-list');
+        if(!container) return;
+
+        if(!deletedTools.length) {
+            container.className = 'deleted-empty';
+            container.textContent = 'Noch nichts gelöscht';
+            return;
+        }
+
+        container.className = '';
+        container.innerHTML = '';
+
+        deletedTools.forEach((tool, index) => {
+            const item = document.createElement('div');
+            item.className = 'deleted-item';
+            item.innerHTML = `
+                <div>
+                    <div class="fw-bold">${tool.name}</div>
+                    <div class="meta">${(tool.cats || []).join(', ')}</div>
+                </div>
+            `;
+
+            const restoreBtn = document.createElement('button');
+            restoreBtn.className = 'btn btn-sm btn-outline-success';
+            restoreBtn.innerHTML = '<i class="fas fa-undo"></i>';
+            restoreBtn.title = 'Tool zurück in den Hangar';
+            restoreBtn.addEventListener('click', () => restoreDeletedTool(index));
+
+            item.appendChild(restoreBtn);
+            container.appendChild(item);
+        });
+    }
+
+    function saveDeletedState() {
+        localStorage.setItem('cockpitDeleted_v1', JSON.stringify(deletedTools));
+    }
+
+    function loadDeletedState() {
+        const stored = localStorage.getItem('cockpitDeleted_v1');
+        if(stored) {
+            deletedTools = JSON.parse(stored);
+        }
+        renderDeletedList();
+    }
+
+    function addToDeleted(toolData) {
+        const sanitized = sanitizeToolData(toolData);
+        deletedTools = [sanitized, ...deletedTools.filter(t => !(t.id === sanitized.id && t.name === sanitized.name))].slice(0, 25);
+        saveDeletedState();
+        renderDeletedList();
+    }
+
+    function restoreDeletedTool(index) {
+        const tool = deletedTools.splice(index, 1)[0];
+        if(!tool) return;
+
+        if(!initialTools.find(t => t.id === tool.id)) {
+            initialTools.push(tool);
+        }
+
+        renderHangar();
+        saveDeletedState();
+        renderDeletedList();
+    }
+
+    function restoreAllDeleted() {
+        if(!deletedTools.length) return;
+
+        deletedTools.forEach(tool => {
+            if(!initialTools.find(t => t.id === tool.id)) {
+                initialTools.push(tool);
+            }
+        });
+
+        deletedTools = [];
+        renderHangar();
+        saveDeletedState();
+        renderDeletedList();
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
         renderHangar();
         populateCategoryOptions();
         loadState();
+        loadDeletedState();
         initTooltips();
         
         // --- DELETE ZONE LOGIC FIX ---
@@ -314,6 +443,7 @@
                 const elementToDelete = document.getElementById(data.uniqueId);
                 if(elementToDelete) {
                     elementToDelete.remove();
+                    addToDeleted(data);
                     saveState();
                 }
             } else if (data.origin === 'hangar') {
@@ -329,6 +459,8 @@
 
                     document.querySelectorAll(`[data-base-id="${data.id}"]`).forEach(el => el.remove());
                 }
+
+                addToDeleted(data);
             }
         });
 
@@ -599,6 +731,7 @@
     function resetCockpit() {
         if(confirm('Wirklich alles löschen?')) {
             localStorage.removeItem('cockpitState_v2');
+            localStorage.removeItem('cockpitDeleted_v1');
             location.reload();
         }
     }
