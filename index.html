@@ -102,7 +102,7 @@
                 </div>
 
             <button class="btn btn-sm btn-outline-primary w-100 mt-3 no-print" data-bs-toggle="modal" data-bs-target="#customToolModal">
-                <i class="fas fa-plus"></i> Eigenes Tool
+                <i class="fas fa-plus"></i> Eigenes Tool ergänzen
             </button>
             
             <div class="mt-auto no-print">
@@ -186,13 +186,29 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Neues Instrument bauen</h5>
+                <h5 class="modal-title">Eigenes Tool ergänzen</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <input type="text" id="customToolName" class="form-control mb-2" placeholder="Name (z.B. Experten-Interview)">
                 <input type="text" id="customToolInfo" class="form-control mb-2" placeholder="Beschreibung für Mouseover">
-                <input type="text" id="customToolUrl" class="form-control" placeholder="URL (optional)">
+                <input type="text" id="customToolUrl" class="form-control mb-2" placeholder="URL (optional)">
+                <div class="mb-2">
+                    <label for="customToolCategory" class="form-label">Bereich</label>
+                    <select id="customToolCategory" class="form-select"></select>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="customToolIsAi">
+                    <label class="form-check-label" for="customToolIsAi">
+                        KI-Tool
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="customToolIsLib">
+                    <label class="form-check-label" for="customToolIsLib">
+                        Uni-Lizenz
+                    </label>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="addCustomTool()">Hinzufügen</button>
@@ -264,6 +280,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         renderHangar();
+        populateCategoryOptions();
         loadState();
         initTooltips();
         
@@ -341,6 +358,20 @@
                     pool.appendChild(createToolElement(tool, 'hangar'));
                 });
             }
+        });
+    }
+
+    function populateCategoryOptions() {
+        const select = document.getElementById('customToolCategory');
+        if(!select) return;
+
+        select.innerHTML = '';
+
+        Object.keys(categories).forEach(catKey => {
+            const option = document.createElement('option');
+            option.value = catKey;
+            option.textContent = catKey;
+            select.appendChild(option);
         });
     }
 
@@ -446,16 +477,20 @@
         const name = document.getElementById('customToolName').value;
         const info = document.getElementById('customToolInfo').value;
         const url = document.getElementById('customToolUrl').value;
-        
+        const cat = document.getElementById('customToolCategory').value;
+        const isAi = document.getElementById('customToolIsAi').checked;
+        const isLib = document.getElementById('customToolIsLib').checked;
+
         if(!name) return;
 
         const newTool = {
             id: 'cust' + Date.now(),
             name: name,
-            cat: 'Verwaltung', // Default Cat
+            cat: cat || 'Verwaltung',
             url: url || '#',
             info: info || 'Benutzerdefiniert',
-            isAi: false
+            isAi: isAi,
+            isLib: isLib
         };
         
         initialTools.push(newTool);
@@ -466,6 +501,9 @@
         document.getElementById('customToolName').value = '';
         document.getElementById('customToolInfo').value = '';
         document.getElementById('customToolUrl').value = '';
+        document.getElementById('customToolCategory').selectedIndex = 0;
+        document.getElementById('customToolIsAi').checked = false;
+        document.getElementById('customToolIsLib').checked = false;
     }
 
     // --- STORAGE ---
