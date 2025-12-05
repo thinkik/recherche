@@ -163,26 +163,41 @@
                 
                 <div class="col">
                     <div class="phase-header"><span class="step-number">1</span> Thema eingrenzen</div>
+                    <button class="btn btn-sm btn-outline-secondary w-100 mb-2 no-print" onclick="openTextModal('phase-1')">
+                        <i class="fas fa-note-sticky"></i> Notiz hinzufügen
+                    </button>
                     <div class="phase-col" id="phase-1" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                 </div>
-                
+
                 <div class="col">
                     <div class="phase-header"><span class="step-number">2</span> Suchbegriffe</div>
+                    <button class="btn btn-sm btn-outline-secondary w-100 mb-2 no-print" onclick="openTextModal('phase-2')">
+                        <i class="fas fa-note-sticky"></i> Notiz hinzufügen
+                    </button>
                     <div class="phase-col" id="phase-2" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                 </div>
 
                 <div class="col">
                     <div class="phase-header"><span class="step-number">3</span> Datenbank-Suche</div>
+                    <button class="btn btn-sm btn-outline-secondary w-100 mb-2 no-print" onclick="openTextModal('phase-3')">
+                        <i class="fas fa-note-sticky"></i> Notiz hinzufügen
+                    </button>
                     <div class="phase-col" id="phase-3" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                 </div>
 
                 <div class="col">
                     <div class="phase-header"><span class="step-number">4</span> Literatur bewerten</div>
+                    <button class="btn btn-sm btn-outline-secondary w-100 mb-2 no-print" onclick="openTextModal('phase-4')">
+                        <i class="fas fa-note-sticky"></i> Notiz hinzufügen
+                    </button>
                     <div class="phase-col" id="phase-4" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                 </div>
-                
+
                 <div class="col">
                     <div class="phase-header"><span class="step-number">5</span> Literatur lesen</div>
+                    <button class="btn btn-sm btn-outline-secondary w-100 mb-2 no-print" onclick="openTextModal('phase-5')">
+                        <i class="fas fa-note-sticky"></i> Notiz hinzufügen
+                    </button>
                     <div class="phase-col" id="phase-5" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                 </div>
 
@@ -191,6 +206,9 @@
             <div class="row g-2">
                 <div class="col-12">
                     <div class="global-header"><i class="fas fa-layer-group me-2 text-primary"></i>Gesamter Rechercheprozess</div>
+                    <button class="btn btn-sm btn-outline-secondary w-100 mb-2 no-print" onclick="openTextModal('phase-global')">
+                        <i class="fas fa-note-sticky"></i> Notiz hinzufügen
+                    </button>
                     <div class="phase-col global-drop" id="phase-global" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                 </div>
             </div>
@@ -215,6 +233,24 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="cancelAiUse">Abbrechen</button>
                 <button type="button" class="btn btn-warning" id="confirmAiUse">Ja, ich verifiziere.</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="textNoteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-note-sticky me-2"></i>Notiz hinzufügen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="noteTitle" class="form-control mb-2" placeholder="Titel (optional)">
+                <textarea id="noteContent" class="form-control" rows="4" placeholder="Ihre Notiz"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="addTextBlock()">Speichern</button>
             </div>
         </div>
     </div>
@@ -266,7 +302,8 @@
         'Analyzers': 'fa-microscope',
         'Writers': 'fa-pen-nib',
         'Verwaltung': 'fa-folder-open',
-        'Evaluation': 'fa-check-double' // Für Scite/Consensus "Publikationsformen"
+        'Evaluation': 'fa-check-double', // Für Scite/Consensus "Publikationsformen"
+        'Notizen': 'fa-note-sticky'
     };
 
     // Tool Datenbank (angereichert mit Links und Kategorien)
@@ -307,9 +344,21 @@
     let currentDragElement = null;
     let pendingAiElement = null;
     let aiModal = null;
+    let textModal = null;
+    let targetPhaseForNote = null;
     let deletedTools = [];
 
     const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5', 'phase-global'];
+
+    function escapeHtml(str) {
+        if(!str) return '';
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
 
     // Papierkorb
     function sanitizeToolData(toolData) {
@@ -321,7 +370,9 @@
             info: toolData.info || 'Gelöscht',
             isAi: !!toolData.isAi,
             isLib: !!toolData.isLib,
-            isCustom: !!toolData.isCustom
+            isCustom: !!toolData.isCustom,
+            type: toolData.type || 'tool',
+            text: toolData.text || ''
         };
     }
 
@@ -341,12 +392,21 @@
         deletedTools.forEach((tool, index) => {
             const item = document.createElement('div');
             item.className = 'deleted-item';
-            item.innerHTML = `
-                <div>
-                    <div class="fw-bold">${tool.name}</div>
-                    <div class="meta">${(tool.cats || []).join(', ')}</div>
-                </div>
-            `;
+
+            const infoWrapper = document.createElement('div');
+            const titleEl = document.createElement('div');
+            titleEl.className = 'fw-bold';
+            titleEl.textContent = tool.name;
+
+            const metaEl = document.createElement('div');
+            metaEl.className = 'meta';
+            metaEl.textContent = tool.type === 'text'
+                ? (tool.text ? tool.text.slice(0, 80) : 'Notiz')
+                : (tool.cats || []).join(', ');
+
+            infoWrapper.appendChild(titleEl);
+            infoWrapper.appendChild(metaEl);
+            item.appendChild(infoWrapper);
 
             const restoreBtn = document.createElement('button');
             restoreBtn.className = 'btn btn-sm btn-outline-success';
@@ -382,6 +442,10 @@
         const tool = deletedTools.splice(index, 1)[0];
         if(!tool) return;
 
+        if(tool.type === 'text' && (!tool.cats || !tool.cats.length)) {
+            tool.cats = ['Notizen'];
+        }
+
         if(!initialTools.find(t => t.id === tool.id)) {
             initialTools.push(tool);
         }
@@ -395,6 +459,9 @@
         if(!deletedTools.length) return;
 
         deletedTools.forEach(tool => {
+            if(tool.type === 'text' && (!tool.cats || !tool.cats.length)) {
+                tool.cats = ['Notizen'];
+            }
             if(!initialTools.find(t => t.id === tool.id)) {
                 initialTools.push(tool);
             }
@@ -461,6 +528,18 @@
         // AI Confirmation Logic
         const aiModalEl = document.getElementById('aiWarningModal');
         aiModal = new bootstrap.Modal(aiModalEl);
+
+        const textModalEl = document.getElementById('textNoteModal');
+        if(textModalEl) {
+            textModal = new bootstrap.Modal(textModalEl);
+            textModalEl.addEventListener('hidden.bs.modal', () => {
+                targetPhaseForNote = null;
+                const titleField = document.getElementById('noteTitle');
+                const contentField = document.getElementById('noteContent');
+                if(titleField) titleField.value = '';
+                if(contentField) contentField.value = '';
+            });
+        }
 
         document.getElementById('confirmAiUse').addEventListener('click', () => {
             if(pendingAiElement) {
@@ -531,6 +610,8 @@
         div.className = classes;
         div.draggable = true;
 
+        const isText = toolData.type === 'text';
+
         // ID Generierung
         const uniqueId = toolData.uniqueId
             || (origin === 'hangar'
@@ -538,34 +619,64 @@
                 : 'c-' + Date.now() + Math.random().toString(16).slice(2));
         div.id = uniqueId;
         div.dataset.baseId = toolData.id;
-        
+        div.dataset.type = toolData.type || 'tool';
+        div.dataset.name = toolData.name || '';
+        div.dataset.info = toolData.info || '';
+        div.dataset.url = toolData.url || '';
+        div.dataset.cats = Array.isArray(toolData.cats) ? toolData.cats.join('|') : '';
+        div.dataset.isAi = toolData.isAi ? '1' : '0';
+        div.dataset.isLib = toolData.isLib ? '1' : '0';
+        div.dataset.isCustom = toolData.isCustom ? '1' : '0';
+        if(toolData.text) {
+            div.dataset.text = toolData.text;
+        }
+
         // Icon bestimmen (wenn keine Kategorie-Icon, dann Standard)
         const primaryCat = Array.isArray(toolData.cats) && toolData.cats.length ? toolData.cats[0] : null;
         const iconClass = (primaryCat && categories[primaryCat]) ? categories[primaryCat] : 'fa-tools';
 
-        const statusBadges = `
-            ${toolData.isAi ? '<span class="status-badge badge-ai">KI</span>' : ''}
-            ${toolData.isLib ? '<span class="status-badge badge-lib">Uni</span>' : ''}
-        `;
-
-        const categoryList = Array.isArray(toolData.cats) && toolData.cats.length
-            ? toolData.cats.join(', ')
-            : 'Allgemein';
-
-        div.innerHTML = `
-            <div class="tool-icon"><i class="fas ${iconClass}"></i></div>
-            <div class="flex-grow-1 text-truncate">
-                <div class="d-flex align-items-center gap-2">
-                    <div class="fw-bold text-truncate">${toolData.name}</div>
-                    <div class="d-flex gap-1 flex-shrink-0">${statusBadges}</div>
+        if(isText) {
+            const displayText = escapeHtml(toolData.text || toolData.info || '').replace(/\n/g, '<br>');
+            const displayTitle = escapeHtml(toolData.name || 'Notiz');
+            div.innerHTML = `
+                <div class="tool-icon"><i class="fas fa-note-sticky"></i></div>
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="fw-bold text-truncate">${displayTitle}</div>
+                    </div>
+                    <div class="small text-muted text-wrap">${displayText || 'Kein Text hinterlegt'}</div>
                 </div>
-                <div class="small text-muted text-truncate">${categoryList}</div>
-            </div>
-            <i class="fas fa-info-circle text-muted" style="cursor:help;" data-bs-toggle="tooltip" title="${toolData.info}"></i>
-            <a href="${toolData.url}" target="_blank" class="tool-link" onclick="event.stopPropagation()" title="Tool öffnen">
-                <i class="fas fa-external-link-alt"></i>
-            </a>
-        `;
+                <span class="status-badge badge bg-light text-muted border">Notiz</span>
+            `;
+        } else {
+            const statusBadges = `
+                ${toolData.isAi ? '<span class="status-badge badge-ai">KI</span>' : ''}
+                ${toolData.isLib ? '<span class="status-badge badge-lib">Uni</span>' : ''}
+            `;
+
+            const categoryList = Array.isArray(toolData.cats) && toolData.cats.length
+                ? escapeHtml(toolData.cats.join(', '))
+                : 'Allgemein';
+
+            const safeName = escapeHtml(toolData.name || 'Unbenanntes Tool');
+            const safeInfo = escapeHtml(toolData.info || '');
+            const safeUrl = escapeHtml(toolData.url || '#');
+
+            div.innerHTML = `
+                <div class="tool-icon"><i class="fas ${iconClass}"></i></div>
+                <div class="flex-grow-1 text-truncate">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="fw-bold text-truncate">${safeName}</div>
+                        <div class="d-flex gap-1 flex-shrink-0">${statusBadges}</div>
+                    </div>
+                    <div class="small text-muted text-truncate">${categoryList}</div>
+                </div>
+                <i class="fas fa-info-circle text-muted" style="cursor:help;" data-bs-toggle="tooltip" title="${safeInfo}"></i>
+                <a href="${safeUrl}" target="_blank" class="tool-link" onclick="event.stopPropagation()" title="Tool öffnen">
+                    <i class="fas fa-external-link-alt"></i>
+                </a>
+            `;
+        }
 
         // Re-Init Tooltips
         setTimeout(() => initTooltips(), 100);
@@ -635,6 +746,55 @@
         }
     }
 
+    function openTextModal(targetId) {
+        targetPhaseForNote = targetId;
+        if(!textModal) {
+            const modalEl = document.getElementById('textNoteModal');
+            if(modalEl) {
+                textModal = new bootstrap.Modal(modalEl);
+            }
+        }
+        if(textModal) {
+            textModal.show();
+        }
+    }
+
+    function addTextBlock() {
+        if(!targetPhaseForNote) return;
+
+        const target = document.getElementById(targetPhaseForNote);
+        if(!target) return;
+
+        const titleField = document.getElementById('noteTitle');
+        const contentField = document.getElementById('noteContent');
+        const title = titleField ? titleField.value.trim() : '';
+        const content = contentField ? contentField.value.trim() : '';
+
+        if(!content && !title) return;
+
+        const noteId = 'note-' + Date.now() + Math.random().toString(16).slice(2);
+        const noteData = {
+            id: noteId,
+            name: title || 'Notiz',
+            info: content || 'Notiz',
+            url: '#',
+            cats: ['Notizen'],
+            isAi: false,
+            isLib: false,
+            type: 'text',
+            text: content,
+            uniqueId: noteId
+        };
+
+        const card = createToolElement(noteData, 'cockpit');
+        target.appendChild(card);
+        saveState();
+
+        if(textModal) {
+            textModal.hide();
+        }
+    }
+
     // --- CUSTOM TOOL ---
     function addCustomTool() {
         const name = document.getElementById('customToolName').value;
@@ -679,21 +839,30 @@
             if(!phase) return;
             const tools = [];
             phase.querySelectorAll('.tool-card').forEach(card => {
-                const name = card.querySelector('.fw-bold').innerText;
-                // Um es einfach zu halten, speichern wir hier nur die ID oder den Namen
-                // und rekonstruieren beim Laden.
-                // Da wir die URL und Cats brauchen, suchen wir das Original.
-                // Wir speichern uniqueId um Duplikate zu unterscheiden
-                tools.push({ name: name, uniqueId: card.id });
+                const cats = card.dataset.cats ? card.dataset.cats.split('|').filter(Boolean) : [];
+                tools.push({
+                    id: card.dataset.baseId || card.id,
+                    uniqueId: card.id,
+                    name: card.dataset.name || (card.querySelector('.fw-bold') ? card.querySelector('.fw-bold').innerText : 'Tool'),
+                    info: card.dataset.info || '',
+                    url: card.dataset.url || '#',
+                    cats: cats,
+                    isAi: card.dataset.isAi === '1' || card.dataset.isAi === 'true',
+                    isLib: card.dataset.isLib === '1' || card.dataset.isLib === 'true',
+                    isCustom: card.dataset.isCustom === '1' || card.dataset.isCustom === 'true',
+                    type: card.dataset.type || 'tool',
+                    text: card.dataset.text || ''
+                });
             });
             state[targetId] = tools;
         });
-        localStorage.setItem('cockpitState_v2', JSON.stringify(state));
+        localStorage.setItem('cockpitState_v3', JSON.stringify(state));
     }
 
     function loadState() {
-        const state = JSON.parse(localStorage.getItem('cockpitState_v2'));
-        if(!state) return;
+        const rawState = localStorage.getItem('cockpitState_v3') || localStorage.getItem('cockpitState_v2');
+        if(!rawState) return;
+        const state = JSON.parse(rawState);
 
         dropTargets.forEach(targetId => {
             const phase = document.getElementById(targetId);
@@ -703,20 +872,43 @@
             const tools = state[targetId] || [];
 
             tools.forEach(savedItem => {
-                // Finde Originaldaten
-                let original = initialTools.find(it => it.name === savedItem.name);
+                const itemType = savedItem.type || 'tool';
+                if(itemType === 'text') {
+                    const restoredNote = {
+                        id: savedItem.id || savedItem.uniqueId || 'restored-note',
+                        name: savedItem.name || 'Notiz',
+                        info: savedItem.info || savedItem.text || 'Notiz',
+                        url: '#',
+                        cats: (savedItem.cats && savedItem.cats.length) ? savedItem.cats : ['Notizen'],
+                        type: 'text',
+                        text: savedItem.text || '',
+                        uniqueId: savedItem.uniqueId || ('note-' + Date.now() + Math.random().toString(16).slice(2))
+                    };
+                    phase.appendChild(createToolElement(restoredNote, 'cockpit'));
+                    return;
+                }
 
-                // Falls es ein Custom Tool war das nicht mehr im initialTools ist (nach reload),
-                // erstellen wir ein Dummy-Objekt, damit es nicht verschwindet.
+                let original = initialTools.find(it => it.id === savedItem.id) || initialTools.find(it => it.name === savedItem.name);
+
                 if(!original) {
                     original = {
-                        id: 'restored', name: savedItem.name, cats: ['Verwaltung'],
-                        url: '#', info: 'Wiederhergestellt', isAi: false
+                        id: savedItem.id || 'restored',
+                        name: savedItem.name || 'Unbenannt',
+                        cats: (savedItem.cats && savedItem.cats.length) ? savedItem.cats : ['Verwaltung'],
+                        url: savedItem.url || '#',
+                        info: savedItem.info || 'Wiederhergestellt',
+                        isAi: !!savedItem.isAi,
+                        isLib: !!savedItem.isLib
                     };
                 }
 
-                // Wichtig: UniqueID vom gespeicherten State übernehmen
-                const restoredTool = { ...original, uniqueId: savedItem.uniqueId };
+                const restoredTool = {
+                    ...original,
+                    uniqueId: savedItem.uniqueId,
+                    isCustom: savedItem.isCustom,
+                    isAi: savedItem.isAi,
+                    isLib: savedItem.isLib
+                };
                 phase.appendChild(createToolElement(restoredTool, 'cockpit'));
             });
         });
@@ -725,6 +917,7 @@
     function resetCockpit() {
         if(confirm('Wirklich alles löschen?')) {
             localStorage.removeItem('cockpitState_v2');
+            localStorage.removeItem('cockpitState_v3');
             localStorage.removeItem('cockpitDeleted_v1');
             location.reload();
         }
