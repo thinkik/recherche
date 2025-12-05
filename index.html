@@ -126,7 +126,14 @@
             <p class="text-muted small" style="line-height: 1.2;">Ziehen Sie die Instrumente in die 5 Phasen. <br>
             <span class="text-success fw-bold">▐</span> = Uni-Lizenz | <span style="color:#8e44ad; font-weight:bold;">▐</span> = KI-Tool<br>
             Beide Marker erscheinen, falls ein Tool beides ist.</p>
-            
+
+            <div class="no-print mb-3">
+                <input type="text" id="toolSearchInput" class="form-control form-control-sm mb-2" placeholder="Tools durchsuchen...">
+                <select id="toolCategoryFilter" class="form-select form-select-sm">
+                    <option value="">Alle Kategorien</option>
+                </select>
+            </div>
+
             <div id="tool-pool">
                 </div>
 
@@ -347,6 +354,8 @@
     let textModal = null;
     let targetPhaseForNote = null;
     let deletedTools = [];
+    let currentSearchTerm = '';
+    let currentCategoryFilter = '';
 
     const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5', 'phase-global'];
 
@@ -476,9 +485,33 @@
     document.addEventListener('DOMContentLoaded', () => {
         renderHangar();
         populateCategoryOptions();
+        populateFilterOptions();
         loadState();
         loadDeletedState();
         initTooltips();
+
+        const searchInput = document.getElementById('toolSearchInput');
+        if(searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                currentSearchTerm = (e.target.value || '').trim().toLowerCase();
+                if(!currentSearchTerm) {
+                    currentCategoryFilter = '';
+                    const categorySelect = document.getElementById('toolCategoryFilter');
+                    if(categorySelect) {
+                        categorySelect.value = '';
+                    }
+                }
+                renderHangar();
+            });
+        }
+
+        const categoryFilter = document.getElementById('toolCategoryFilter');
+        if(categoryFilter) {
+            categoryFilter.addEventListener('change', (e) => {
+                currentCategoryFilter = e.target.value;
+                renderHangar();
+            });
+        }
         
         // --- DELETE ZONE LOGIC FIX ---
         const deleteZone = document.getElementById('delete-zone');
@@ -566,10 +599,24 @@
     function renderHangar() {
         const pool = document.getElementById('tool-pool');
         pool.innerHTML = '';
-        
+
+        const searchTerm = currentSearchTerm;
+        const selectedCategory = currentCategoryFilter;
+
         // Gruppen bilden
         Object.keys(categories).forEach(catKey => {
-            const catTools = initialTools.filter(t => Array.isArray(t.cats) && t.cats.includes(catKey));
+            const catTools = initialTools.filter(t => {
+                const hasCategory = Array.isArray(t.cats) && t.cats.includes(catKey);
+                if(!hasCategory) return false;
+
+                const matchesCategoryFilter = !selectedCategory || (Array.isArray(t.cats) && t.cats.includes(selectedCategory));
+                if(!matchesCategoryFilter) return false;
+
+                if(!searchTerm) return true;
+
+                const haystack = `${t.name || ''} ${t.info || ''} ${(t.cats || []).join(' ')}`.toLowerCase();
+                return haystack.includes(searchTerm);
+            });
             if(catTools.length > 0) {
                 // Header einfügen
                 const header = document.createElement('div');
@@ -598,6 +645,25 @@
             option.textContent = catKey;
             select.appendChild(option);
         });
+    }
+
+    function populateFilterOptions() {
+        const select = document.getElementById('toolCategoryFilter');
+        if(!select) return;
+
+        const currentValue = select.value;
+
+        // clear existing (except first default?) better rebuild
+        select.innerHTML = '<option value="">Alle Kategorien</option>';
+
+        Object.keys(categories).forEach(catKey => {
+            const option = document.createElement('option');
+            option.value = catKey;
+            option.textContent = catKey;
+            select.appendChild(option);
+        });
+
+        select.value = currentValue;
     }
 
     function createToolElement(toolData, origin) {
