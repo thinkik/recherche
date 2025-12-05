@@ -34,8 +34,13 @@
         .tool-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 4px; color: #555; font-size: 0.8rem; }
         
         /* Special Status Colors */
-        .is-ai { border-left: 3px solid #8e44ad; } /* Lila für KI */
-        .is-library { border-left: 3px solid #198754; } /* Grün für Bibliothek */
+        .is-ai { box-shadow: inset 3px 0 0 #8e44ad; } /* Lila für KI */
+        .is-library { box-shadow: inset 3px 0 0 #198754; } /* Grün für Bibliothek */
+        .is-ai.is-library { box-shadow: inset 3px 0 0 #8e44ad, inset 6px 0 0 #198754; }
+
+        .status-badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 8px; }
+        .badge-ai { background: #f3e8ff; color: #6f42c1; border: 1px solid #e0c3ff; }
+        .badge-lib { background: #e8fff3; color: #0f5132; border: 1px solid #b6e2c8; }
 
         /* Link Button on Card */
         .tool-link {
@@ -96,7 +101,8 @@
         <div class="col-md-3 hangar-area d-flex flex-column">
             <h5 class="mb-3"><i class="fas fa-warehouse"></i> Hangar</h5>
             <p class="text-muted small" style="line-height: 1.2;">Ziehen Sie die Instrumente in die 5 Phasen. <br>
-            <span class="text-success fw-bold">▐</span> = Uni-Lizenz | <span style="color:#8e44ad; font-weight:bold;">▐</span> = KI-Tool</p>
+            <span class="text-success fw-bold">▐</span> = Uni-Lizenz | <span style="color:#8e44ad; font-weight:bold;">▐</span> = KI-Tool<br>
+            Beide Marker erscheinen, falls ein Tool beides ist.</p>
             
             <div id="tool-pool">
                 </div>
@@ -194,8 +200,8 @@
                 <input type="text" id="customToolInfo" class="form-control mb-2" placeholder="Beschreibung für Mouseover">
                 <input type="text" id="customToolUrl" class="form-control mb-2" placeholder="URL (optional)">
                 <div class="mb-2">
-                    <label for="customToolCategory" class="form-label">Bereich</label>
-                    <select id="customToolCategory" class="form-select"></select>
+                    <label for="customToolCategory" class="form-label">Bereich (Mehrfachauswahl möglich)</label>
+                    <select id="customToolCategory" class="form-select" multiple size="6"></select>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="customToolIsAi">
@@ -236,40 +242,40 @@
     // Tool Datenbank (angereichert mit Links und Kategorien)
     const initialTools = [
         // ASSISTANTS
-        { id: 't1', name: 'ChatGPT', cat: 'Assistants', url: 'https://chat.openai.com', isAi: true, info: 'Brainstorming & Gliederung' },
-        { id: 't2', name: 'Scispace', cat: 'Assistants', url: 'https://www.scispace.com', isAi: true, info: 'KI-Schreibassistent' },
+        { id: 't1', name: 'ChatGPT', cats: ['Assistants'], url: 'https://chat.openai.com', isAi: true, info: 'Brainstorming & Gliederung' },
+        { id: 't2', name: 'Scispace', cats: ['Assistants'], url: 'https://www.scispace.com', isAi: true, info: 'KI-Schreibassistent' },
         
         // FINDERS
-        { id: 't4', name: 'Swisscover RZS UNI/PH', cat: 'Finders', url: 'https://rzs.swisscovery.slsp.ch/discovery/search?vid=41SLSP_RZS:VU07', isAi: false, info: 'Bibliothekskatalog Schweiz', isLib: true },
-        { id: 't5', name: 'Elicit', cat: 'Finders', url: 'https://elicit.org', isAi: true, info: 'Findet Paper und extrahiert Kernaussagen' },
-        { id: 't6', name: 'Google Scholar', cat: 'Finders', url: 'https://scholar.google.com', isAi: false, info: 'Breite Suche nach wissenschaftlichen Texten' },
-        { id: 't7', name: 'EconLit', cat: 'Finders', url: 'https://www.aeaweb.org/econlit', isAi: false, info: 'Fachportal Wirtschaft', isLib: true },
+        { id: 't4', name: 'Swisscover RZS UNI/PH', cats: ['Finders'], url: 'https://rzs.swisscovery.slsp.ch/discovery/search?vid=41SLSP_RZS:VU07', isAi: false, info: 'Bibliothekskatalog Schweiz', isLib: true },
+        { id: 't5', name: 'Elicit', cats: ['Finders'], url: 'https://elicit.org', isAi: true, info: 'Findet Paper und extrahiert Kernaussagen' },
+        { id: 't6', name: 'Google Scholar', cats: ['Finders'], url: 'https://scholar.google.com', isAi: false, info: 'Breite Suche nach wissenschaftlichen Texten' },
+        { id: 't7', name: 'EconLit', cats: ['Finders'], url: 'https://www.aeaweb.org/econlit', isAi: false, info: 'Fachportal Wirtschaft', isLib: true },
 
         // CONNECTORS
-        { id: 't8', name: 'ResearchRabbit', cat: 'Connectors', url: 'https://researchrabbit.ai', isAi: true, info: 'Visualisiert Literatur-Netzwerke' },
-        { id: 't9', name: 'Connected Papers', cat: 'Connectors', url: 'https://www.connectedpapers.com', isAi: false, info: 'Zeigt verwandte Arbeiten grafisch an' },
+        { id: 't8', name: 'ResearchRabbit', cats: ['Connectors'], url: 'https://researchrabbit.ai', isAi: true, info: 'Visualisiert Literatur-Netzwerke' },
+        { id: 't9', name: 'Connected Papers', cats: ['Connectors'], url: 'https://www.connectedpapers.com', isAi: false, info: 'Zeigt verwandte Arbeiten grafisch an' },
 
         // ANALYZERS
-        { id: 't10', name: 'Explainpaper', cat: 'Analyzers', url: 'https://www.explainpaper.com', isAi: true, info: 'Erklärt komplexe Textstellen' },
-        { id: 't11', name: 'Humata', cat: 'Analyzers', url: 'https://humata.ai', isAi: true, info: 'Chatte mit deinen PDFs' },
-        { id: 't12', name: 'PDF.ai', cat: 'Analyzers', url: 'https://pdf.ai', isAi: true, info: 'PDF Analyse Tool' },
+        { id: 't10', name: 'Explainpaper', cats: ['Analyzers'], url: 'https://www.explainpaper.com', isAi: true, info: 'Erklärt komplexe Textstellen' },
+        { id: 't11', name: 'Humata', cats: ['Analyzers'], url: 'https://humata.ai', isAi: true, info: 'Chatte mit deinen PDFs' },
+        { id: 't12', name: 'PDF.ai', cats: ['Analyzers'], url: 'https://pdf.ai', isAi: true, info: 'PDF Analyse Tool' },
 
         // WRITERS
-        { id: 't13', name: 'Writefull', cat: 'Writers', url: 'https://writefull.com', isAi: true, info: 'Akademische Sprachprüfung' },
-        { id: 't14', name: 'Paperpal', cat: 'Writers', url: 'https://paperpal.com', isAi: true, info: 'Echtzeit-Schreibfeedback' },
-        { id: 't15', name: 'DeepL Write', cat: 'Writers', url: 'https://www.deepl.com/write', isAi: true, info: 'Sprachoptimierung' },
+        { id: 't13', name: 'Writefull', cats: ['Writers'], url: 'https://writefull.com', isAi: true, info: 'Akademische Sprachprüfung' },
+        { id: 't14', name: 'Paperpal', cats: ['Writers'], url: 'https://paperpal.com', isAi: true, info: 'Echtzeit-Schreibfeedback' },
+        { id: 't15', name: 'DeepL Write', cats: ['Writers'], url: 'https://www.deepl.com/write', isAi: true, info: 'Sprachoptimierung' },
 
         // PRESENTERS & GRAFIK
-        { id: 't16', name: 'Gamma.app', cat: 'Presenters', url: 'https://gamma.app', isAi: true, info: 'KI-Präsentationen' },
-        { id: 't17', name: 'BioRender / Canva', cat: 'Grafiktools', url: 'https://www.canva.com', isAi: false, info: 'Wissenschaftliche Grafiken' },
+        { id: 't16', name: 'Gamma.app', cats: ['Presenters'], url: 'https://gamma.app', isAi: true, info: 'KI-Präsentationen' },
+        { id: 't17', name: 'BioRender / Canva', cats: ['Grafiktools'], url: 'https://www.canva.com', isAi: false, info: 'Wissenschaftliche Grafiken' },
 
         // VERWALTUNG
-        { id: 't18', name: 'Zotero', cat: 'Verwaltung', url: 'https://www.zotero.org', isAi: false, info: 'Literaturverwaltung (Open Source)' },
-        { id: 't19', name: 'Citavi', cat: 'Verwaltung', url: 'https://www.citavi.com', isAi: false, info: 'Literaturverwaltung' },
+        { id: 't18', name: 'Zotero', cats: ['Verwaltung'], url: 'https://www.zotero.org', isAi: false, info: 'Literaturverwaltung (Open Source)' },
+        { id: 't19', name: 'Citavi', cats: ['Verwaltung'], url: 'https://www.citavi.com', isAi: false, info: 'Literaturverwaltung' },
 
         // EVALUATION / PUBLIKATIONSFORMEN
-        { id: 't20', name: 'Scite_', cat: 'Evaluation', url: 'https://scite.ai', isAi: true, info: 'Smart Citations - wie wurde zitiert?', isLib: true },
-        { id: 't21', name: 'Consensus', cat: 'Evaluation', url: 'https://consensus.app', isAi: true, info: 'Wissenschaftlicher Konsens finden', isLib: true }
+        { id: 't20', name: 'Scite_', cats: ['Evaluation', 'Finders'], url: 'https://scite.ai', isAi: true, info: 'Smart Citations - wie wurde zitiert?', isLib: true },
+        { id: 't21', name: 'Consensus', cats: ['Evaluation', 'Finders'], url: 'https://consensus.app', isAi: true, info: 'Wissenschaftlicher Konsens finden', isLib: true }
     ];
 
     let currentDragElement = null;
@@ -345,7 +351,7 @@
         
         // Gruppen bilden
         Object.keys(categories).forEach(catKey => {
-            const catTools = initialTools.filter(t => t.cat === catKey);
+            const catTools = initialTools.filter(t => Array.isArray(t.cats) && t.cats.includes(catKey));
             if(catTools.length > 0) {
                 // Header einfügen
                 const header = document.createElement('div');
@@ -355,7 +361,8 @@
 
                 // Tools einfügen
                 catTools.forEach(tool => {
-                    pool.appendChild(createToolElement(tool, 'hangar'));
+                    const instanceId = `${tool.id}-${catKey}`;
+                    pool.appendChild(createToolElement({ ...tool, uniqueId: instanceId }, 'hangar'));
                 });
             }
         });
@@ -393,11 +400,27 @@
         div.id = uniqueId;
         
         // Icon bestimmen (wenn keine Kategorie-Icon, dann Standard)
-        const iconClass = categories[toolData.cat] || 'fa-tools';
+        const primaryCat = Array.isArray(toolData.cats) && toolData.cats.length ? toolData.cats[0] : null;
+        const iconClass = (primaryCat && categories[primaryCat]) ? categories[primaryCat] : 'fa-tools';
+
+        const statusBadges = `
+            ${toolData.isAi ? '<span class="status-badge badge-ai">KI</span>' : ''}
+            ${toolData.isLib ? '<span class="status-badge badge-lib">Uni</span>' : ''}
+        `;
+
+        const categoryList = Array.isArray(toolData.cats) && toolData.cats.length
+            ? toolData.cats.join(', ')
+            : 'Allgemein';
 
         div.innerHTML = `
             <div class="tool-icon"><i class="fas ${iconClass}"></i></div>
-            <div class="flex-grow-1 text-truncate fw-bold">${toolData.name}</div>
+            <div class="flex-grow-1 text-truncate">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="fw-bold text-truncate">${toolData.name}</div>
+                    <div class="d-flex gap-1 flex-shrink-0">${statusBadges}</div>
+                </div>
+                <div class="small text-muted text-truncate">${categoryList}</div>
+            </div>
             <i class="fas fa-info-circle text-muted" style="cursor:help;" data-bs-toggle="tooltip" title="${toolData.info}"></i>
             <a href="${toolData.url}" target="_blank" class="tool-link" onclick="event.stopPropagation()" title="Tool öffnen">
                 <i class="fas fa-external-link-alt"></i>
@@ -477,7 +500,8 @@
         const name = document.getElementById('customToolName').value;
         const info = document.getElementById('customToolInfo').value;
         const url = document.getElementById('customToolUrl').value;
-        const cat = document.getElementById('customToolCategory').value;
+        const catSelect = document.getElementById('customToolCategory');
+        const cat = Array.from(catSelect.selectedOptions).map(opt => opt.value);
         const isAi = document.getElementById('customToolIsAi').checked;
         const isLib = document.getElementById('customToolIsLib').checked;
 
@@ -486,7 +510,7 @@
         const newTool = {
             id: 'cust' + Date.now(),
             name: name,
-            cat: cat || 'Verwaltung',
+            cats: cat && cat.length ? cat : ['Verwaltung'],
             url: url || '#',
             info: info || 'Benutzerdefiniert',
             isAi: isAi,
@@ -501,7 +525,7 @@
         document.getElementById('customToolName').value = '';
         document.getElementById('customToolInfo').value = '';
         document.getElementById('customToolUrl').value = '';
-        document.getElementById('customToolCategory').selectedIndex = 0;
+        document.getElementById('customToolCategory').selectedIndex = -1;
         document.getElementById('customToolIsAi').checked = false;
         document.getElementById('customToolIsLib').checked = false;
     }
@@ -545,7 +569,7 @@
                 // erstellen wir ein Dummy-Objekt, damit es nicht verschwindet.
                 if(!original) {
                     original = {
-                        id: 'restored', name: savedItem.name, cat: 'Verwaltung',
+                        id: 'restored', name: savedItem.name, cats: ['Verwaltung'],
                         url: '#', info: 'Wiederhergestellt', isAi: false
                     };
                 }
