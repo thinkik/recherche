@@ -309,12 +309,25 @@
             
             const data = JSON.parse(rawData);
 
-            // Nur löschen, wenn es aus dem Cockpit kommt
+            // Löschen für Cockpit- und Hangar-Elemente
             if(data.origin === 'cockpit') {
                 const elementToDelete = document.getElementById(data.uniqueId);
                 if(elementToDelete) {
                     elementToDelete.remove();
                     saveState();
+                }
+            } else if (data.origin === 'hangar') {
+                const hangarElement = document.getElementById(data.uniqueId);
+                if(hangarElement) {
+                    hangarElement.remove();
+                }
+
+                // Benutzerdefinierte Tools komplett entfernen (alle Kategorien)
+                if(data.isCustom) {
+                    const index = initialTools.findIndex(t => t.id === data.id);
+                    if(index >= 0) initialTools.splice(index, 1);
+
+                    document.querySelectorAll(`[data-base-id="${data.id}"]`).forEach(el => el.remove());
                 }
             }
         });
@@ -398,6 +411,7 @@
                 ? toolData.id
                 : 'c-' + Date.now() + Math.random().toString(16).slice(2));
         div.id = uniqueId;
+        div.dataset.baseId = toolData.id;
         
         // Icon bestimmen (wenn keine Kategorie-Icon, dann Standard)
         const primaryCat = Array.isArray(toolData.cats) && toolData.cats.length ? toolData.cats[0] : null;
@@ -514,7 +528,8 @@
             url: url || '#',
             info: info || 'Benutzerdefiniert',
             isAi: isAi,
-            isLib: isLib
+            isLib: isLib,
+            isCustom: true
         };
         
         initialTools.push(newTool);
