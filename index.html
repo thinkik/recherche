@@ -140,6 +140,10 @@
             <button class="btn btn-sm btn-outline-primary w-100 mt-3 no-print" data-bs-toggle="modal" data-bs-target="#customToolModal">
                 <i class="fas fa-plus"></i> Eigenes Tool ergänzen
             </button>
+
+            <button class="btn btn-sm btn-outline-success w-100 mt-2 no-print" data-bs-toggle="modal" data-bs-target="#licensedDbModal">
+                <i class="fas fa-database"></i> + Lizenzierte Datenbank ergänzen
+            </button>
             
             <div class="mt-auto no-print">
                 <div class="delete-zone" id="delete-zone">
@@ -298,6 +302,35 @@
     </div>
 </div>
 
+<div class="modal fade" id="licensedDbModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-database me-2"></i>Lizenzierte Datenbank ergänzen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <label for="licensedDbSelect" class="form-label">Datenbank auswählen</label>
+                        <select id="licensedDbSelect" class="form-select" size="10"></select>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="border rounded p-3 h-100 bg-light" id="licensedDbDetails">
+                            <h6 class="fw-bold mb-2" id="licensedDbTitle">Datenbank wählen</h6>
+                            <p class="mb-2 small text-muted" id="licensedDbDescription">Wählen Sie links eine Datenbank aus, um Details zu sehen.</p>
+                            <div class="small" id="licensedDbBadges"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="addLicensedDatabase()">Zum Hangar hinzufügen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     // --- KONFIGURATION DER TOOLS ---
@@ -346,6 +379,47 @@
         // EVALUATION / PUBLIKATIONSFORMEN
         { id: 't20', name: 'Scite_', cats: ['Evaluation', 'Finders'], url: 'https://scite.ai', isAi: true, info: 'Smart Citations - wie wurde zitiert?', isLib: true },
         { id: 't21', name: 'Consensus', cats: ['Evaluation', 'Finders'], url: 'https://consensus.app', isAi: true, info: 'Wissenschaftlicher Konsens finden', isLib: true }
+    ];
+
+    const licensedDatabases = [
+        { id: 'lic1', name: 'Academic Search Ultimate (EBSCOhost)', url: 'https://search.ebscohost.com/ehost/asn', info: 'Multidisziplinäre Volltextdatenbank mit mehr als 9 200 Zeitschriften, zahlreichen Magazinen und rund 60 000 Videos seit 1930.', cats: ['Finders'], isLib: true },
+        { id: 'lic2', name: 'Blackwell Reference Online', url: 'https://www.blackwellreference.com', info: 'Sammlung von Referenzwerken aus den Geistes- und Sozialwissenschaften wie Classics, History, Language & Linguistics, Philosophy & Religion.', cats: ['Finders'], isLib: true },
+        { id: 'lic3', name: 'Business Source Premier (EBSCOhost)', url: 'https://search.ebscohost.com/ehost/bsp', info: 'Wirtschaftswissenschaftliche Datenbank mit Volltexten aus mehr als 2 200 Zeitschriften und Magazinen, Firmenprofilen, Marktstudien und SWOT-Analysen.', cats: ['Finders'], isLib: true },
+        { id: 'lic4', name: 'CEPR Discussion Papers', url: 'https://cepr.org/publications/discussion-papers', info: 'Working-Paper-Reihe des Centre for Economic Policy Research mit aktuellen Forschungsarbeiten renommierter Ökonominnen und Ökonomen.', cats: ['Finders'], isLib: true },
+        { id: 'lic5', name: 'Duden Sprachwissen (Munzinger-Portal)', url: 'https://www.munzinger.de', info: 'Enthält die Standardwerke der Duden-Reihe wie Rechtschreibung, Fremdwörterbuch und Stilwörterbuch für prägnante Antworten auf sprachliche Fragen.', cats: ['Finders'], isLib: true },
+        { id: 'lic6', name: 'EconLit', url: 'https://www.aeaweb.org/econlit', info: 'Datenbank der American Economic Association mit wirtschaftswissenschaftlichen Veröffentlichungen seit 1969 aus rund 750 Zeitschriften, Büchern und Dissertationen.', cats: ['Finders'], isLib: true },
+        { id: 'lic7', name: 'Encyclopedia of Health Economics', url: 'https://www.sciencedirect.com/referencework/encyclopedia-of-health-economics', info: 'Dreibändiges Nachschlagewerk über Gesundheitsökonomie mit Analysen zu Gesundheitssystem, Versorgung und -politik.', cats: ['Finders'], isLib: true },
+        { id: 'lic8', name: 'Factiva', url: 'https://global.factiva.com', info: 'Dow-Jones-Datenbank für internationale Nachrichten und Wirtschaftsinformationen mit Presseartikeln, Nachrichtendiensten und Unternehmensmeldungen.', cats: ['Finders'], isLib: true },
+        { id: 'lic9', name: 'International Bibliography of the Social Sciences (IBSS)', url: 'https://search.proquest.com/ibss', info: 'Bibliografische Datenbank von ProQuest zur internationalen Literatur aus Soziologie, Politikwissenschaft, Wirtschaft und Anthropologie.', cats: ['Finders'], isLib: true },
+        { id: 'lic10', name: 'International Encyclopedia of the Social & Behavioral Sciences (2. Ausgabe)', url: 'https://www.sciencedirect.com/referencework/iesbs', info: 'Umfassende Enzyklopädie der Sozial- und Verhaltenswissenschaften (2. Ausgabe) mit Grundlagen, Theorien und Methoden.', cats: ['Finders'], isLib: true },
+        { id: 'lic11', name: 'International Encyclopedia of the Social & Behavioral Sciences (1. Ausgabe)', url: 'https://www.sciencedirect.com/referencework/iesbs', info: 'Erste Ausgabe der großen Elsevier-Enzyklopädie mit Artikeln zu Sozial- und Verhaltenswissenschaften.', cats: ['Finders'], isLib: true },
+        { id: 'lic12', name: 'JSTOR Journals', url: 'https://www.jstor.org', info: 'Digitales Archiv mit Volltext-Backfiles wissenschaftlicher Zeitschriften aus Geistes-, Sozial- und Naturwissenschaften.', cats: ['Finders'], isLib: true },
+        { id: 'lic13', name: 'Kluwer Law Online', url: 'https://www.kluwerlawonline.com', info: 'Plattform von Wolters Kluwer mit Zeitschriften, Handbüchern, Kommentaren und Fallanalysen zum internationalen Recht.', cats: ['Finders'], isLib: true },
+        { id: 'lic14', name: 'Lexology Pro', url: 'https://www.lexology.com', info: 'Informationsdienst mit Fachartikeln von Anwaltskanzleien über Gesetzesänderungen und juristische Entwicklungen weltweit.', cats: ['Finders'], isLib: true },
+        { id: 'lic15', name: 'LinkedIn Learning', url: 'https://www.linkedin.com/learning', info: 'Lernplattform mit Videokursen zu Business-, Technologie- und Kreativthemen, moderiert von Branchenexpertinnen und -experten.', cats: ['Finders'], isLib: true },
+        { id: 'lic16', name: 'Munzinger Online / Länder', url: 'https://www.munzinger.de', info: 'Deutsches Nachschlagewerk mit Länderprofilen, aktuellen Daten und Hintergrundinformationen zu Staaten, Organisationen und Persönlichkeiten.', cats: ['Finders'], isLib: true },
+        { id: 'lic17', name: 'NBER Working Papers', url: 'https://www.nber.org/papers', info: 'Veröffentlichungsreihe des National Bureau of Economic Research mit aktuellen ökonomischen Forschungsergebnissen.', cats: ['Finders'], isLib: true },
+        { id: 'lic18', name: 'New Palgrave Dictionary of Economics', url: 'https://link.springer.com/referencework/10.1057/978-1-349-94852-9', info: 'Enzyklopädisches Ökonomie-Wörterbuch mit Artikeln zu Konzepten, Methoden und Schulen der Wirtschaftstheorie.', cats: ['Finders'], isLib: true },
+        { id: 'lic19', name: 'New York Times / ProQuest Historical Newspapers', url: 'https://search.proquest.com/hnpnewyorktimes', info: 'Digitalisierte Ausgaben der New York Times ab 1851 für wirtschaftshistorische Recherchen.', cats: ['Finders'], isLib: true },
+        { id: 'lic20', name: 'Nexis Uni', url: 'https://www.nexisuni.com', info: 'Rechercheplattform von LexisNexis mit Nachrichtenquellen, Rechtsfällen, Unternehmensdaten und juristischen Fachartikeln für die Hochschullehre.', cats: ['Finders'], isLib: true },
+        { id: 'lic21', name: 'Orbis – weltweite Unternehmensdaten', url: 'https://orbis.bvdinfo.com', info: 'Unternehmensdatenbank von Bureau van Dijk mit Finanzdaten, Beteiligungsstrukturen und Vergleichskennzahlen für Millionen Firmen.', cats: ['Finders'], isLib: true },
+        { id: 'lic22', name: 'Oxford Reference', url: 'https://www.oxfordreference.com', info: 'Sammlung von Wörterbüchern und Enzyklopädien der Oxford University Press zu verschiedenen Fachgebieten.', cats: ['Finders'], isLib: true },
+        { id: 'lic23', name: 'Oxford Research Encyclopedia – Global Public Health', url: 'https://oxfordre.com/publichealth', info: 'Begutachtete Forschungsenzyklopädie mit Artikeln zu globaler Gesundheitspolitik, Prävention, Epidemiologie und Versorgung.', cats: ['Finders'], isLib: true },
+        { id: 'lic24', name: 'Oxford Research Encyclopedia – Climate Science', url: 'https://oxfordre.com/climatescience', info: 'Online-Enzyklopädie mit wissenschaftlichen Übersichtsartikeln zu Klimaforschung, Klimawandel, Klimapolitik und Resilienz.', cats: ['Finders'], isLib: true },
+        { id: 'lic25', name: 'Periodicals Archive Online', url: 'https://search.proquest.com/pao', info: 'Archiv mit den Rückläufen von über 700 Zeitschriften der Geistes- und Sozialwissenschaften mit mehr als 3 Mio. Artikeln.', cats: ['Finders'], isLib: true },
+        { id: 'lic26', name: 'Policy Commons', url: 'https://policycommons.net', info: 'Plattform mit mehr als 3 Mio. Publikationen von Politikexpertinnen, Think Tanks, IGOs und NGOs.', cats: ['Finders'], isLib: true },
+        { id: 'lic27', name: 'ScienceDirect', url: 'https://www.sciencedirect.com', info: 'Elsevier-Plattform für elektronische Zeitschriften und eBooks mit simultaner oder getrennter Suche und Volltextzugriff je nach Lizenz.', cats: ['Finders'], isLib: true },
+        { id: 'lic28', name: 'Scite', url: 'https://scite.ai', info: 'KI-gestützte Zitationsdatenbank, die Zitierungen als unterstützend, widersprechend oder erwähnend klassifiziert.', cats: ['Evaluation', 'Finders'], isLib: true, isAi: true },
+        { id: 'lic29', name: 'Statista', url: 'https://www.statista.com', info: 'Statistikportal mit Daten aus zahlreichen Instituten und Quellen; Volltextzugriff abhängig vom Lizenzumfang der Einrichtung.', cats: ['Finders'], isLib: true },
+        { id: 'lic30', name: 'Tax Treaties Database (IBFD)', url: 'https://www.ibfd.org', info: 'Datenbank des International Bureau of Fiscal Documentation mit über 5 000 Steuerabkommen, Protokollen und Vergleichstabellen.', cats: ['Finders'], isLib: true },
+        { id: 'lic31', name: 'UN iLibrary', url: 'https://www.un-ilibrary.org', info: 'Bibliothek der Vereinten Nationen mit Büchern, Zeitschriften, Arbeitspapieren und Statistiken zu UN-Themen.', cats: ['Finders'], isLib: true },
+        { id: 'lic32', name: 'WEKA Business Portal', url: 'https://www.weka.ch/business', info: 'Praxisorientiertes Informationsportal mit Fachinformationen, Vorlagen und eLearning-Materialien zu Recht, Steuern und Unternehmensführung.', cats: ['Finders'], isLib: true },
+        { id: 'lic33', name: 'Web of Science / Social Sciences Citation Index', url: 'https://www.webofscience.com/wos', info: 'Aufsatzdatenbank mit mehr als 3,45 Mio. Titeln und Beiträgen aus über 50 Sozial- und Nachbardisziplinen.', cats: ['Finders'], isLib: true },
+        { id: 'lic34', name: 'Web of Science Core Collection', url: 'https://www.webofscience.com/wos', info: 'Multidisziplinäre Zitationsdatenbank mit Informationen aus Tausenden wissenschaftlicher Zeitschriften, Büchern und Konferenzen.', cats: ['Finders'], isLib: true },
+        { id: 'lic35', name: 'Wiley Online Library', url: 'https://onlinelibrary.wiley.com', info: 'Plattform des Wiley-Verlags mit über 1 500 Fachzeitschriften und mehr als 20 000 eBooks aus Natur-, Gesundheits- und Sozialwissenschaften.', cats: ['Finders'], isLib: true },
+        { id: 'lic36', name: 'WorldTradeLaw.net', url: 'https://www.worldtradelaw.net', info: 'Datenbank mit WTO- und GATT-Schiedssprüchen, Analysen und Kommentaren zur internationalen Handelspolitik.', cats: ['Finders'], isLib: true },
+        { id: 'lic37', name: 'wiso', url: 'https://www.wiso-net.de', info: 'Deutschsprachige Plattform mit Literaturhinweisen, E-Books und Fachzeitschriften zu Wirtschafts- und Sozialwissenschaften plus Praxis- und Statistikmodule.', cats: ['Finders'], isLib: true },
+        { id: 'lic38', name: 'Statistical Portal OECD Data Explorer', url: 'https://data-explorer.oecd.org', info: 'Interaktive OECD-Plattform für Vergleich und Visualisierung sozioökonomischer Kennzahlen verschiedener Länder.', cats: ['Finders'], isLib: true }
     ];
 
     let currentDragElement = null;
@@ -440,6 +514,69 @@
         renderDeletedList();
     }
 
+    function normalizeName(name) {
+        return (name || '').toLowerCase().replace(/[_\s]+$/, '').trim();
+    }
+
+    function populateLicensedDbSelect() {
+        const select = document.getElementById('licensedDbSelect');
+        if(!select) return;
+
+        select.innerHTML = '';
+        licensedDatabases.forEach(db => {
+            const opt = document.createElement('option');
+            opt.value = db.id;
+            opt.textContent = db.name;
+            select.appendChild(opt);
+        });
+
+        select.addEventListener('change', (e) => updateLicensedDbDetails(e.target.value));
+        if(licensedDatabases.length) {
+            select.value = licensedDatabases[0].id;
+            updateLicensedDbDetails(licensedDatabases[0].id);
+        }
+    }
+
+    function updateLicensedDbDetails(dbId) {
+        const db = licensedDatabases.find(item => item.id === dbId);
+        const titleEl = document.getElementById('licensedDbTitle');
+        const descEl = document.getElementById('licensedDbDescription');
+        const badgeEl = document.getElementById('licensedDbBadges');
+
+        if(!db || !titleEl || !descEl || !badgeEl) return;
+
+        titleEl.textContent = db.name;
+        descEl.textContent = db.info || '';
+
+        const badges = [];
+        if(db.isLib) badges.push('<span class="status-badge badge-lib">Uni</span>');
+        if(db.isAi) badges.push('<span class="status-badge badge-ai">KI</span>');
+        badgeEl.innerHTML = badges.join(' ');
+    }
+
+    function addLicensedDatabase() {
+        const select = document.getElementById('licensedDbSelect');
+        if(!select || !select.value) return;
+
+        const db = licensedDatabases.find(item => item.id === select.value);
+        if(!db) return;
+
+        const alreadyExists = initialTools.some(tool => normalizeName(tool.name) === normalizeName(db.name));
+        if(alreadyExists) {
+            alert('Diese Datenbank befindet sich bereits im Hangar.');
+            return;
+        }
+
+        initialTools.push({ ...db, isLib: true, cats: db.cats && db.cats.length ? db.cats : ['Finders'] });
+        renderHangar();
+
+        const modalEl = document.getElementById('licensedDbModal');
+        if(modalEl) {
+            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            modal.hide();
+        }
+    }
+
     function addToDeleted(toolData) {
         const sanitized = sanitizeToolData(toolData);
         deletedTools = [sanitized, ...deletedTools.filter(t => !(t.id === sanitized.id && t.name === sanitized.name))].slice(0, 25);
@@ -486,6 +623,7 @@
         renderHangar();
         populateCategoryOptions();
         populateFilterOptions();
+        populateLicensedDbSelect();
         loadState();
         loadDeletedState();
         initTooltips();
