@@ -108,12 +108,13 @@
 
         /* Print Styles */
         @media print {
-            .hangar-area, .no-print, .delete-zone, .tool-link, .modal { display: none !important; }
+            .hangar-area, .no-print, .delete-zone, .modal { display: none !important; }
             .cockpit-area { width: 100% !important; height: auto !important; overflow: visible; padding: 0;}
             .phase-col { border: 1px solid #ccc; min-height: 150px; page-break-inside: avoid; }
-            .row { display: flex !important; flex-wrap: nowrap !important; } 
+            .row { display: flex !important; flex-wrap: nowrap !important; }
             .col, .col-md-2 { flex: 1 !important; width: 20% !important; }
             body { background: white; -webkit-print-color-adjust: exact; }
+            .tool-link { display: inline-flex !important; align-items: center; gap: 4px; color: #0d6efd !important; text-decoration: underline; }
         }
     </style>
 </head>
@@ -880,6 +881,7 @@
                 <i class="fas fa-info-circle text-muted" style="cursor:help;" data-bs-toggle="tooltip" title="${safeInfo}"></i>
                 <a href="${safeUrl}" target="_blank" class="tool-link" onclick="event.stopPropagation()" title="Tool öffnen">
                     <i class="fas fa-external-link-alt"></i>
+                    <span class="d-none d-print-inline small text-decoration-underline text-primary">${safeUrl}</span>
                 </a>
             `;
         }
