@@ -106,6 +106,37 @@
         .deleted-item .meta { color: #6c757d; font-size: 0.8rem; }
         .deleted-empty { color: #adb5bd; font-style: italic; font-size: 0.9rem; }
 
+        /* Kategorie-Infos */
+        .category-info-card {
+            border: 1px solid #e5e7eb;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 8px 10px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .category-info-card .icon-wrap {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: #e9ecef;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #0d6efd;
+        }
+        .category-info-card h6 {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        .category-info-card p {
+            margin: 2px 0 0 0;
+            color: #495057;
+            font-size: 0.9rem;
+            line-height: 1.3;
+        }
+
         /* Print Styles */
         @media print {
             .hangar-area, .no-print, .delete-zone, .modal { display: none !important; }
@@ -133,6 +164,14 @@
                 <select id="toolCategoryFilter" class="form-select form-select-sm">
                     <option value="">Alle Kategorien</option>
                 </select>
+            </div>
+
+            <div class="mb-3" aria-label="Kategorien im Überblick">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <h6 class="mb-0 text-uppercase text-muted" style="letter-spacing: 0.5px; font-size: 0.75rem;">Kategorien im Überblick</h6>
+                    <span class="badge bg-light text-muted border"><i class="fas fa-compass text-primary me-1"></i> Orientierung</span>
+                </div>
+                <div id="category-info-grid" class="d-flex flex-column gap-2"></div>
             </div>
 
             <div id="tool-pool">
@@ -337,14 +376,38 @@
     // --- KONFIGURATION DER TOOLS ---
     // Kategorien basierend auf Ihrem Bild
     const categories = {
-        'Assistants': 'fa-lightbulb',
-        'Finders': 'fa-search',
-        'Connectors': 'fa-project-diagram',
-        'Analyzers': 'fa-microscope',
-        'Writers': 'fa-pen-nib',
-        'Verwaltung': 'fa-folder-open',
-        'Evaluation': 'fa-check-double', // Für Scite/Consensus "Publikationsformen"
-        'Notizen': 'fa-note-sticky'
+        'Assistants': {
+            icon: 'fa-lightbulb',
+            info: 'KI-Co-Piloten, die beim Brainstorming, Strukturieren und beim ersten Aufschlag von Textbausteinen unterstützen.'
+        },
+        'Finders': {
+            icon: 'fa-search',
+            info: 'Suchmaschinen, Datenbanken und Kataloge, mit denen Sie geeignete Quellen aufspüren und Trefferlisten filtern.'
+        },
+        'Connectors': {
+            icon: 'fa-project-diagram',
+            info: 'Tools zur Visualisierung und Vernetzung von Literatur, um Forschungsstränge und Schlüsselpublikationen sichtbar zu machen.'
+        },
+        'Analyzers': {
+            icon: 'fa-microscope',
+            info: 'Analysetools, die Texte zusammenfassen, erklären oder Inhalte aus PDFs und Artikeln herausarbeiten.'
+        },
+        'Writers': {
+            icon: 'fa-pen-nib',
+            info: 'Schreib- und Stilhilfen für saubere Formulierungen, Grammatikprüfungen und Feedback auf wissenschaftliche Texte.'
+        },
+        'Verwaltung': {
+            icon: 'fa-folder-open',
+            info: 'Literaturverwaltungsprogramme zum Sammeln, Ordnen und Zitieren Ihrer Quellen in verschiedenen Zitationsstilen.'
+        },
+        'Evaluation': {
+            icon: 'fa-check-double', // Für Scite/Consensus "Publikationsformen"
+            info: 'Werkzeuge zur Bewertung von Qualität und Wirkung, z. B. Kontext zu Zitierungen oder Hinweise auf den wissenschaftlichen Konsens.'
+        },
+        'Notizen': {
+            icon: 'fa-note-sticky',
+            info: 'Eigene Merkzettel, um Zwischenergebnisse, Recherchewege und To-dos festzuhalten.'
+        }
     };
 
     // Tool Datenbank (angereichert mit Links und Kategorien)
@@ -624,6 +687,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         renderHangar();
+        renderCategoryInfo();
         populateCategoryOptions();
         populateFilterOptions();
         populateLicensedDbSelect();
@@ -762,7 +826,8 @@
                 // Header einfügen
                 const header = document.createElement('div');
                 header.className = 'cat-header';
-                header.innerHTML = `<i class="fas ${categories[catKey]} me-2"></i> ${catKey}`;
+                const catIcon = (categories[catKey] && categories[catKey].icon) ? categories[catKey].icon : 'fa-tools';
+                header.innerHTML = `<i class="fas ${catIcon} me-2"></i> ${catKey}`;
                 pool.appendChild(header);
 
                 // Tools einfügen
@@ -771,6 +836,29 @@
                     pool.appendChild(createToolElement({ ...tool, uniqueId: instanceId }, 'hangar'));
                 });
             }
+        });
+    }
+
+    function renderCategoryInfo() {
+        const grid = document.getElementById('category-info-grid');
+        if(!grid) return;
+
+        grid.innerHTML = '';
+
+        Object.entries(categories).forEach(([catKey, meta]) => {
+            const iconClass = (meta && meta.icon) ? meta.icon : 'fa-tools';
+            const description = escapeHtml((meta && meta.info) ? meta.info : '');
+
+            const card = document.createElement('div');
+            card.className = 'category-info-card';
+            card.innerHTML = `
+                <div class="icon-wrap"><i class="fas ${iconClass}"></i></div>
+                <div>
+                    <h6 class="fw-bold">${catKey}</h6>
+                    <p class="mb-0">${description}</p>
+                </div>
+            `;
+            grid.appendChild(card);
         });
     }
 
@@ -840,7 +928,7 @@
 
         // Icon bestimmen (wenn keine Kategorie-Icon, dann Standard)
         const primaryCat = Array.isArray(toolData.cats) && toolData.cats.length ? toolData.cats[0] : null;
-        const iconClass = (primaryCat && categories[primaryCat]) ? categories[primaryCat] : 'fa-tools';
+        const iconClass = (primaryCat && categories[primaryCat] && categories[primaryCat].icon) ? categories[primaryCat].icon : 'fa-tools';
 
         if(isText) {
             const displayText = escapeHtml(toolData.text || toolData.info || '').replace(/\n/g, '<br>');
