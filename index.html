@@ -41,6 +41,15 @@
         .tool-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-color: #0d6efd; z-index: 10; }
         .tool-card:active { cursor: grabbing; }
         .tool-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 4px; color: #555; font-size: 0.8rem; }
+        .tool-card-body { min-width: 0; }
+        .tool-title-row { align-items: flex-start; gap: 8px; }
+        .tool-title { white-space: normal; line-height: 1.25; max-height: 3.75em; overflow: hidden; transition: max-height 0.2s ease; }
+        .tool-title.expanded { max-height: none; }
+        .tool-title-toggle { border: none; background: transparent; color: #0d6efd; font-size: 0.75rem; padding: 0 4px; line-height: 1.25; }
+        .tool-title-toggle:hover { text-decoration: underline; }
+        .tool-title-toggle:focus-visible { outline: 2px solid #0d6efd; outline-offset: 2px; }
+        .tool-badges { display: flex; gap: 4px; flex-shrink: 0; }
+        .tool-category { white-space: normal; line-height: 1.2; }
         .is-ai { box-shadow: inset 3px 0 0 #8e44ad; }
         .is-library { box-shadow: inset 3px 0 0 #198754; }
         .is-ai.is-library { box-shadow: inset 3px 0 0 #8e44ad, inset 6px 0 0 #198754; }
@@ -1123,9 +1132,9 @@
             const displayTitle = escapeHtml(toolData.name || 'Notiz');
             div.innerHTML = `
                 <div class="tool-icon"><i class="fas fa-note-sticky"></i></div>
-                <div class="flex-grow-1">
-                    <div class="d-flex align-items-center gap-2">
-                        <div class="fw-bold text-truncate">${displayTitle}</div>
+                <div class="flex-grow-1 tool-card-body">
+                    <div class="d-flex tool-title-row">
+                        <div class="fw-bold tool-title">${displayTitle}</div>
                     </div>
                     <div class="small text-muted text-wrap">${displayText || 'Kein Text hinterlegt'}</div>
                 </div>
@@ -1152,12 +1161,12 @@
 
             div.innerHTML = `
                 <div class="tool-icon"><i class="fas ${iconClass}"></i></div>
-                <div class="flex-grow-1 text-truncate">
-                    <div class="d-flex align-items-center gap-2">
-                        <div class="fw-bold text-truncate">${safeName}</div>
-                        <div class="d-flex gap-1 flex-shrink-0">${statusBadges}</div>
+                <div class="flex-grow-1 tool-card-body">
+                    <div class="d-flex tool-title-row">
+                        <div class="fw-bold tool-title">${safeName}</div>
+                        <div class="tool-badges">${statusBadges}</div>
                     </div>
-                    <div class="small text-muted text-truncate">${categoryList}</div>
+                    <div class="small text-muted tool-category">${categoryList}</div>
                 </div>
                 <i class="fas fa-info-circle text-muted tool-info-icon" style="cursor:help;" data-bs-toggle="tooltip" title="${safeInfo}"></i>
                 ${allowEdit ? '<button type="button" class="edit-custom-btn" title="Bearbeiten"><i class="fas fa-pen"></i></button>' : ''}
@@ -1200,6 +1209,8 @@
         });
         div.appendChild(removeBtn);
 
+        setTimeout(() => applyCollapsibleTitle(div), 0);
+
         setTimeout(() => initTooltips(), 100);
 
         div.addEventListener('dragstart', (e) => {
@@ -1214,6 +1225,50 @@
         });
 
         return div;
+    }
+
+    function applyCollapsibleTitle(card) {
+        if(!card) return;
+
+        const titleEl = card.querySelector('.tool-title');
+        if(!titleEl) return;
+
+        const row = card.querySelector('.tool-title-row') || titleEl.parentElement;
+        const toggleBtn = card.querySelector('.tool-title-toggle');
+
+        const adjustToggle = () => {
+            const computedLineHeight = parseFloat(getComputedStyle(titleEl).lineHeight) || 16;
+            const maxHeight = computedLineHeight * 3;
+            const isOverflowing = titleEl.scrollHeight > maxHeight + 1;
+
+            titleEl.style.maxHeight = titleEl.classList.contains('expanded') ? 'none' : `${maxHeight}px`;
+
+            if(isOverflowing) {
+                if(!toggleBtn) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'tool-title-toggle';
+                    btn.textContent = 'Mehr';
+                    btn.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        const expanded = titleEl.classList.toggle('expanded');
+                        titleEl.style.maxHeight = expanded ? 'none' : `${maxHeight}px`;
+                        btn.textContent = expanded ? 'Weniger' : 'Mehr';
+                    });
+                    if(row) {
+                        row.appendChild(btn);
+                    }
+                }
+            } else {
+                titleEl.classList.remove('expanded');
+                titleEl.style.maxHeight = `${maxHeight}px`;
+                if(toggleBtn) {
+                    toggleBtn.remove();
+                }
+            }
+        };
+
+        requestAnimationFrame(adjustToggle);
     }
 
     function initTooltips() {
@@ -1848,6 +1903,10 @@
         if(importInput) {
             importInput.addEventListener('change', handleImportFile);
         }
+
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.tool-card').forEach(card => applyCollapsibleTitle(card));
+        });
     });
 </script>
 
