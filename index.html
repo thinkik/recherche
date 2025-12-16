@@ -61,7 +61,27 @@
         .tool-link .d-print-inline { color: #0d6efd !important; }
 
         /* === Toasts === */
-        /* (Derzeit keine Toasts im Einsatz) */
+        .toast-container { position: fixed; top: 1rem; right: 1rem; display: flex; flex-direction: column; gap: 0.5rem; z-index: 1080; pointer-events: none; }
+        .toast-container.bottom { top: auto; bottom: 1rem; }
+        .toast-item { background: #ffffff; color: #111827; border-radius: 10px; border: 1px solid #e5e7eb; border-left: 4px solid #0d6efd; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); padding: 10px 12px; min-width: 260px; max-width: min(360px, calc(100vw - 2rem)); display: flex; align-items: flex-start; gap: 10px; pointer-events: auto; opacity: 0; transform: translateY(6px); transition: opacity 0.2s ease, transform 0.2s ease; }
+        .toast-item.show { opacity: 1; transform: translateY(0); }
+        .toast-item .toast-icon { font-size: 1rem; margin-top: 2px; }
+        .toast-item .toast-content { flex: 1; }
+        .toast-item .toast-title { font-weight: 700; font-size: 0.95rem; line-height: 1.2; }
+        .toast-item .toast-message { font-size: 0.9rem; color: #374151; line-height: 1.35; word-break: break-word; }
+        .toast-item .toast-close { border: none; background: transparent; color: #6b7280; cursor: pointer; padding: 4px; border-radius: 6px; flex-shrink: 0; }
+        .toast-item .toast-close:focus-visible { outline: 2px solid #0d6efd; outline-offset: 2px; }
+        .toast-success { border-left-color: #16a34a; }
+        .toast-success .toast-icon { color: #16a34a; }
+        .toast-info { border-left-color: #0d6efd; }
+        .toast-info .toast-icon { color: #0d6efd; }
+        .toast-error { border-left-color: #dc2626; }
+        .toast-error .toast-icon { color: #dc2626; }
+
+        @media (max-width: 576px) {
+            .toast-container { left: 0.75rem; right: 0.75rem; top: auto; bottom: 1rem; align-items: flex-end; }
+            .toast-item { width: 100%; max-width: none; }
+        }
 
         /* === A11y === */
         .tool-card:focus-visible, .delete-zone:focus-visible, .btn:focus-visible { outline: 2px solid #0d6efd; outline-offset: 2px; }
@@ -79,6 +99,8 @@
     </style>
 </head>
 <body>
+
+<div id="toast-container" class="toast-container no-print" aria-live="polite" aria-atomic="true"></div>
 
 <div class="container-fluid">
     <div class="row">
@@ -547,6 +569,7 @@
     let currentCategoryFilter = '';
     let currentEditingCustomToolId = null;
     let deleteZoneTextElement = null;
+    let toastContainer = null;
 
     // === HELPERS ===
     function normalizeCategoriesList(cats) {
@@ -630,6 +653,102 @@
 
     function resetDeleteZoneText() {
         updateDeleteZoneText(false);
+    }
+
+    // === TOASTS ===
+    function getToastContainer() {
+        if(toastContainer && document.body.contains(toastContainer)) return toastContainer;
+
+        let container = document.getElementById('toast-container');
+        if(!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.className = 'toast-container no-print';
+            container.setAttribute('aria-live', 'polite');
+            container.setAttribute('aria-atomic', 'true');
+            document.body.appendChild(container);
+        }
+
+        toastContainer = container;
+        return container;
+    }
+
+    function removeToastElement(toastEl) {
+        if(!toastEl) return;
+        toastEl.classList.remove('show');
+        setTimeout(() => {
+            if(toastEl && toastEl.parentElement) {
+                toastEl.parentElement.removeChild(toastEl);
+            }
+        }, 180);
+    }
+
+    function showToast(message, type = 'info', timeoutMs = 3000) {
+        const container = getToastContainer();
+        const normalizedType = ['success', 'info', 'error'].includes(type) ? type : 'info';
+        const safeMessage = typeof message === 'string' ? message : String(message ?? '');
+
+        const toastEl = document.createElement('div');
+        toastEl.className = `toast-item toast-${normalizedType}`;
+        toastEl.setAttribute('role', normalizedType === 'error' ? 'alert' : 'status');
+        toastEl.setAttribute('aria-live', normalizedType === 'error' ? 'assertive' : 'polite');
+
+        const iconMap = { success: 'fa-circle-check', info: 'fa-circle-info', error: 'fa-triangle-exclamation' };
+        const titleMap = { success: 'Erfolg', info: 'Hinweis', error: 'Fehler' };
+
+        const icon = document.createElement('div');
+        icon.className = 'toast-icon';
+        icon.innerHTML = `<i class="fas ${iconMap[normalizedType]}"></i>`;
+
+        const contentWrap = document.createElement('div');
+        contentWrap.className = 'toast-content';
+
+        const titleEl = document.createElement('div');
+        titleEl.className = 'toast-title';
+        titleEl.textContent = titleMap[normalizedType];
+
+        const messageEl = document.createElement('div');
+        messageEl.className = 'toast-message';
+        messageEl.textContent = safeMessage;
+
+        contentWrap.appendChild(titleEl);
+        contentWrap.appendChild(messageEl);
+
+        const closeBtn = document.createElement('button');
+        closeBtn.type = 'button';
+        closeBtn.className = 'toast-close';
+        closeBtn.setAttribute('aria-label', 'Toast schließen');
+        closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+
+        let hideTimer = null;
+        const safeTimeout = Number.isFinite(timeoutMs) && timeoutMs > 0 ? timeoutMs : 3000;
+        hideTimer = setTimeout(() => removeToastElement(toastEl), safeTimeout);
+
+        closeBtn.addEventListener('click', () => {
+            if(hideTimer) clearTimeout(hideTimer);
+            removeToastElement(toastEl);
+        });
+
+        toastEl.addEventListener('pointerenter', () => {
+            if(hideTimer) {
+                clearTimeout(hideTimer);
+                hideTimer = null;
+            }
+        });
+
+        toastEl.addEventListener('pointerleave', () => {
+            if(!hideTimer && safeTimeout > 0) {
+                hideTimer = setTimeout(() => removeToastElement(toastEl), safeTimeout);
+            }
+        });
+
+        toastEl.appendChild(icon);
+        toastEl.appendChild(contentWrap);
+        toastEl.appendChild(closeBtn);
+        container.appendChild(toastEl);
+
+        requestAnimationFrame(() => toastEl.classList.add('show'));
+        return toastEl;
     }
 
     // === GELÖSCHTE ELEMENTE ===
@@ -1466,6 +1585,7 @@
 
     // === INITIALISIERUNG ===
     document.addEventListener('DOMContentLoaded', () => {
+        toastContainer = document.getElementById('toast-container');
         loadCustomTools();
         renderHangar();
         renderCategoryInfo();
