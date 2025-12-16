@@ -70,6 +70,32 @@
 
         /* === Modal === */
         .tool-link .d-print-inline { color: #0d6efd !important; }
+        .orientation-highlight {
+            outline: 3px solid #0d6efd;
+            outline-offset: 3px;
+            box-shadow: 0 0 0 6px rgba(13, 110, 253, 0.2);
+            transition: outline-offset 0.2s ease, box-shadow 0.2s ease;
+        }
+        .orientation-onboarding-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #e7f1ff;
+            color: #0d6efd;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .orientation-tip-list li + li { margin-top: 6px; }
+        .orientation-modal-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .orientation-modal-footer .btn-group { flex-wrap: wrap; }
 
         /* === Toasts === */
         .toast-container { position: fixed; top: 1rem; right: 1rem; display: flex; flex-direction: column; gap: 0.5rem; z-index: 1080; pointer-events: none; }
@@ -133,7 +159,10 @@
             <div class="mb-3" aria-label="Kategorien im Überblick">
                 <div class="d-flex align-items-center justify-content-between mb-2">
                     <h6 class="mb-0 text-uppercase text-muted" style="letter-spacing: 0.5px; font-size: 0.75rem;">Kategorien im Überblick</h6>
-                    <span class="badge bg-light text-muted border"><i class="fas fa-compass text-primary me-1"></i> Orientierung</span>
+                    <button id="orientationButton" type="button" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#orientationModal">
+                        <i class="fas fa-compass"></i>
+                        <span>Orientierung</span>
+                    </button>
                 </div>
                 <div id="category-info-grid" class="d-flex flex-column gap-2"></div>
             </div>
@@ -173,8 +202,8 @@
                 <h3><i class="fas fa-plane-departure"></i> Mein Recherche-Cockpit</h3>
                 <div class="no-print">
                     <button class="btn btn-sm btn-warning me-2" onclick="resetCockpit()"><i class="fas fa-undo"></i> Reset</button>
-                    <button class="btn btn-sm btn-outline-primary me-2" onclick="exportConfiguration()"><i class="fas fa-download"></i> Export JSON</button>
-                    <button class="btn btn-sm btn-outline-primary me-2" onclick="triggerImport()"><i class="fas fa-upload"></i> Import JSON</button>
+                    <button class="btn btn-sm btn-outline-primary me-2" id="exportJsonButton" onclick="exportConfiguration()"><i class="fas fa-download"></i> Export JSON</button>
+                    <button class="btn btn-sm btn-outline-primary me-2" id="importJsonButton" onclick="triggerImport()"><i class="fas fa-upload"></i> Import JSON</button>
                     <input type="file" id="importJsonInput" class="d-none" accept="application/json" />
                     <button class="btn btn-sm btn-success" id="savePdfButton"><i class="fas fa-file-pdf"></i> Als PDF speichern</button>
                 </div>
@@ -248,6 +277,57 @@
                         <i class="fas fa-note-sticky"></i> Notiz hinzufügen
                     </button>
                     <div class="phase-col global-drop" id="phase-global" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="orientationModal" role="dialog" tabindex="-1" aria-labelledby="orientationModalLabel" aria-modal="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <p class="orientation-onboarding-tag mb-1"><i class="fas fa-compass"></i> Orientierung</p>
+                    <h5 class="modal-title" id="orientationModalLabel">Schnelle Hilfe & Onboarding</h5>
+                </div>
+                <button type="button" class="btn-close" aria-label="Schließen" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-md-7">
+                        <h6 class="fw-bold">Was kann ich hier tun?</h6>
+                        <ul class="orientation-tip-list ps-3">
+                            <li><strong>Drag & Drop:</strong> Ziehen Sie Tools am Griff <i class="fas fa-grip-lines-vertical text-muted"></i> vom Hangar in die Phasen.</li>
+                            <li><strong>Löschen:</strong> Entfernen Sie Tools über den roten Papierkorb-Button oder indem Sie sie in die Lösch-Zone ziehen.</li>
+                            <li><strong>Import & Export:</strong> Nutzen Sie die JSON-Buttons oben rechts, um Cockpit-Setups zu sichern oder zu teilen.</li>
+                            <li><strong>PDF / Drucken:</strong> Der PDF-Button öffnet den Druckdialog – wählen Sie dort „Als PDF speichern“.</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="border rounded p-3 h-100">
+                            <h6 class="fw-bold mb-2">Mini-Onboarding</h6>
+                            <p class="small text-muted mb-3">Markieren Sie nacheinander die wichtigsten Bereiche. Die Hervorhebung lässt sich jederzeit wechseln.</p>
+                            <div class="btn-group w-100" role="group" aria-label="Onboarding-Schritte">
+                                <button type="button" class="btn btn-outline-primary" data-onboarding-step="drag">
+                                    1. Ziehen
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" data-onboarding-step="delete">
+                                    2. Löschen
+                                </button>
+                                <button type="button" class="btn btn-outline-primary" data-onboarding-step="export">
+                                    3. Export/PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer orientation-modal-footer">
+                <span class="small text-muted">ESC schließt das Fenster. Fokus bleibt im Modal.</span>
+                <div class="btn-group" role="group" aria-label="Modalaktionen">
+                    <button type="button" class="btn btn-outline-secondary" id="resetOnboardingHighlights">Hervorhebungen zurücksetzen</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Schließen</button>
                 </div>
             </div>
         </div>
@@ -575,10 +655,14 @@
     const DELETE_ZONE_DEFAULT_TEXT = 'Aus dem Cockpit entfernen (Tool bleibt im Hangar verfügbar)';
     const DELETE_ZONE_CUSTOM_TEXT = 'Custom Tool endgültig löschen';
     const MAX_IMPORT_FILE_SIZE_BYTES = 2 * 1024 * 1024;
+    const ORIENTATION_HIGHLIGHT_CLASS = 'orientation-highlight';
 
     let pendingAiElement = null;
     let aiModal = null;
     let textModal = null;
+    let orientationModal = null;
+    let orientationFocusTrapCleanup = null;
+    let lastFocusedElement = null;
     let targetPhaseForNote = null;
     let deletedTools = [];
     let currentSearchTerm = '';
@@ -660,6 +744,65 @@
             type: toolData.type || 'tool',
             text: toolData.text || ''
         };
+    }
+
+    function trapFocusWithin(modalEl) {
+        if(!modalEl) return () => {};
+        const selectors = ['a[href]', 'button:not([disabled])', 'textarea:not([disabled])', 'input:not([disabled])', 'select:not([disabled])', '[tabindex]:not([tabindex="-1"])'];
+        const focusable = Array.from(modalEl.querySelectorAll(selectors.join(',')))
+            .filter(el => el.offsetParent !== null && !el.hasAttribute('aria-hidden'));
+
+        if(!focusable.length) return () => {};
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        const handleKeydown = (event) => {
+            if(event.key === 'Tab') {
+                if(event.shiftKey && document.activeElement === first) {
+                    event.preventDefault();
+                    last.focus();
+                } else if(!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
+            }
+
+            if(event.key === 'Escape') {
+                const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                if(modalInstance) modalInstance.hide();
+            }
+        };
+
+        modalEl.addEventListener('keydown', handleKeydown);
+        requestAnimationFrame(() => first.focus());
+
+        return () => modalEl.removeEventListener('keydown', handleKeydown);
+    }
+
+    const orientationOnboardingSteps = {
+        drag: ['.hangar-area', '.phase-col'],
+        delete: ['#delete-zone'],
+        export: ['#savePdfButton', '#exportJsonButton', '#importJsonButton']
+    };
+
+    function clearOrientationHighlights() {
+        document.querySelectorAll('.' + ORIENTATION_HIGHLIGHT_CLASS).forEach(el => {
+            el.classList.remove(ORIENTATION_HIGHLIGHT_CLASS);
+            el.removeAttribute('data-onboarding-step');
+        });
+    }
+
+    function applyOnboardingStep(stepKey) {
+        clearOrientationHighlights();
+        const targets = orientationOnboardingSteps[stepKey];
+        if(!targets) return;
+        targets.forEach(selector => {
+            document.querySelectorAll(selector).forEach(el => {
+                el.classList.add(ORIENTATION_HIGHLIGHT_CLASS);
+                el.setAttribute('data-onboarding-step', stepKey);
+            });
+        });
     }
 
     function updateDeleteZoneText(isCustomTool) {
@@ -1878,6 +2021,40 @@
         const customModalEl = document.getElementById('customToolModal');
         if(customModalEl) {
             customModalEl.addEventListener('hidden.bs.modal', () => resetCustomToolForm());
+        }
+
+        const orientationModalEl = document.getElementById('orientationModal');
+        if(orientationModalEl) {
+            orientationModal = new bootstrap.Modal(orientationModalEl, { backdrop: true, keyboard: true });
+
+            orientationModalEl.addEventListener('show.bs.modal', () => {
+                lastFocusedElement = document.activeElement;
+            });
+
+            orientationModalEl.addEventListener('shown.bs.modal', () => {
+                if(orientationFocusTrapCleanup) orientationFocusTrapCleanup();
+                orientationFocusTrapCleanup = trapFocusWithin(orientationModalEl);
+            });
+
+            orientationModalEl.addEventListener('hidden.bs.modal', () => {
+                if(orientationFocusTrapCleanup) {
+                    orientationFocusTrapCleanup();
+                    orientationFocusTrapCleanup = null;
+                }
+                clearOrientationHighlights();
+                if(lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+                    lastFocusedElement.focus();
+                }
+            });
+
+            orientationModalEl.querySelectorAll('[data-onboarding-step]').forEach(btn => {
+                btn.addEventListener('click', () => applyOnboardingStep(btn.dataset.onboardingStep));
+            });
+
+            const resetHighlightsBtn = document.getElementById('resetOnboardingHighlights');
+            if(resetHighlightsBtn) {
+                resetHighlightsBtn.addEventListener('click', clearOrientationHighlights);
+            }
         }
 
         document.getElementById('confirmAiUse').addEventListener('click', () => {
