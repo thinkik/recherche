@@ -12,7 +12,7 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; }
         .hangar-area { background: #ffffff; height: 100vh; overflow-y: auto; border-right: 1px solid #dee2e6; padding: 15px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1020; }
         .cockpit-area { padding: 20px; height: 100vh; overflow-y: auto; }
-        .cat-header { font-size: 0.75rem; font-weight: 800; color: #adb5bd; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+        .cat-header { font-size: 0.75rem; font-weight: 800; color: #5c6770; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px solid #e2e6ea; padding-bottom: 4px; }
         .phase-col { background: #eef2f7; border-radius: 12px; min-height: 65vh; padding: 10px; border: 2px dashed #cbd5e0; transition: background 0.3s; }
         .phase-col.drag-over { background: #dbeafe; border-color: #3b82f6; }
         .global-header { font-weight: 700; text-align: center; margin: 20px 0 10px; color: #0d6efd; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; }
@@ -57,7 +57,7 @@
         .badge-ai { background: #f3e8ff; color: #6f42c1; border: 1px solid #e0c3ff; }
         .badge-lib { background: #e8fff3; color: #0f5132; border: 1px solid #b6e2c8; }
         .badge-oa { background: #fff4e5; color: #d35400; border: 1px solid #f6d7b0; }
-        .tool-link { color: #adb5bd; margin-left: auto; padding: 2px 6px; border-radius: 4px; transition: 0.2s; }
+        .tool-link { color: #495057; margin-left: auto; padding: 2px 6px; border-radius: 4px; transition: 0.2s; }
         .tool-link:hover { background-color: #e9ecef; color: #0d6efd; }
         .tool-remove-btn { position: absolute; top: 6px; right: 6px; border: none; background: transparent; color: #6c757d; padding: 4px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
         .tool-remove-btn:hover, .tool-remove-btn:focus-visible { color: #dc3545; background: #f8d7da; }
@@ -121,7 +121,28 @@
         }
 
         /* === A11y === */
-        .tool-card:focus-visible, .delete-zone:focus-visible, .btn:focus-visible { outline: 2px solid #0d6efd; outline-offset: 2px; }
+        .tool-card:focus-visible, .delete-zone:focus-visible, .btn:focus-visible, .form-control:focus-visible, .form-select:focus-visible, .tool-link:focus-visible, .tool-info-btn:focus-visible, .edit-custom-btn:focus-visible, .tool-title-toggle:focus-visible {
+            outline: 3px solid #0a58ca;
+            outline-offset: 3px;
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.2);
+        }
+
+        .tool-info-btn {
+            border: none;
+            background: transparent;
+            color: #6c757d;
+            padding: 4px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            min-height: 32px;
+        }
+
+        .tool-info-btn:hover { background: #e9ecef; color: #0d6efd; }
+
+        .phase-col:focus-within { box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.35); border-color: #0d6efd; }
 
         /* === Responsive Board & Layout === */
         .cockpit-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: flex-end; }
@@ -156,7 +177,7 @@
 </head>
 <body>
 
-<div id="toast-container" class="toast-container no-print" aria-live="polite" aria-atomic="true"></div>
+<div id="toast-container" class="toast-container no-print" aria-live="polite" aria-atomic="true" role="region" aria-label="Systembenachrichtigungen"></div>
 
 <div class="container-fluid">
     <div class="row">
@@ -167,8 +188,10 @@
             Beide Marker erscheinen, falls ein Tool beides ist.</p>
 
             <div class="no-print mb-3">
-                <input type="text" id="toolSearchInput" class="form-control form-control-sm mb-2" placeholder="Tools durchsuchen...">
-                <select id="toolCategoryFilter" class="form-select form-select-sm">
+                <label class="form-label visually-hidden" for="toolSearchInput">Tools durchsuchen</label>
+                <input type="text" id="toolSearchInput" class="form-control form-control-sm mb-2" placeholder="Tools durchsuchen..." aria-label="Tools durchsuchen">
+                <label class="form-label visually-hidden" for="toolCategoryFilter">Kategorie filtern</label>
+                <select id="toolCategoryFilter" class="form-select form-select-sm" aria-label="Tools nach Kategorie filtern">
                     <option value="">Alle Kategorien</option>
                 </select>
             </div>
@@ -199,13 +222,13 @@
                 <button class="btn ki-check-btn w-100 mb-3" data-bs-toggle="modal" data-bs-target="#kiSourcesModal">
                     <i class="fas fa-shield-alt me-2"></i> KI & Quellen-Check
                 </button>
-                <div class="delete-zone" id="delete-zone">
+                <div class="delete-zone" id="delete-zone" role="region" aria-label="In diesen Bereich ziehen, um Tools zu entfernen" tabindex="0">
                     <i class="fas fa-trash"></i> <span id="delete-zone-text">Aus dem Cockpit entfernen (Tool bleibt im Hangar verfügbar)</span>
                 </div>
                 <div class="mt-3 deleted-wrapper">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <div class="fw-bold"><i class="fas fa-trash-undo me-2"></i>Gelöschte Tools</div>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="restoreAllDeleted()" title="Alle zurückholen">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="restoreAllDeleted()" title="Alle zurückholen" aria-label="Alle gelöschten Tools wiederherstellen">
                             <i class="fas fa-undo"></i>
                         </button>
                     </div>
@@ -243,7 +266,7 @@
                     <button class="btn btn-sm btn-outline-secondary w-100 mb-2 no-print" onclick="openTextModal('phase-1')">
                         <i class="fas fa-note-sticky"></i> Notiz hinzufügen
                     </button>
-                    <div class="phase-col" id="phase-1" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                    <div class="phase-col" id="phase-1" role="region" aria-label="Phase 1: Thema eingrenzen" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                 </div>
 
                 <div class="col">
@@ -251,7 +274,7 @@
                     <button class="btn btn-sm btn-outline-secondary w-100 mb-2 no-print" onclick="openTextModal('phase-2')">
                         <i class="fas fa-note-sticky"></i> Notiz hinzufügen
                     </button>
-                    <div class="phase-col" id="phase-2" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                    <div class="phase-col" id="phase-2" role="region" aria-label="Phase 2: Suchbegriffe" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                 </div>
 
                 <div class="col">
@@ -259,7 +282,7 @@
                     <button class="btn btn-sm btn-outline-secondary w-100 mb-2 no-print" onclick="openTextModal('phase-3')">
                         <i class="fas fa-note-sticky"></i> Notiz hinzufügen
                     </button>
-                    <div class="phase-col" id="phase-3" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                    <div class="phase-col" id="phase-3" role="region" aria-label="Phase 3: Datenbank-Suche" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                 </div>
 
                 <div class="col">
@@ -267,7 +290,7 @@
                     <button class="btn btn-sm btn-outline-secondary w-100 mb-2 no-print" onclick="openTextModal('phase-4')">
                         <i class="fas fa-note-sticky"></i> Notiz hinzufügen
                     </button>
-                    <div class="phase-col" id="phase-4" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                    <div class="phase-col" id="phase-4" role="region" aria-label="Phase 4: Literatur bewerten" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                 </div>
 
                 <div class="col">
@@ -275,7 +298,7 @@
                     <button class="btn btn-sm btn-outline-secondary w-100 mb-2 no-print" onclick="openTextModal('phase-5')">
                         <i class="fas fa-note-sticky"></i> Notiz hinzufügen
                     </button>
-                    <div class="phase-col" id="phase-5" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                    <div class="phase-col" id="phase-5" role="region" aria-label="Phase 5: Literatur lesen" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                 </div>
 
                 <div class="col">
@@ -283,7 +306,7 @@
                     <button class="btn btn-sm btn-outline-secondary w-100 mb-2 no-print" onclick="openTextModal('phase-6')">
                         <i class="fas fa-note-sticky"></i> Notiz hinzufügen
                     </button>
-                    <div class="phase-col" id="phase-6" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                    <div class="phase-col" id="phase-6" role="region" aria-label="Phase 6: Text schreiben" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                 </div>
 
             </div>
@@ -295,7 +318,7 @@
                     <button class="btn btn-sm btn-outline-secondary w-100 mb-2 no-print" onclick="openTextModal('phase-global')">
                         <i class="fas fa-note-sticky"></i> Notiz hinzufügen
                     </button>
-                    <div class="phase-col global-drop" id="phase-global" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                    <div class="phase-col global-drop" id="phase-global" role="region" aria-label="Gesamter Rechercheprozess" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                 </div>
             </div>
         </div>
@@ -353,19 +376,21 @@
     </div>
 </div>
 
-<div class="modal fade" id="aiWarningModal" tabindex="-1" data-bs-backdrop="static">
+<div class="modal fade" id="aiWarningModal" tabindex="-1" data-bs-backdrop="static" role="alertdialog" aria-modal="true" aria-labelledby="aiWarningModalTitle" aria-describedby="aiWarningModalDesc">
     <div class="modal-dialog border-danger">
         <div class="modal-content">
             <div class="modal-header bg-warning">
-                <h5 class="modal-title"><i class="fas fa-robot"></i> Co-Pilot Warnung (KI)</h5>
+                <h5 class="modal-title" id="aiWarningModalTitle"><i class="fas fa-robot"></i> Co-Pilot Warnung (KI)</h5>
             </div>
             <div class="modal-body">
-                <p class="fw-bold">Sie setzen Künstliche Intelligenz ein.</p>
-                <div class="alert alert-light border">
+                <div id="aiWarningModalDesc">
+                    <p class="fw-bold">Sie setzen Künstliche Intelligenz ein.</p>
+                    <div class="alert alert-light border">
                     <i class="fas fa-exclamation-triangle text-warning"></i> 
                     KI-Modelle können Fakten halluzinieren und Quellen erfinden.
+                    </div>
+                    <p>Verpflichten Sie sich, alle KI-Ergebnisse mit Primärquellen zu verifizieren?</p>
                 </div>
-                <p>Verpflichten Sie sich, alle KI-Ergebnisse mit Primärquellen zu verifizieren?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="cancelAiUse">Abbrechen</button>
@@ -375,16 +400,16 @@
     </div>
 </div>
 
-<div class="modal fade" id="textNoteModal" tabindex="-1">
+<div class="modal fade" id="textNoteModal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="textNoteModalTitle">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-note-sticky me-2"></i>Notiz hinzufügen</h5>
+                <h5 class="modal-title" id="textNoteModalTitle"><i class="fas fa-note-sticky me-2"></i>Notiz hinzufügen</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <input type="text" id="noteTitle" class="form-control mb-2" placeholder="Titel (optional)">
-                <textarea id="noteContent" class="form-control" rows="4" placeholder="Ihre Notiz"></textarea>
+                <input type="text" id="noteTitle" class="form-control mb-2" placeholder="Titel (optional)" aria-label="Titel der Notiz">
+                <textarea id="noteContent" class="form-control" rows="4" placeholder="Ihre Notiz" aria-label="Inhalt der Notiz"></textarea>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="addTextBlock()">Speichern</button>
@@ -393,7 +418,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="customToolModal" tabindex="-1">
+<div class="modal fade" id="customToolModal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="customToolModalTitle">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -401,9 +426,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <input type="text" id="customToolName" class="form-control mb-2" placeholder="Name (z.B. Experten-Interview)">
-                <input type="text" id="customToolInfo" class="form-control mb-2" placeholder="Beschreibung für Mouseover">
-                <input type="text" id="customToolUrl" class="form-control mb-2" placeholder="URL (optional)">
+                <input type="text" id="customToolName" class="form-control mb-2" placeholder="Name (z.B. Experten-Interview)" aria-label="Name des Tools">
+                <input type="text" id="customToolInfo" class="form-control mb-2" placeholder="Beschreibung für Mouseover" aria-label="Beschreibung des Tools">
+                <input type="text" id="customToolUrl" class="form-control mb-2" placeholder="URL (optional)" aria-label="URL des Tools">
                 <div class="mb-2">
                     <label for="customToolCategory" class="form-label">Bereich (Mehrfachauswahl möglich)</label>
                     <select id="customToolCategory" class="form-select" multiple size="6"></select>
@@ -428,11 +453,11 @@
     </div>
 </div>
 
-<div class="modal fade" id="licensedDbModal" tabindex="-1">
+<div class="modal fade" id="licensedDbModal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="licensedDbModalLabel" aria-describedby="licensedDbDescription">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><i class="fas fa-database me-2"></i>Lizenzierte Datenbank ergänzen</h5>
+                <h5 class="modal-title" id="licensedDbModalLabel"><i class="fas fa-database me-2"></i>Lizenzierte Datenbank ergänzen</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -457,18 +482,18 @@
     </div>
 </div>
 
-<div class="modal fade" id="kiSourcesModal" tabindex="-1">
+<div class="modal fade" id="kiSourcesModal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="kiSourcesModalLabel" aria-describedby="kiSourcesModalDesc">
     <div class="modal-dialog modal-lg">
         <div class="modal-content border border-warning shadow-lg">
             <div class="modal-header bg-warning-subtle">
-                <h5 class="modal-title">
+                <h5 class="modal-title" id="kiSourcesModalLabel">
                     <i class="fas fa-shield-alt text-warning me-2"></i>
                     Reflektierter Umgang mit KI & Quellen
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="ki-callout d-flex align-items-start gap-3 mb-3">
+                <div class="ki-callout d-flex align-items-start gap-3 mb-3" id="kiSourcesModalDesc">
                     <div class="icon-wrap"><i class="fas fa-triangle-exclamation"></i></div>
                     <div>
                         <div class="fw-bold text-warning mb-1">Verantwortungsvoll entscheiden</div>
@@ -920,6 +945,8 @@
         toastEl.className = `toast-item toast-${normalizedType}`;
         toastEl.setAttribute('role', normalizedType === 'error' ? 'alert' : 'status');
         toastEl.setAttribute('aria-live', normalizedType === 'error' ? 'assertive' : 'polite');
+        toastEl.setAttribute('aria-label', `${normalizedType === 'error' ? 'Fehler' : 'Hinweis'}: ${safeMessage}`);
+        toastEl.tabIndex = 0;
 
         const iconMap = { success: 'fa-circle-check', info: 'fa-circle-info', error: 'fa-triangle-exclamation' };
         const titleMap = { success: 'Erfolg', info: 'Hinweis', error: 'Fehler' };
@@ -970,6 +997,12 @@
             }
         });
 
+        toastEl.addEventListener('keydown', (event) => {
+            if(event.key === 'Escape') {
+                removeToastElement(toastEl);
+            }
+        });
+
         toastEl.appendChild(icon);
         toastEl.appendChild(contentWrap);
         toastEl.appendChild(closeBtn);
@@ -1016,6 +1049,7 @@
             restoreBtn.className = 'btn btn-sm btn-outline-success';
             restoreBtn.innerHTML = '<i class="fas fa-undo"></i>';
             restoreBtn.title = 'Tool zurück in den Hangar';
+            restoreBtn.setAttribute('aria-label', `Tool wiederherstellen: ${tool.name}`);
             restoreBtn.addEventListener('click', () => restoreDeletedTool(index));
 
             item.appendChild(restoreBtn);
@@ -1286,6 +1320,8 @@
             div.dataset.text = toolData.text;
         }
 
+        div.tabIndex = 0;
+
         const primaryCat = Array.isArray(categoriesForTool) && categoriesForTool.length ? categoriesForTool[0] : null;
         const iconClass = (primaryCat && categories[primaryCat] && categories[primaryCat].icon) ? categories[primaryCat].icon : 'fa-tools';
 
@@ -1320,6 +1356,7 @@
             const plainInfo = stripHtml(rawInfo);
             const safeInfo = escapeHtml(rawInfo || '');
             const safeUrl = escapeHtml(toolData.url || '#');
+            const infoLabel = `Zusatzinformation zu ${safeName}`;
 
             div.innerHTML = `
                 <div class="tool-icon"><i class="fas ${iconClass}"></i></div>
@@ -1330,9 +1367,11 @@
                     </div>
                     <div class="small text-muted tool-category">${categoryList}</div>
                 </div>
-                <i class="fas fa-info-circle text-muted tool-info-icon" style="cursor:help;" data-bs-toggle="tooltip" title="${safeInfo}"></i>
+                <button type="button" class="tool-info-btn tool-info-icon" data-bs-toggle="tooltip" title="${safeInfo}" aria-label="${infoLabel}">
+                    <i class="fas fa-info-circle"></i>
+                </button>
                 ${allowEdit ? '<button type="button" class="edit-custom-btn" title="Bearbeiten"><i class="fas fa-pen"></i></button>' : ''}
-                <a href="${safeUrl}" target="_blank" class="tool-link" onclick="event.stopPropagation()" title="Tool öffnen">
+                <a href="${safeUrl}" target="_blank" class="tool-link" onclick="event.stopPropagation()" title="Tool öffnen" aria-label="Tool öffnen: ${safeName}">
                     <i class="fas fa-external-link-alt"></i>
                     <span class="d-none d-print-inline small text-decoration-underline text-primary">${safeUrl}</span>
                 </a>
@@ -1348,6 +1387,7 @@
             if(allowEdit) {
                 const editBtn = div.querySelector('.edit-custom-btn');
                 if(editBtn) {
+                    editBtn.setAttribute('aria-label', 'Eigenes Tool bearbeiten');
                     editBtn.setAttribute('draggable', 'false');
                     editBtn.addEventListener('mousedown', (event) => event.stopPropagation());
                     editBtn.addEventListener('click', (event) => {
@@ -1362,6 +1402,7 @@
         removeBtn.type = 'button';
         removeBtn.className = 'tool-remove-btn';
         removeBtn.setAttribute('aria-label', 'Tool entfernen');
+        removeBtn.title = 'Tool entfernen';
         removeBtn.innerHTML = '<i class="fas fa-times"></i>';
         removeBtn.setAttribute('draggable', 'false');
         removeBtn.addEventListener('mousedown', (event) => event.stopPropagation());
@@ -1436,7 +1477,30 @@
     function initTooltips() {
         document.querySelectorAll('.tooltip').forEach(t => t.remove());
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl, { html: tooltipTriggerEl.getAttribute('data-bs-html') === 'true' }));
+        tooltipTriggerList.forEach((tooltipTriggerEl) => {
+            const existing = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+            if(existing) existing.dispose();
+
+            const tooltip = new bootstrap.Tooltip(tooltipTriggerEl, {
+                html: tooltipTriggerEl.getAttribute('data-bs-html') === 'true',
+                trigger: 'manual'
+            });
+
+            if(tooltipTriggerEl.dataset.tooltipBound === 'true') return;
+
+            const showTooltip = () => tooltip.show();
+            const hideTooltip = () => tooltip.hide();
+
+            tooltipTriggerEl.addEventListener('focus', showTooltip);
+            tooltipTriggerEl.addEventListener('blur', hideTooltip);
+            tooltipTriggerEl.addEventListener('mouseenter', showTooltip);
+            tooltipTriggerEl.addEventListener('mouseleave', hideTooltip);
+            tooltipTriggerEl.addEventListener('keydown', (event) => {
+                if(event.key === 'Escape') hideTooltip();
+            });
+
+            tooltipTriggerEl.dataset.tooltipBound = 'true';
+        });
     }
 
     // === DRAG & DROP ===
