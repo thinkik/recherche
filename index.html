@@ -90,9 +90,11 @@
         @media print {
             .hangar-area, .no-print, .delete-zone, .modal { display: none !important; }
             .cockpit-area { width: 100% !important; height: auto !important; overflow: visible; padding: 0; }
-            .phase-col { border: 1px solid #ccc; min-height: 150px; page-break-inside: avoid; }
-            .row { display: flex !important; flex-wrap: nowrap !important; }
-            .col, .col-md-2 { flex: 1 !important; width: calc(100% / 6) !important; }
+            .phase-col { border: 1px solid #ccc; min-height: 150px; page-break-inside: avoid; break-inside: avoid; padding: 10px; }
+            .phase-header { background: #f1f3f5; padding: 8px; border-bottom: 1px solid #dee2e6; border-radius: 6px 6px 0 0; }
+            .row { display: flex !important; flex-wrap: wrap !important; gap: 12px !important; }
+            .cockpit-area .row.row-cols-1.row-cols-md-6.g-2 > .col { flex: 1 1 45% !important; max-width: 50% !important; min-width: 240px; }
+            .cockpit-area .row.g-2 > .col-12 { flex: 1 1 100% !important; max-width: 100% !important; }
             body { background: white; -webkit-print-color-adjust: exact; }
             .tool-link { display: inline-flex !important; align-items: center; gap: 4px; color: #0d6efd !important; text-decoration: underline !important; visibility: visible !important; opacity: 1 !important; }
         }
@@ -163,7 +165,7 @@
                     <button class="btn btn-sm btn-outline-primary me-2" onclick="exportConfiguration()"><i class="fas fa-download"></i> Export JSON</button>
                     <button class="btn btn-sm btn-outline-primary me-2" onclick="triggerImport()"><i class="fas fa-upload"></i> Import JSON</button>
                     <input type="file" id="importJsonInput" class="d-none" accept="application/json" />
-                    <button class="btn btn-sm btn-success" onclick="window.print()"><i class="fas fa-file-pdf"></i> Als PDF speichern</button>
+                    <button class="btn btn-sm btn-success" id="savePdfButton"><i class="fas fa-file-pdf"></i> Als PDF speichern</button>
                 </div>
             </div>
 
@@ -1510,6 +1512,16 @@
         });
     }
 
+    // === PRINT ===
+    function handlePrintClick() {
+        showToast('PDF wird erstellt…', 'info', 5000);
+        showToast('Im Druckdialog als PDF speichern.', 'info', 5000);
+        setTimeout(() => {
+            window.print();
+            showToast('PDF wurde erstellt.', 'success', 4000);
+        }, 120);
+    }
+
     // === IMPORT/EXPORT & RESET ===
     function exportConfiguration() {
         let cockpitState = {};
@@ -1654,6 +1666,11 @@
 
         deleteZoneTextElement = document.getElementById('delete-zone-text');
         resetDeleteZoneText();
+
+        const savePdfButton = document.getElementById('savePdfButton');
+        if(savePdfButton) {
+            savePdfButton.addEventListener('click', handlePrintClick);
+        }
 
         const searchInput = document.getElementById('toolSearchInput');
         if(searchInput) {
