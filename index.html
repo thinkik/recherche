@@ -109,6 +109,49 @@
         .deleted-item .meta { color: #6c757d; font-size: 0.8rem; }
         .deleted-empty { color: #adb5bd; font-style: italic; font-size: 0.9rem; }
 
+        /* KI & Quellen Check */
+        .ki-check-btn {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            box-shadow: 0 6px 14px rgba(243, 156, 18, 0.3);
+            border: none;
+        }
+        .ki-check-btn:hover {
+            color: #fff;
+            background: linear-gradient(135deg, #ffa726, #e67e22);
+            box-shadow: 0 8px 18px rgba(243, 156, 18, 0.45);
+            transform: translateY(-1px);
+        }
+        .ki-callout {
+            border: 1px solid #ffeeba;
+            background: #fff8e1;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .ki-callout .icon-wrap {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: #fff3cd;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #e67e22;
+            box-shadow: inset 0 0 0 1px #ffe8a1;
+        }
+        .ki-checklist .list-group-item {
+            border: none;
+            border-bottom: 1px dashed #f1c40f;
+            background: transparent;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .ki-checklist .list-group-item:last-child {
+            border-bottom: none;
+        }
+
         /* Kategorie-Infos */
         .category-info-card {
             border: 1px solid #e5e7eb;
@@ -189,6 +232,9 @@
             </button>
             
             <div class="mt-auto no-print">
+                <button class="btn ki-check-btn w-100 mb-3" data-bs-toggle="modal" data-bs-target="#kiSourcesModal">
+                    <i class="fas fa-shield-alt me-2"></i> KI & Quellen-Check
+                </button>
                 <div class="delete-zone" id="delete-zone">
                     <i class="fas fa-trash"></i> Hierher ziehen zum Löschen
                 </div>
@@ -380,6 +426,131 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="addLicensedDatabase()">Zum Hangar hinzufügen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="kiSourcesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border border-warning shadow-lg">
+            <div class="modal-header bg-warning-subtle">
+                <h5 class="modal-title">
+                    <i class="fas fa-shield-alt text-warning me-2"></i>
+                    Reflektierter Umgang mit KI & Quellen
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="ki-callout d-flex align-items-start gap-3 mb-3">
+                    <div class="icon-wrap"><i class="fas fa-triangle-exclamation"></i></div>
+                    <div>
+                        <div class="fw-bold text-warning mb-1">Verantwortungsvoll entscheiden</div>
+                        <div class="text-muted small">Nutzen Sie KI nur, wenn Sie Quellen prüfen, Rechte klären und transparent kennzeichnen. Dieser Check hilft, Risiken früh zu erkennen.</div>
+                    </div>
+                </div>
+
+                <ul class="nav nav-pills" id="kiSourcesTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="ki-reflexion-tab" data-bs-toggle="pill" data-bs-target="#ki-reflexion" type="button" role="tab" aria-controls="ki-reflexion" aria-selected="true">
+                            <i class="fas fa-brain me-1"></i> KI-Reflexion
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="craap-tab" data-bs-toggle="pill" data-bs-target="#craap" type="button" role="tab" aria-controls="craap" aria-selected="false">
+                            <i class="fas fa-clipboard-check me-1"></i> CRAAP-Test
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content mt-3">
+                    <div class="tab-pane fade show active" id="ki-reflexion" role="tabpanel" aria-labelledby="ki-reflexion-tab">
+                        <div class="ki-callout mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <i class="fas fa-lightbulb text-warning"></i>
+                                <span class="fw-semibold">KI-Reflexion</span>
+                            </div>
+                            <p class="mb-2 small text-muted">Gehen Sie diese Fragen vor Nutzung von KI-basierten Ergebnissen durch.</p>
+                            <ul class="list-group ki-checklist">
+                                <li class="list-group-item">
+                                    <div class="d-flex align-items-start gap-2">
+                                        <i class="fas fa-shield-check text-warning mt-1"></i>
+                                        <div>
+                                            <div class="fw-semibold">Habe ich die Fakten verifiziert?</div>
+                                            <div class="text-muted small">Prüfen Sie jede Aussage mit Primärquellen oder offiziellen Daten.</div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="d-flex align-items-start gap-2">
+                                        <i class="fas fa-scale-balanced text-warning mt-1"></i>
+                                        <div>
+                                            <div class="fw-semibold">Darf ich die Ergebnisse verwenden?</div>
+                                            <div class="text-muted small">Klären Sie Urheberrecht, Lizenzbedingungen und Datenschutz.</div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="d-flex align-items-start gap-2">
+                                        <i class="fas fa-highlighter text-warning mt-1"></i>
+                                        <div>
+                                            <div class="fw-semibold">Wie muss ich das kennzeichnen?</div>
+                                            <div class="text-muted small">Dokumentieren Sie Prompts, Tools und Versionen transparent.</div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="craap" role="tabpanel" aria-labelledby="craap-tab">
+                        <div class="ki-callout">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <i class="fas fa-list-check text-warning"></i>
+                                <span class="fw-semibold">CRAAP-Test (Checkliste)</span>
+                            </div>
+                            <p class="mb-2 small text-muted">Bewerten Sie Quellen systematisch, bevor Sie sie übernehmen.</p>
+                            <ul class="list-group ki-checklist">
+                                <li class="list-group-item">
+                                    <div class="d-flex align-items-start gap-2">
+                                        <i class="fas fa-clock text-warning mt-1"></i>
+                                        <div><div class="fw-semibold">Currency</div><div class="text-muted small">Wie aktuell sind Daten und Publikation?</div></div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="d-flex align-items-start gap-2">
+                                        <i class="fas fa-bullseye text-warning mt-1"></i>
+                                        <div><div class="fw-semibold">Relevance</div><div class="text-muted small">Passt der Inhalt genau zu Ihrer Fragestellung?</div></div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="d-flex align-items-start gap-2">
+                                        <i class="fas fa-user-tie text-warning mt-1"></i>
+                                        <div><div class="fw-semibold">Authority</div><div class="text-muted small">Wer steht hinter der Quelle und ist sie qualifiziert?</div></div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="d-flex align-items-start gap-2">
+                                        <i class="fas fa-check-double text-warning mt-1"></i>
+                                        <div><div class="fw-semibold">Accuracy</div><div class="text-muted small">Sind Aussagen belegt, konsistent und nachvollziehbar?</div></div>
+                                    </div>
+                                </li>
+                                <li class="list-group-item">
+                                    <div class="d-flex align-items-start gap-2">
+                                        <i class="fas fa-bullhorn text-warning mt-1"></i>
+                                        <div><div class="fw-semibold">Purpose</div><div class="text-muted small">Warum existiert die Quelle? Information, Verkauf, Meinung?</div></div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-muted small me-auto d-flex align-items-center gap-2">
+                    <i class="fas fa-circle-exclamation text-warning"></i>
+                    Dokumentieren Sie Entscheidungen in Ihren Notizen.
+                </div>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Schließen</button>
             </div>
         </div>
     </div>
