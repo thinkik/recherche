@@ -50,6 +50,8 @@
         .badge-oa { background: #fff4e5; color: #d35400; border: 1px solid #f6d7b0; }
         .tool-link { color: #adb5bd; margin-left: auto; padding: 2px 6px; border-radius: 4px; transition: 0.2s; }
         .tool-link:hover { background-color: #e9ecef; color: #0d6efd; }
+        .tool-remove-btn { position: absolute; top: 6px; right: 6px; border: none; background: transparent; color: #6c757d; padding: 4px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
+        .tool-remove-btn:hover, .tool-remove-btn:focus-visible { color: #dc3545; background: #f8d7da; }
 
         /* === Buttons === */
         .edit-custom-btn { border: none; background: transparent; color: #6c757d; padding: 2px 6px; }
@@ -658,6 +660,56 @@
         updateDeleteZoneText(false);
     }
 
+    function buildToolDataFromCard(cardEl) {
+        if(!cardEl) return null;
+        const cats = cardEl.dataset.cats ? cardEl.dataset.cats.split('|').filter(Boolean) : [];
+        return {
+            id: cardEl.dataset.baseId || cardEl.id,
+            name: cardEl.dataset.name || (cardEl.querySelector('.fw-bold') ? cardEl.querySelector('.fw-bold').innerText : 'Tool'),
+            info: cardEl.dataset.info || '',
+            url: cardEl.dataset.url || '#',
+            cats: cats.length ? cats : ['Organize & Cite'],
+            isAi: cardEl.dataset.isAi === '1' || cardEl.dataset.isAi === 'true',
+            isLib: cardEl.dataset.isLib === '1' || cardEl.dataset.isLib === 'true',
+            isOA: cardEl.dataset.isOa === '1' || cardEl.dataset.isOa === 'true',
+            isCustom: cardEl.dataset.isCustom === '1' || cardEl.dataset.isCustom === 'true',
+            type: cardEl.dataset.type || 'tool',
+            text: cardEl.dataset.text || '',
+            uniqueId: cardEl.id
+        };
+    }
+
+    function handleCardRemoval(cardEl) {
+        if(!cardEl) return;
+        const parent = cardEl.parentElement;
+        const origin = parent && dropTargets.includes(parent.id) ? 'cockpit' : 'hangar';
+        const toolData = buildToolDataFromCard(cardEl);
+        if(!toolData) return;
+
+        cardEl.remove();
+
+        if(pendingAiElement === cardEl) {
+            pendingAiElement = null;
+        }
+
+        if(origin === 'cockpit') {
+            addToDeleted(toolData);
+            saveState();
+        } else {
+            if(toolData.isCustom) {
+                const index = initialTools.findIndex(t => t.id === toolData.id);
+                if(index >= 0) initialTools.splice(index, 1);
+                document.querySelectorAll(`[data-base-id="${toolData.id}"]`).forEach(el => {
+                    if(el !== cardEl) el.remove();
+                });
+                saveCustomTools();
+            }
+            addToDeleted(toolData);
+        }
+
+        showToast('Tool entfernt (in \\'Gelöschte Tools\\' wiederherstellbar).', 'info');
+    }
+
     // === TOASTS ===
     function getToastContainer() {
         if(toastContainer && document.body.contains(toastContainer)) return toastContainer;
@@ -1132,6 +1184,19 @@
                 }
             }
         }
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'tool-remove-btn';
+        removeBtn.setAttribute('aria-label', 'Tool entfernen');
+        removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        removeBtn.setAttribute('draggable', 'false');
+        removeBtn.addEventListener('mousedown', (event) => event.stopPropagation());
+        removeBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            handleCardRemoval(div);
+        });
+        div.appendChild(removeBtn);
 
         setTimeout(() => initTooltips(), 100);
 
