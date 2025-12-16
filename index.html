@@ -8,185 +8,68 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
+        /* === Layout === */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; }
-        
-        /* Layout Styles */
         .hangar-area { background: #ffffff; height: 100vh; overflow-y: auto; border-right: 1px solid #dee2e6; padding: 15px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
         .cockpit-area { padding: 20px; height: 100vh; overflow-y: auto; }
-        
-        /* Category Header */
-        .cat-header {
-            font-size: 0.75rem; font-weight: 800; color: #adb5bd; text-transform: uppercase; 
-            letter-spacing: 1px; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px;
-        }
+        .cat-header { font-size: 0.75rem; font-weight: 800; color: #adb5bd; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+        .phase-col { background: #eef2f7; border-radius: 12px; min-height: 65vh; padding: 10px; border: 2px dashed #cbd5e0; transition: background 0.3s; }
+        .phase-col.drag-over { background: #dbeafe; border-color: #3b82f6; }
+        .global-header { font-weight: 700; text-align: center; margin: 20px 0 10px; color: #0d6efd; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; }
+        .global-drop { min-height: 160px; background: #e8f4ff; border-color: #0d6efd99; box-shadow: inset 0 0 0 1px #0d6efd33; }
+        .global-drop.drag-over { background: #d0e7ff; border-color: #0d6efd; }
+        .phase-header { font-weight: 700; text-align: center; margin-bottom: 15px; color: #495057; font-size: 0.85rem; min-height: 40px; display: flex; align-items: center; justify-content: center; }
+        .step-number { background: #6c757d; color: white; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; margin-right: 6px; font-size: 0.75rem; }
+        .delete-zone { margin-top: 20px; border: 2px solid #dc3545; color: #dc3545; border-radius: 8px; padding: 15px; text-align: center; border-style: dotted; transition: 0.2s; }
+        .delete-zone.drag-over { background: #dc3545; color: white; transform: scale(1.02); }
+        .deleted-wrapper { border: 1px dashed #ced4da; border-radius: 8px; padding: 10px; background: #f8f9fa; }
+        .deleted-item { background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 6px 8px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.9rem; }
+        .deleted-item:last-child { margin-bottom: 0; }
+        .deleted-item .meta { color: #6c757d; font-size: 0.8rem; }
+        .deleted-empty { color: #adb5bd; font-style: italic; font-size: 0.9rem; }
+        .category-info-card { border: 1px solid #e5e7eb; background: #f8fafc; border-radius: 8px; padding: 8px 10px; display: flex; gap: 10px; align-items: flex-start; }
+        .category-info-card .icon-wrap { width: 32px; height: 32px; border-radius: 6px; background: #e9ecef; display: inline-flex; align-items: center; justify-content: center; color: #0d6efd; }
+        .category-info-card h6 { margin: 0; font-size: 0.95rem; }
+        .category-info-card p { margin: 2px 0 0 0; color: #495057; font-size: 0.9rem; line-height: 1.3; }
+        .ki-callout { border: 1px solid #ffeeba; background: #fff8e1; border-radius: 8px; padding: 12px; }
+        .ki-callout .icon-wrap { width: 38px; height: 38px; border-radius: 8px; background: #fff3cd; display: inline-flex; align-items: center; justify-content: center; color: #e67e22; box-shadow: inset 0 0 0 1px #ffe8a1; }
+        .ki-checklist .list-group-item { border: none; border-bottom: 1px dashed #f1c40f; background: transparent; padding-left: 0; padding-right: 0; }
+        .ki-checklist .list-group-item:last-child { border-bottom: none; }
 
-        /* Tool Card Styles */
-        .tool-card {
-            background: white; border: 1px solid #e0e0e0; border-radius: 6px;
-            padding: 8px; margin-bottom: 8px; cursor: grab;
-            display: flex; align-items: center; gap: 8px;
-            transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            font-size: 0.9rem; position: relative;
-        }
+        /* === Cards === */
+        .tool-card { background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 8px; margin-bottom: 8px; cursor: grab; display: flex; align-items: center; gap: 8px; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05); font-size: 0.9rem; position: relative; }
         .tool-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-color: #0d6efd; z-index: 10; }
         .tool-card:active { cursor: grabbing; }
-        
         .tool-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 4px; color: #555; font-size: 0.8rem; }
-        
-        /* Special Status Colors */
-        .is-ai { box-shadow: inset 3px 0 0 #8e44ad; } /* Lila für KI */
-        .is-library { box-shadow: inset 3px 0 0 #198754; } /* Grün für Bibliothek */
+        .is-ai { box-shadow: inset 3px 0 0 #8e44ad; }
+        .is-library { box-shadow: inset 3px 0 0 #198754; }
         .is-ai.is-library { box-shadow: inset 3px 0 0 #8e44ad, inset 6px 0 0 #198754; }
-
         .status-badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 8px; }
         .badge-ai { background: #f3e8ff; color: #6f42c1; border: 1px solid #e0c3ff; }
         .badge-lib { background: #e8fff3; color: #0f5132; border: 1px solid #b6e2c8; }
         .badge-oa { background: #fff4e5; color: #d35400; border: 1px solid #f6d7b0; }
-        .edit-custom-btn { border: none; background: transparent; color: #6c757d; padding: 2px 6px; }
-        .edit-custom-btn:hover { color: #0d6efd; }
-
-        /* Link Button on Card */
-        .tool-link {
-            color: #adb5bd; margin-left: auto; padding: 2px 6px; border-radius: 4px; transition: 0.2s;
-        }
+        .tool-link { color: #adb5bd; margin-left: auto; padding: 2px 6px; border-radius: 4px; transition: 0.2s; }
         .tool-link:hover { background-color: #e9ecef; color: #0d6efd; }
 
-        /* Phase Columns (6 Columns) */
-        .phase-col {
-            background: #eef2f7; border-radius: 12px; min-height: 65vh;
-            padding: 10px; border: 2px dashed #cbd5e0; transition: background 0.3s;
-        }
-        .phase-col.drag-over { background: #dbeafe; border-color: #3b82f6; }
+        /* === Buttons === */
+        .edit-custom-btn { border: none; background: transparent; color: #6c757d; padding: 2px 6px; }
+        .edit-custom-btn:hover { color: #0d6efd; }
+        .ki-check-btn { background: linear-gradient(135deg, #f39c12, #e67e22); color: #fff; font-weight: 700; letter-spacing: 0.3px; box-shadow: 0 6px 14px rgba(243, 156, 18, 0.3); border: none; }
+        .ki-check-btn:hover { color: #fff; background: linear-gradient(135deg, #ffa726, #e67e22); box-shadow: 0 8px 18px rgba(243, 156, 18, 0.45); transform: translateY(-1px); }
 
-        /* Global Drop Zone */
-        .global-header {
-            font-weight: 700; text-align: center; margin: 20px 0 10px;
-            color: #0d6efd; font-size: 0.9rem; display: flex; align-items: center; justify-content: center;
-        }
-        .global-drop {
-            min-height: 160px; background: #e8f4ff; border-color: #0d6efd99;
-            box-shadow: inset 0 0 0 1px #0d6efd33;
-        }
-        .global-drop.drag-over { background: #d0e7ff; border-color: #0d6efd; }
-        
-        .phase-header { 
-            font-weight: 700; text-align: center; margin-bottom: 15px; 
-            color: #495057; font-size: 0.85rem; min-height: 40px; 
-            display: flex; align-items: center; justify-content: center;
-        }
-        .step-number { 
-            background: #6c757d; color: white; border-radius: 50%; width: 20px; height: 20px; 
-            display: inline-flex; align-items: center; justify-content: center; margin-right: 6px; font-size: 0.75rem;
-        }
+        /* === Modal === */
+        .tool-link .d-print-inline { color: #0d6efd !important; }
 
-        /* Delete Area */
-        .delete-zone {
-            margin-top: 20px; border: 2px solid #dc3545; color: #dc3545;
-            border-radius: 8px; padding: 15px; text-align: center; border-style: dotted; transition: 0.2s;
-        }
-        .delete-zone.drag-over { background: #dc3545; color: white; transform: scale(1.02); }
+        /* === Toasts === */
+        /* (Derzeit keine Toasts im Einsatz) */
 
-        /* Deleted Items */
-        .deleted-wrapper {
-            border: 1px dashed #ced4da;
-            border-radius: 8px;
-            padding: 10px;
-            background: #f8f9fa;
-        }
-        .deleted-item {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            padding: 6px 8px;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
-        .deleted-item:last-child { margin-bottom: 0; }
-        .deleted-item .meta { color: #6c757d; font-size: 0.8rem; }
-        .deleted-empty { color: #adb5bd; font-style: italic; font-size: 0.9rem; }
+        /* === A11y === */
+        .tool-card:focus-visible, .delete-zone:focus-visible, .btn:focus-visible { outline: 2px solid #0d6efd; outline-offset: 2px; }
 
-        /* KI & Quellen Check */
-        .ki-check-btn {
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: #fff;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-            box-shadow: 0 6px 14px rgba(243, 156, 18, 0.3);
-            border: none;
-        }
-        .ki-check-btn:hover {
-            color: #fff;
-            background: linear-gradient(135deg, #ffa726, #e67e22);
-            box-shadow: 0 8px 18px rgba(243, 156, 18, 0.45);
-            transform: translateY(-1px);
-        }
-        .ki-callout {
-            border: 1px solid #ffeeba;
-            background: #fff8e1;
-            border-radius: 8px;
-            padding: 12px;
-        }
-        .ki-callout .icon-wrap {
-            width: 38px;
-            height: 38px;
-            border-radius: 8px;
-            background: #fff3cd;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #e67e22;
-            box-shadow: inset 0 0 0 1px #ffe8a1;
-        }
-        .ki-checklist .list-group-item {
-            border: none;
-            border-bottom: 1px dashed #f1c40f;
-            background: transparent;
-            padding-left: 0;
-            padding-right: 0;
-        }
-        .ki-checklist .list-group-item:last-child {
-            border-bottom: none;
-        }
-
-        /* Kategorie-Infos */
-        .category-info-card {
-            border: 1px solid #e5e7eb;
-            background: #f8fafc;
-            border-radius: 8px;
-            padding: 8px 10px;
-            display: flex;
-            gap: 10px;
-            align-items: flex-start;
-        }
-        .category-info-card .icon-wrap {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            background: #e9ecef;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: #0d6efd;
-        }
-        .category-info-card h6 {
-            margin: 0;
-            font-size: 0.95rem;
-        }
-        .category-info-card p {
-            margin: 2px 0 0 0;
-            color: #495057;
-            font-size: 0.9rem;
-            line-height: 1.3;
-        }
-
-        /* Print Styles */
+        /* === Responsive === */
         @media print {
             .hangar-area, .no-print, .delete-zone, .modal { display: none !important; }
-            .cockpit-area { width: 100% !important; height: auto !important; overflow: visible; padding: 0;}
+            .cockpit-area { width: 100% !important; height: auto !important; overflow: visible; padding: 0; }
             .phase-col { border: 1px solid #ccc; min-height: 150px; page-break-inside: avoid; }
             .row { display: flex !important; flex-wrap: nowrap !important; }
             .col, .col-md-2 { flex: 1 !important; width: calc(100% / 6) !important; }
@@ -567,102 +450,47 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // --- KONFIGURATION DER TOOLS ---
-    // Kategorien basierend auf Ihrem Bild
+    // === STATE & KONFIGURATION ===
     const categories = {
-        'Assistants': {
-            icon: 'fa-lightbulb',
-            info: 'KI-Co-Piloten, die beim Brainstorming, Strukturieren und beim ersten Aufschlag von Textbausteinen unterstützen.'
-        },
-        'Finders': {
-            icon: 'fa-search',
-            info: 'Suchmaschinen, Datenbanken und Kataloge, mit denen Sie geeignete Quellen aufspüren und Trefferlisten filtern.'
-        },
-        'Lizenziert': {
-            icon: 'fa-database',
-            info: 'Lizenzierte Datenbanken und Angebote, die über die Hochschule verfügbar sind.'
-        },
-        'Connectors': {
-            icon: 'fa-project-diagram',
-            info: 'Tools zur Visualisierung und Vernetzung von Literatur, um Forschungsstränge und Schlüsselpublikationen sichtbar zu machen.'
-        },
-        'Analyzers': {
-            icon: 'fa-microscope',
-            info: 'Analysetools, die Texte zusammenfassen, erklären oder Inhalte aus PDFs und Artikeln herausarbeiten.'
-        },
-        'Evaluation': {
-            icon: 'fa-check-double', // Für Scite/Consensus "Publikationsformen"
-            info: 'Werkzeuge zur Bewertung von Qualität und Wirkung, z. B. Kontext zu Zitierungen oder Hinweise auf den wissenschaftlichen Konsens.'
-        },
-        'Writers': {
-            icon: 'fa-pen-nib',
-            info: 'Schreib- und Stilhilfen für saubere Formulierungen, Grammatikprüfungen und Feedback auf wissenschaftliche Texte.'
-        },
-        'Organize & Cite': {
-            icon: 'fa-folder-open',
-            info: 'Literaturverwaltungsprogramme zum Sammeln, Ordnen und Zitieren Ihrer Quellen in verschiedenen Zitationsstilen.'
-        },
-        'Notizen': {
-            icon: 'fa-note-sticky',
-            info: 'Eigene Merkzettel, um Zwischenergebnisse, Recherchewege und To-dos festzuhalten.'
-        }
+        'Assistants': { icon: 'fa-lightbulb', info: 'KI-Co-Piloten, die beim Brainstorming, Strukturieren und beim ersten Aufschlag von Textbausteinen unterstützen.' },
+        'Finders': { icon: 'fa-search', info: 'Suchmaschinen, Datenbanken und Kataloge, mit denen Sie geeignete Quellen aufspüren und Trefferlisten filtern.' },
+        'Lizenziert': { icon: 'fa-database', info: 'Lizenzierte Datenbanken und Angebote, die über die Hochschule verfügbar sind.' },
+        'Connectors': { icon: 'fa-project-diagram', info: 'Tools zur Visualisierung und Vernetzung von Literatur, um Forschungsstränge und Schlüsselpublikationen sichtbar zu machen.' },
+        'Analyzers': { icon: 'fa-microscope', info: 'Analysetools, die Texte zusammenfassen, erklären oder Inhalte aus PDFs und Artikeln herausarbeiten.' },
+        'Evaluation': { icon: 'fa-check-double', info: 'Werkzeuge zur Bewertung von Qualität und Wirkung, z. B. Kontext zu Zitierungen oder Hinweise auf den wissenschaftlichen Konsens.' },
+        'Writers': { icon: 'fa-pen-nib', info: 'Schreib- und Stilhilfen für saubere Formulierungen, Grammatikprüfungen und Feedback auf wissenschaftliche Texte.' },
+        'Organize & Cite': { icon: 'fa-folder-open', info: 'Literaturverwaltungsprogramme zum Sammeln, Ordnen und Zitieren Ihrer Quellen in verschiedenen Zitationsstilen.' },
+        'Notizen': { icon: 'fa-note-sticky', info: 'Eigene Merkzettel, um Zwischenergebnisse, Recherchewege und To-dos festzuhalten.' }
     };
 
     const flightPhases = {
-        'PRE-FLIGHT': {
-            icon: 'fa-clipboard-list',
-            categories: ['Assistants', 'Notizen']
-        },
-        'TAKE-OFF': {
-            icon: 'fa-plane-departure',
-            categories: ['Finders', 'Lizenziert']
-        },
-        'IN-FLIGHT': {
-            icon: 'fa-plane',
-            categories: ['Analyzers', 'Connectors', 'Evaluation']
-        },
-        'LANDING': {
-            icon: 'fa-plane-arrival',
-            categories: ['Writers', 'Organize & Cite']
-        }
+        'PRE-FLIGHT': { icon: 'fa-clipboard-list', categories: ['Assistants', 'Notizen'] },
+        'TAKE-OFF': { icon: 'fa-plane-departure', categories: ['Finders', 'Lizenziert'] },
+        'IN-FLIGHT': { icon: 'fa-plane', categories: ['Analyzers', 'Connectors', 'Evaluation'] },
+        'LANDING': { icon: 'fa-plane-arrival', categories: ['Writers', 'Organize & Cite'] }
     };
 
-    // Tool Datenbank (angereichert mit Links und Kategorien)
     const initialTools = [
-        // ASSISTANTS
         { id: 't1', name: 'ChatGPT', cats: ['Assistants'], url: 'https://chat.openai.com', isAi: true, info: 'Brainstorming & Gliederung' },
         { id: 't2', name: 'Scispace', cats: ['Assistants'], url: 'https://www.scispace.com', isAi: true, info: 'KI-Schreibassistent' },
-        
-        // FINDERS
         { id: 't4', name: 'Swisscover RZS UNI/PH', cats: ['Finders', 'Lizenziert'], url: 'https://rzs.swisscovery.slsp.ch/discovery/search?vid=41SLSP_RZS:VU07', isAi: false, info: 'Bibliothekskatalog Schweiz', isLib: true },
         { id: 't5', name: 'Elicit', cats: ['Finders'], url: 'https://elicit.org', isAi: true, info: 'Findet Paper und extrahiert Kernaussagen' },
         { id: 't6', name: 'Google Scholar', cats: ['Finders'], url: 'https://scholar.google.com', isAi: false, info: 'Breite Suche nach wissenschaftlichen Texten' },
         { id: 't7', name: 'EconLit', cats: ['Finders', 'Lizenziert'], url: 'https://www.aeaweb.org/econlit', isAi: false, info: 'Fachportal Wirtschaft', isLib: true },
-
-        // CONNECTORS
         { id: 't8', name: 'ResearchRabbit', cats: ['Connectors'], url: 'https://researchrabbit.ai', isAi: true, info: 'Visualisiert Literatur-Netzwerke' },
         { id: 't9', name: 'Connected Papers', cats: ['Connectors'], url: 'https://www.connectedpapers.com', isAi: false, info: 'Zeigt verwandte Arbeiten grafisch an' },
-
-        // ANALYZERS
         { id: 't10', name: 'Explainpaper', cats: ['Analyzers'], url: 'https://www.explainpaper.com', isAi: true, info: 'Erklärt komplexe Textstellen' },
         { id: 't11', name: 'Humata', cats: ['Analyzers'], url: 'https://humata.ai', isAi: true, info: 'Chatte mit deinen PDFs' },
         { id: 't12', name: 'PDF.ai', cats: ['Analyzers'], url: 'https://pdf.ai', isAi: true, info: 'PDF Analyse Tool' },
-
-        // WRITERS
         { id: 't13', name: 'Writefull', cats: ['Writers'], url: 'https://writefull.com', isAi: true, info: 'Akademische Sprachprüfung' },
         { id: 't14', name: 'Paperpal', cats: ['Writers'], url: 'https://paperpal.com', isAi: true, info: 'Echtzeit-Schreibfeedback' },
         { id: 't15', name: 'DeepL Write', cats: ['Writers'], url: 'https://www.deepl.com/write', isAi: true, info: 'Sprachoptimierung' },
-
-        // ORGANIZE & CITE
         { id: 't18', name: 'Zotero', cats: ['Organize & Cite'], url: 'https://www.zotero.org', isAi: false, info: 'Literaturverwaltung (Open Source)' },
         { id: 't19', name: 'Citavi', cats: ['Organize & Cite'], url: 'https://www.citavi.com', isAi: false, info: 'Literaturverwaltung' },
-
-        // EVALUATION / PUBLIKATIONSFORMEN
         { id: 't20', name: 'Scite_', cats: ['Evaluation', 'Finders', 'Lizenziert'], url: 'https://scite.ai', isAi: true, info: 'Smart Citations - wie wurde zitiert?', isLib: true },
         { id: 't21', name: 'Consensus', cats: ['Evaluation', 'Finders', 'Lizenziert'], url: 'https://consensus.app', isAi: true, info: 'Wissenschaftlicher Konsens finden', isLib: true }
     ];
 
-    
     const licensedDatabases = [
         { id: 'lic1', name: 'Academic Search Ultimate (EBSCOhost)', url: 'https://dbis.ur.de/ZHBLU/resources/101844', info: 'Multidisziplinäre Volltextdatenbank mit mehr als 9 200 Zeitschriften (über 8 400 peer-reviewed), zahlreichen Magazinen und rund 60 000 Videos seit 1930', cats: ['Finders'], isLib: true },
         { id: 'lic2', name: 'Blackwell Reference Online', url: 'https://dbis.ur.de/ZHBLU/resources/7081', info: 'Sammlung von Referenzwerken aus den Geistes- und Sozialwissenschaften (z. B. Classics, History, Language & Linguistics, Philosophy & Religion, Sociology & Anthropology)', cats: ['Finders'], isLib: true },
@@ -693,7 +521,7 @@
         { id: 'lic27', name: 'ScienceDirect', url: 'https://dbis.ur.de/ZHBLU/resources/801', info: 'Elsevier-Plattform mit elektronischen Zeitschriften und eBooks; sie ermöglicht simultane oder getrennte Suche und Volltextzugriff je nach Lizenz', cats: ['Finders'], isLib: true },
         { id: 'lic28', name: 'Scite', url: 'https://dbis.ur.de/ZHBLU/resources/104874', info: 'KI-gestützte Zitationsdatenbank, die den Kontext von Zitierungen analysiert und Zitate als unterstützend, widersprechend oder erwähnend klassifiziert', cats: ['Evaluation', 'Finders'], isLib: true, isAi: true },
         { id: 'lic29', name: 'Statista', url: 'https://dbis.ur.de/ZHBLU/resources/9808', info: 'Statistikportal, das Daten aus zahlreichen Instituten und Quellen bündelt; der Volltextzugriff richtet sich nach dem Lizenzumfang der Einrichtung.', cats: ['Finders'], isLib: true },
-        { id: 'lic30', name: 'Tax Treaties Database (IBFD)', url: 'https://dbis.ur.de/ZHBLU/resources/8580', info: 'Datenbank des International Bureau of Fiscal Documentation (IBFD) mit über 5 000 geltenden Steuerabkommen, Protokollen und Verhandlungsdokumenten sowie Vergleichstabellen.', cats: ['Finders'], isLib: true},
+        { id: 'lic30', name: 'Tax Treaties Database (IBFD)', url: 'https://dbis.ur.de/ZHBLU/resources/8580', info: 'Datenbank des International Bureau of Fiscal Documentation (IBFD) mit über 5 000 geltenden Steuerabkommen, Protokollen und Verhandlungsdokumenten sowie Vergleichstabellen.', cats: ['Finders'], isLib: true, isOA: false },
         { id: 'lic31', name: 'UN iLibrary', url: 'https://dbis.ur.de/ZHBLU/resources/101214', info: 'Bibliothek der Vereinten Nationen mit Büchern, Zeitschriften, Arbeitspapieren und Statistiken zu UN-Themen in verschiedenen Sprachen.', cats: ['Finders'], isLib: true },
         { id: 'lic32', name: 'WEKA Business Portal', url: 'https://dbis.ur.de/ZHBLU/resources/8661', info: 'Praxisorientiertes Informationsportal der WEKA-Verlagsgruppe mit Fachinformationen, Vorlagen und eLearning-Materialien zu Recht, Steuern und Unternehmensführung.', cats: ['Finders'], isLib: true },
         { id: 'lic33', name: 'Web of Science / Social Sciences Citation Index', url: 'https://dbis.ur.de/ZHBLU/resources/360', info: 'Aufsatzdatenbank, die mehr als 3,45 Mio. Titel nachweist und Beiträge aus über 50 Sozial- und Nachbardisziplinen auswertet', cats: ['Finders'], isLib: true },
@@ -704,10 +532,23 @@
         { id: 'lic38', name: 'Statistical Portal OECD Data Explorer', url: 'https://dbis.ur.de/ZHBLU/resources/106121', info: 'Interaktive Plattform der OECD, mit der sich sozioökonomische Kennzahlen verschiedener Länder vergleichen und visualisieren lassen.', cats: ['Finders'], isLib: true, isOA: true }
     ].map(db => ({ isOA: false, ...db }));
 
-    const LEGACY_CATEGORY_MAP = {
-        'Verwaltung': 'Organize & Cite'
-    };
+    const LEGACY_CATEGORY_MAP = { 'Verwaltung': 'Organize & Cite' };
+    const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5', 'phase-global'];
+    const CUSTOM_TOOLS_KEY = 'customTools';
+    const DELETE_ZONE_DEFAULT_TEXT = 'Aus dem Cockpit entfernen (Tool bleibt im Hangar verfügbar)';
+    const DELETE_ZONE_CUSTOM_TEXT = 'Custom Tool endgültig löschen';
 
+    let pendingAiElement = null;
+    let aiModal = null;
+    let textModal = null;
+    let targetPhaseForNote = null;
+    let deletedTools = [];
+    let currentSearchTerm = '';
+    let currentCategoryFilter = '';
+    let currentEditingCustomToolId = null;
+    let deleteZoneTextElement = null;
+
+    // === HELPERS ===
     function normalizeCategoriesList(cats) {
         const mapped = (Array.isArray(cats) ? cats : [])
             .map(cat => LEGACY_CATEGORY_MAP[cat] || cat)
@@ -723,23 +564,6 @@
         return Array.from(new Set(categoriesWithLicense));
     }
 
-
-    let currentDragElement = null;
-    let pendingAiElement = null;
-    let aiModal = null;
-    let textModal = null;
-    let targetPhaseForNote = null;
-    let deletedTools = [];
-    let currentSearchTerm = '';
-    let currentCategoryFilter = '';
-    let currentEditingCustomToolId = null;
-    let deleteZoneTextElement = null;
-
-    const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5', 'phase-global'];
-    const CUSTOM_TOOLS_KEY = 'customTools';
-    const DELETE_ZONE_DEFAULT_TEXT = 'Aus dem Cockpit entfernen (Tool bleibt im Hangar verfügbar)';
-    const DELETE_ZONE_CUSTOM_TEXT = 'Custom Tool endgültig löschen';
-
     function escapeHtml(str) {
         if(!str) return '';
         return str
@@ -750,7 +574,36 @@
             .replace(/'/g, '&#39;');
     }
 
-    // Papierkorb
+    function normalizeName(name) {
+        return (name || '').toLowerCase().replace(/[_\s]+$/, '').trim();
+    }
+
+    function isCustomToolData(toolData) {
+        return !!(toolData && (toolData.isCustom === true || toolData.isCustom === 'true' || toolData.isCustom === 1 || toolData.isCustom === '1'));
+    }
+
+    function sanitizeTooltipHtml(content) {
+        if(!content) return '';
+        const temp = document.createElement('div');
+        temp.innerHTML = content;
+        const allowedTags = ['B', 'STRONG', 'EM', 'I', 'BR', 'P', 'UL', 'OL', 'LI'];
+        temp.querySelectorAll('*').forEach(el => {
+            if(!allowedTags.includes(el.tagName)) {
+                el.replaceWith(document.createTextNode(el.textContent));
+            } else {
+                Array.from(el.attributes).forEach(attr => el.removeAttribute(attr.name));
+            }
+        });
+        return temp.innerHTML;
+    }
+
+    function stripHtml(content) {
+        if(!content) return '';
+        const temp = document.createElement('div');
+        temp.innerHTML = content;
+        return temp.textContent || temp.innerText || '';
+    }
+
     function sanitizeToolData(toolData) {
         const normalizedCats = toolData.type === 'text'
             ? ((toolData.cats && toolData.cats.length) ? normalizeCategoriesList(toolData.cats) : ['Notizen'])
@@ -770,6 +623,16 @@
         };
     }
 
+    function updateDeleteZoneText(isCustomTool) {
+        if(!deleteZoneTextElement) return;
+        deleteZoneTextElement.textContent = isCustomTool ? DELETE_ZONE_CUSTOM_TEXT : DELETE_ZONE_DEFAULT_TEXT;
+    }
+
+    function resetDeleteZoneText() {
+        updateDeleteZoneText(false);
+    }
+
+    // === GELÖSCHTE ELEMENTE ===
     function renderDeletedList() {
         const container = document.getElementById('deleted-list');
         if(!container) return;
@@ -825,99 +688,6 @@
         renderDeletedList();
     }
 
-    function normalizeName(name) {
-        return (name || '').toLowerCase().replace(/[_\s]+$/, '').trim();
-    }
-
-    function isCustomToolData(toolData) {
-        return !!(toolData && (toolData.isCustom === true || toolData.isCustom === 'true' || toolData.isCustom === 1 || toolData.isCustom === '1'));
-    }
-
-    function sanitizeTooltipHtml(content) {
-        if(!content) return '';
-        const temp = document.createElement('div');
-        temp.innerHTML = content;
-        const allowedTags = ['B', 'STRONG', 'EM', 'I', 'BR', 'P', 'UL', 'OL', 'LI'];
-        temp.querySelectorAll('*').forEach(el => {
-            if(!allowedTags.includes(el.tagName)) {
-                el.replaceWith(document.createTextNode(el.textContent));
-            } else {
-                Array.from(el.attributes).forEach(attr => el.removeAttribute(attr.name));
-            }
-        });
-        return temp.innerHTML;
-    }
-
-    function stripHtml(content) {
-        if(!content) return '';
-        const temp = document.createElement('div');
-        temp.innerHTML = content;
-        return temp.textContent || temp.innerText || '';
-    }
-
-    function populateLicensedDbSelect() {
-        const select = document.getElementById('licensedDbSelect');
-        if(!select) return;
-
-        select.innerHTML = '';
-        licensedDatabases.forEach(db => {
-            const opt = document.createElement('option');
-            opt.value = db.id;
-            opt.textContent = db.name;
-            select.appendChild(opt);
-        });
-
-        select.addEventListener('change', (e) => updateLicensedDbDetails(e.target.value));
-        if(licensedDatabases.length) {
-            select.value = licensedDatabases[0].id;
-            updateLicensedDbDetails(licensedDatabases[0].id);
-        }
-    }
-
-    function updateLicensedDbDetails(dbId) {
-        const db = licensedDatabases.find(item => item.id === dbId);
-        const titleEl = document.getElementById('licensedDbTitle');
-        const descEl = document.getElementById('licensedDbDescription');
-        const badgeEl = document.getElementById('licensedDbBadges');
-
-        if(!db || !titleEl || !descEl || !badgeEl) return;
-
-        titleEl.textContent = db.name;
-        descEl.textContent = db.info || '';
-
-        const badges = [];
-        if(db.isLib) badges.push('<span class="status-badge badge-lib">Uni</span>');
-        if(db.isAi) badges.push('<span class="status-badge badge-ai">KI</span>');
-        if(db.isOA) badges.push('<span class="status-badge badge-oa">Open Access</span>');
-        badgeEl.innerHTML = badges.join(' ');
-    }
-
-    function addLicensedDatabase() {
-        const select = document.getElementById('licensedDbSelect');
-        if(!select || !select.value) return;
-
-        const db = licensedDatabases.find(item => item.id === select.value);
-        if(!db) return;
-
-        const alreadyExists = initialTools.some(tool => normalizeName(tool.name) === normalizeName(db.name));
-        if(alreadyExists) {
-            alert('Diese Datenbank befindet sich bereits im Hangar.');
-            return;
-        }
-
-        const baseCats = db.cats && db.cats.length ? db.cats : ['Finders'];
-        const normalizedDb = { ...db, isLib: true, cats: baseCats, isOA: !!db.isOA };
-        const enhancedCats = deriveCategoriesForTool(normalizedDb);
-        initialTools.push({ ...normalizedDb, cats: enhancedCats });
-        renderHangar();
-
-        const modalEl = document.getElementById('licensedDbModal');
-        if(modalEl) {
-            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-            modal.hide();
-        }
-    }
-
     function addToDeleted(toolData) {
         const sanitized = sanitizeToolData(toolData);
         deletedTools = [sanitized, ...deletedTools.filter(t => !(t.id === sanitized.id && t.name === sanitized.name))].slice(0, 25);
@@ -960,139 +730,7 @@
         renderDeletedList();
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        loadCustomTools();
-        renderHangar();
-        renderCategoryInfo();
-        populateCategoryOptions();
-        populateFilterOptions();
-        populateLicensedDbSelect();
-        loadState();
-        loadDeletedState();
-        initTooltips();
-
-        deleteZoneTextElement = document.getElementById('delete-zone-text');
-        resetDeleteZoneText();
-
-        const searchInput = document.getElementById('toolSearchInput');
-        if(searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                currentSearchTerm = (e.target.value || '').trim().toLowerCase();
-                if(!currentSearchTerm) {
-                    currentCategoryFilter = '';
-                    const categorySelect = document.getElementById('toolCategoryFilter');
-                    if(categorySelect) {
-                        categorySelect.value = '';
-                    }
-                }
-                renderHangar();
-            });
-        }
-
-        const categoryFilter = document.getElementById('toolCategoryFilter');
-        if(categoryFilter) {
-            categoryFilter.addEventListener('change', (e) => {
-                currentCategoryFilter = e.target.value;
-                renderHangar();
-            });
-        }
-        
-        // --- DELETE ZONE LOGIC FIX ---
-        const deleteZone = document.getElementById('delete-zone');
-        deleteZone.addEventListener('dragover', (e) => { 
-            e.preventDefault(); 
-            deleteZone.classList.add('drag-over'); 
-        });
-        deleteZone.addEventListener('dragleave', () => { 
-            deleteZone.classList.remove('drag-over'); 
-            resetDeleteZoneText();
-        });
-        
-        deleteZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            deleteZone.classList.remove('drag-over');
-            resetDeleteZoneText();
-            
-            const rawData = e.dataTransfer.getData("text/plain");
-            if(!rawData) return;
-            
-            const data = JSON.parse(rawData);
-
-            // Löschen für Cockpit- und Hangar-Elemente
-            if(data.origin === 'cockpit') {
-                const elementToDelete = document.getElementById(data.uniqueId);
-                if(elementToDelete) {
-                    elementToDelete.remove();
-                    addToDeleted(data);
-                    saveState();
-                }
-            } else if (data.origin === 'hangar') {
-                const hangarElement = document.getElementById(data.uniqueId);
-                if(hangarElement) {
-                    hangarElement.remove();
-                }
-
-                // Benutzerdefinierte Tools komplett entfernen (alle Kategorien)
-                if(data.isCustom) {
-                    const index = initialTools.findIndex(t => t.id === data.id);
-                    if(index >= 0) initialTools.splice(index, 1);
-
-                    document.querySelectorAll(`[data-base-id="${data.id}"]`).forEach(el => el.remove());
-                    saveCustomTools();
-                }
-
-                addToDeleted(data);
-            }
-        });
-
-        // AI Confirmation Logic
-        const aiModalEl = document.getElementById('aiWarningModal');
-        aiModal = new bootstrap.Modal(aiModalEl);
-
-        const textModalEl = document.getElementById('textNoteModal');
-        if(textModalEl) {
-            textModal = new bootstrap.Modal(textModalEl);
-            textModalEl.addEventListener('hidden.bs.modal', () => {
-                targetPhaseForNote = null;
-                const titleField = document.getElementById('noteTitle');
-                const contentField = document.getElementById('noteContent');
-                if(titleField) titleField.value = '';
-                if(contentField) contentField.value = '';
-            });
-        }
-
-        const customModalEl = document.getElementById('customToolModal');
-        if(customModalEl) {
-            customModalEl.addEventListener('hidden.bs.modal', () => resetCustomToolForm());
-        }
-
-        document.getElementById('confirmAiUse').addEventListener('click', () => {
-            if(pendingAiElement) {
-                aiModal.hide();
-                pendingAiElement = null;
-                saveState();
-            }
-        });
-        
-        document.getElementById('cancelAiUse').addEventListener('click', () => {
-             aiModal.hide();
-        });
-
-        aiModalEl.addEventListener('hidden.bs.modal', () => {
-            if(pendingAiElement) {
-                // Wenn Modal geschlossen wird (ohne Bestätigung), Element entfernen
-                pendingAiElement.remove();
-                pendingAiElement = null;
-            }
-        });
-
-        const importInput = document.getElementById('importJsonInput');
-        if(importInput) {
-            importInput.addEventListener('change', handleImportFile);
-        }
-    });
-
-    // --- RENDER FUNKTIONEN ---
+    // === RENDERING ===
     function renderHangar() {
         const pool = document.getElementById('tool-pool');
         if(!pool) return;
@@ -1193,8 +831,6 @@
         if(!select) return;
 
         const currentValue = select.value;
-
-        // clear existing (except first default?) better rebuild
         select.innerHTML = '<option value="">Alle Kategorien</option>';
 
         Object.keys(categories).forEach(catKey => {
@@ -1207,9 +843,71 @@
         select.value = currentValue;
     }
 
+    function populateLicensedDbSelect() {
+        const select = document.getElementById('licensedDbSelect');
+        if(!select) return;
+
+        select.innerHTML = '';
+        licensedDatabases.forEach(db => {
+            const opt = document.createElement('option');
+            opt.value = db.id;
+            opt.textContent = db.name;
+            select.appendChild(opt);
+        });
+
+        select.addEventListener('change', (e) => updateLicensedDbDetails(e.target.value));
+        if(licensedDatabases.length) {
+            select.value = licensedDatabases[0].id;
+            updateLicensedDbDetails(licensedDatabases[0].id);
+        }
+    }
+
+    function updateLicensedDbDetails(dbId) {
+        const db = licensedDatabases.find(item => item.id === dbId);
+        const titleEl = document.getElementById('licensedDbTitle');
+        const descEl = document.getElementById('licensedDbDescription');
+        const badgeEl = document.getElementById('licensedDbBadges');
+
+        if(!db || !titleEl || !descEl || !badgeEl) return;
+
+        titleEl.textContent = db.name;
+        descEl.textContent = db.info || '';
+
+        const badges = [];
+        if(db.isLib) badges.push('<span class="status-badge badge-lib">Uni</span>');
+        if(db.isAi) badges.push('<span class="status-badge badge-ai">KI</span>');
+        if(db.isOA) badges.push('<span class="status-badge badge-oa">Open Access</span>');
+        badgeEl.innerHTML = badges.join(' ');
+    }
+
+    function addLicensedDatabase() {
+        const select = document.getElementById('licensedDbSelect');
+        if(!select || !select.value) return;
+
+        const db = licensedDatabases.find(item => item.id === select.value);
+        if(!db) return;
+
+        const alreadyExists = initialTools.some(tool => normalizeName(tool.name) === normalizeName(db.name));
+        if(alreadyExists) {
+            alert('Diese Datenbank befindet sich bereits im Hangar.');
+            return;
+        }
+
+        const baseCats = db.cats && db.cats.length ? db.cats : ['Finders'];
+        const normalizedDb = { ...db, isLib: true, cats: baseCats, isOA: !!db.isOA };
+        const enhancedCats = deriveCategoriesForTool(normalizedDb);
+        initialTools.push({ ...normalizedDb, cats: enhancedCats });
+        renderHangar();
+
+        const modalEl = document.getElementById('licensedDbModal');
+        if(modalEl) {
+            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            modal.hide();
+        }
+    }
+
     function createToolElement(toolData, origin) {
         const div = document.createElement('div');
-        // Klassen für Farben setzen
         let classes = 'tool-card';
         if(toolData.isAi) classes += ' is-ai';
         if(toolData.isLib) classes += ' is-library';
@@ -1222,7 +920,6 @@
             ? ((toolData.cats && toolData.cats.length) ? normalizeCategoriesList(toolData.cats) : ['Notizen'])
             : deriveCategoriesForTool(toolData);
 
-        // ID Generierung
         const uniqueId = toolData.uniqueId
             || (origin === 'hangar'
                 ? toolData.id
@@ -1242,7 +939,6 @@
             div.dataset.text = toolData.text;
         }
 
-        // Icon bestimmen (wenn keine Kategorie-Icon, dann Standard)
         const primaryCat = Array.isArray(categoriesForTool) && categoriesForTool.length ? categoriesForTool[0] : null;
         const iconClass = (primaryCat && categories[primaryCat] && categories[primaryCat].icon) ? categories[primaryCat].icon : 'fa-tools';
 
@@ -1315,16 +1011,10 @@
             }
         }
 
-        // Re-Init Tooltips
         setTimeout(() => initTooltips(), 100);
 
-        // Drag Events
         div.addEventListener('dragstart', (e) => {
-            const transferData = {
-                ...toolData,
-                uniqueId: uniqueId,
-                origin: origin
-            };
+            const transferData = { ...toolData, uniqueId: uniqueId, origin: origin };
             e.dataTransfer.setData("text/plain", JSON.stringify(transferData));
             e.dataTransfer.effectAllowed = origin === 'hangar' ? 'copy' : 'move';
             updateDeleteZoneText(isCustomToolData(toolData));
@@ -1337,41 +1027,43 @@
         return div;
     }
 
-    // --- DRAG & DROP LOGIC ---
+    function initTooltips() {
+        document.querySelectorAll('.tooltip').forEach(t => t.remove());
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl, { html: tooltipTriggerEl.getAttribute('data-bs-html') === 'true' }));
+    }
+
+    // === DRAG & DROP ===
     function allowDrop(e) { e.preventDefault(); }
-    
+
     function dragEnter(e) {
-        let target = e.target.closest('.phase-col');
+        const target = e.target.closest('.phase-col');
         if(target) target.classList.add('drag-over');
     }
-    
+
     function dragLeave(e) {
-        let target = e.target.closest('.phase-col');
+        const target = e.target.closest('.phase-col');
         if(target) target.classList.remove('drag-over');
     }
 
     function drop(e) {
         e.preventDefault();
-        let target = e.target.closest('.phase-col');
+        const target = e.target.closest('.phase-col');
         if(!target) return;
-        
-        target.classList.remove('drag-over');
 
+        target.classList.remove('drag-over');
         const rawData = e.dataTransfer.getData("text/plain");
         if(!rawData) return;
 
         const data = JSON.parse(rawData);
 
         if (data.origin === 'hangar') {
-            // COPY: Neues Element erstellen
             const newTool = createToolElement({
                 ...data,
-                // Immer eine frische ID vergeben, damit Delete/Move zuverlässig funktionieren
                 uniqueId: 'c-' + Date.now() + Math.random().toString(16).slice(2)
             }, 'cockpit');
             target.appendChild(newTool);
-            
-            // Check AI Warning
+
             if(data.isAi) {
                 pendingAiElement = newTool;
                 aiModal.show();
@@ -1379,7 +1071,6 @@
                 saveState();
             }
         } else {
-            // MOVE: Vorhandenes Element verschieben
             const existingEl = document.getElementById(data.uniqueId);
             if(existingEl) {
                 target.appendChild(existingEl);
@@ -1388,6 +1079,7 @@
         }
     }
 
+    // === NOTIZEN ===
     function openTextModal(targetId) {
         targetPhaseForNote = targetId;
         if(!textModal) {
@@ -1437,7 +1129,7 @@
         }
     }
 
-    // --- CUSTOM TOOL ---
+    // === CUSTOM TOOLS ===
     function saveCustomTools() {
         const customTools = initialTools.filter(tool => tool.isCustom);
         localStorage.setItem(CUSTOM_TOOLS_KEY, JSON.stringify(customTools));
@@ -1599,7 +1291,7 @@
             saveCustomTools();
             renderHangar();
         }
-        
+
         const modalInstance = bootstrap.Modal.getInstance(document.getElementById('customToolModal'));
         if(modalInstance) {
             modalInstance.hide();
@@ -1607,7 +1299,7 @@
         resetCustomToolForm();
     }
 
-    // --- STORAGE ---
+    // === STORAGE ===
     function saveState() {
         const state = {};
         dropTargets.forEach(targetId => {
@@ -1696,6 +1388,7 @@
         });
     }
 
+    // === IMPORT/EXPORT & RESET ===
     function exportConfiguration() {
         let cockpitState = {};
         let storedCustomTools = [];
@@ -1712,11 +1405,7 @@
             console.error('Fehler beim Lesen der Custom Tools', error);
         }
 
-        const payload = {
-            cockpitState_v3: cockpitState,
-            customTools: storedCustomTools
-        };
-
+        const payload = { cockpitState_v3: cockpitState, customTools: storedCustomTools };
         const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -1775,27 +1464,133 @@
         }
     }
 
-    function initTooltips() {
-        // Zerstöre alte Tooltips um Ghosts zu vermeiden
-        const oldTooltips = document.querySelectorAll('.tooltip');
-        oldTooltips.forEach(t => t.remove());
+    // === INITIALISIERUNG ===
+    document.addEventListener('DOMContentLoaded', () => {
+        loadCustomTools();
+        renderHangar();
+        renderCategoryInfo();
+        populateCategoryOptions();
+        populateFilterOptions();
+        populateLicensedDbSelect();
+        loadState();
+        loadDeletedState();
+        initTooltips();
 
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl, {
-                html: tooltipTriggerEl.getAttribute('data-bs-html') === 'true'
-            })
-        })
-    }
+        deleteZoneTextElement = document.getElementById('delete-zone-text');
+        resetDeleteZoneText();
 
-    function updateDeleteZoneText(isCustomTool) {
-        if(!deleteZoneTextElement) return;
-        deleteZoneTextElement.textContent = isCustomTool ? DELETE_ZONE_CUSTOM_TEXT : DELETE_ZONE_DEFAULT_TEXT;
-    }
+        const searchInput = document.getElementById('toolSearchInput');
+        if(searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                currentSearchTerm = (e.target.value || '').trim().toLowerCase();
+                if(!currentSearchTerm) {
+                    currentCategoryFilter = '';
+                    const categorySelect = document.getElementById('toolCategoryFilter');
+                    if(categorySelect) {
+                        categorySelect.value = '';
+                    }
+                }
+                renderHangar();
+            });
+        }
 
-    function resetDeleteZoneText() {
-        updateDeleteZoneText(false);
-    }
+        const categoryFilter = document.getElementById('toolCategoryFilter');
+        if(categoryFilter) {
+            categoryFilter.addEventListener('change', (e) => {
+                currentCategoryFilter = e.target.value;
+                renderHangar();
+            });
+        }
+
+        const deleteZone = document.getElementById('delete-zone');
+        deleteZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            deleteZone.classList.add('drag-over');
+        });
+        deleteZone.addEventListener('dragleave', () => {
+            deleteZone.classList.remove('drag-over');
+            resetDeleteZoneText();
+        });
+
+        deleteZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            deleteZone.classList.remove('drag-over');
+            resetDeleteZoneText();
+
+            const rawData = e.dataTransfer.getData("text/plain");
+            if(!rawData) return;
+
+            const data = JSON.parse(rawData);
+
+            if(data.origin === 'cockpit') {
+                const elementToDelete = document.getElementById(data.uniqueId);
+                if(elementToDelete) {
+                    elementToDelete.remove();
+                    addToDeleted(data);
+                    saveState();
+                }
+            } else if (data.origin === 'hangar') {
+                const hangarElement = document.getElementById(data.uniqueId);
+                if(hangarElement) {
+                    hangarElement.remove();
+                }
+
+                if(data.isCustom) {
+                    const index = initialTools.findIndex(t => t.id === data.id);
+                    if(index >= 0) initialTools.splice(index, 1);
+
+                    document.querySelectorAll(`[data-base-id="${data.id}"]`).forEach(el => el.remove());
+                    saveCustomTools();
+                }
+
+                addToDeleted(data);
+            }
+        });
+
+        const aiModalEl = document.getElementById('aiWarningModal');
+        aiModal = new bootstrap.Modal(aiModalEl);
+
+        const textModalEl = document.getElementById('textNoteModal');
+        if(textModalEl) {
+            textModal = new bootstrap.Modal(textModalEl);
+            textModalEl.addEventListener('hidden.bs.modal', () => {
+                targetPhaseForNote = null;
+                const titleField = document.getElementById('noteTitle');
+                const contentField = document.getElementById('noteContent');
+                if(titleField) titleField.value = '';
+                if(contentField) contentField.value = '';
+            });
+        }
+
+        const customModalEl = document.getElementById('customToolModal');
+        if(customModalEl) {
+            customModalEl.addEventListener('hidden.bs.modal', () => resetCustomToolForm());
+        }
+
+        document.getElementById('confirmAiUse').addEventListener('click', () => {
+            if(pendingAiElement) {
+                aiModal.hide();
+                pendingAiElement = null;
+                saveState();
+            }
+        });
+
+        document.getElementById('cancelAiUse').addEventListener('click', () => {
+            aiModal.hide();
+        });
+
+        aiModalEl.addEventListener('hidden.bs.modal', () => {
+            if(pendingAiElement) {
+                pendingAiElement.remove();
+                pendingAiElement = null;
+            }
+        });
+
+        const importInput = document.getElementById('importJsonInput');
+        if(importInput) {
+            importInput.addEventListener('change', handleImportFile);
+        }
+    });
 </script>
 
 </body>
