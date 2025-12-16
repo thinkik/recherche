@@ -236,7 +236,7 @@
                     <i class="fas fa-shield-alt me-2"></i> KI & Quellen-Check
                 </button>
                 <div class="delete-zone" id="delete-zone">
-                    <i class="fas fa-trash"></i> Hierher ziehen zum Löschen
+                    <i class="fas fa-trash"></i> <span id="delete-zone-text">Aus dem Cockpit entfernen (Tool bleibt im Hangar verfügbar)</span>
                 </div>
                 <div class="mt-3 deleted-wrapper">
                     <div class="d-flex justify-content-between align-items-center mb-2">
@@ -266,6 +266,15 @@
                 
                 <div class="col">
                     <div class="phase-header"><span class="step-number">1</span> Thema eingrenzen</div>
+                    <div class="no-print mb-2">
+                        <button class="btn btn-link p-0 text-decoration-none small d-flex align-items-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#phase1Help" aria-expanded="false" aria-controls="phase1Help">
+                            <i class="fas fa-circle-question text-primary"></i>
+                            <span class="fw-semibold text-secondary">Hilfe</span>
+                        </button>
+                        <div class="collapse" id="phase1Help">
+                            <div class="small text-muted ps-4 pt-1">Nutze KI-Tools für Brainstorming, aber suche dann nach einem Seed Paper / Literaturperle für die Vertiefung</div>
+                        </div>
+                    </div>
                     <button class="btn btn-sm btn-outline-secondary w-100 mb-2 no-print" onclick="openTextModal('phase-1')">
                         <i class="fas fa-note-sticky"></i> Notiz hinzufügen
                     </button>
@@ -724,9 +733,12 @@
     let currentSearchTerm = '';
     let currentCategoryFilter = '';
     let currentEditingCustomToolId = null;
+    let deleteZoneTextElement = null;
 
     const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5', 'phase-global'];
     const CUSTOM_TOOLS_KEY = 'customTools';
+    const DELETE_ZONE_DEFAULT_TEXT = 'Aus dem Cockpit entfernen (Tool bleibt im Hangar verfügbar)';
+    const DELETE_ZONE_CUSTOM_TEXT = 'Custom Tool endgültig löschen';
 
     function escapeHtml(str) {
         if(!str) return '';
@@ -815,6 +827,32 @@
 
     function normalizeName(name) {
         return (name || '').toLowerCase().replace(/[_\s]+$/, '').trim();
+    }
+
+    function isCustomToolData(toolData) {
+        return !!(toolData && (toolData.isCustom === true || toolData.isCustom === 'true' || toolData.isCustom === 1 || toolData.isCustom === '1'));
+    }
+
+    function sanitizeTooltipHtml(content) {
+        if(!content) return '';
+        const temp = document.createElement('div');
+        temp.innerHTML = content;
+        const allowedTags = ['B', 'STRONG', 'EM', 'I', 'BR', 'P', 'UL', 'OL', 'LI'];
+        temp.querySelectorAll('*').forEach(el => {
+            if(!allowedTags.includes(el.tagName)) {
+                el.replaceWith(document.createTextNode(el.textContent));
+            } else {
+                Array.from(el.attributes).forEach(attr => el.removeAttribute(attr.name));
+            }
+        });
+        return temp.innerHTML;
+    }
+
+    function stripHtml(content) {
+        if(!content) return '';
+        const temp = document.createElement('div');
+        temp.innerHTML = content;
+        return temp.textContent || temp.innerText || '';
     }
 
     function populateLicensedDbSelect() {
@@ -933,6 +971,9 @@
         loadDeletedState();
         initTooltips();
 
+        deleteZoneTextElement = document.getElementById('delete-zone-text');
+        resetDeleteZoneText();
+
         const searchInput = document.getElementById('toolSearchInput');
         if(searchInput) {
             searchInput.addEventListener('input', (e) => {
@@ -964,11 +1005,13 @@
         });
         deleteZone.addEventListener('dragleave', () => { 
             deleteZone.classList.remove('drag-over'); 
+            resetDeleteZoneText();
         });
         
         deleteZone.addEventListener('drop', (e) => {
             e.preventDefault();
             deleteZone.classList.remove('drag-over');
+            resetDeleteZoneText();
             
             const rawData = e.dataTransfer.getData("text/plain");
             if(!rawData) return;
@@ -1194,7 +1237,7 @@
         div.dataset.isAi = toolData.isAi ? '1' : '0';
         div.dataset.isLib = toolData.isLib ? '1' : '0';
         div.dataset.isOa = toolData.isOA ? '1' : '0';
-        div.dataset.isCustom = toolData.isCustom ? '1' : '0';
+        div.dataset.isCustom = isCustomToolData(toolData) ? '1' : '0';
         if(toolData.text) {
             div.dataset.text = toolData.text;
         }
@@ -1229,7 +1272,10 @@
                 : 'Allgemein';
 
             const safeName = escapeHtml(toolData.name || 'Unbenanntes Tool');
-            const safeInfo = escapeHtml(toolData.info || '');
+            const rawInfo = toolData.info || '';
+            const tooltipHtml = sanitizeTooltipHtml(rawInfo);
+            const plainInfo = stripHtml(rawInfo);
+            const safeInfo = escapeHtml(rawInfo || '');
             const safeUrl = escapeHtml(toolData.url || '#');
 
             div.innerHTML = `
@@ -1241,13 +1287,20 @@
                     </div>
                     <div class="small text-muted text-truncate">${categoryList}</div>
                 </div>
-                <i class="fas fa-info-circle text-muted" style="cursor:help;" data-bs-toggle="tooltip" title="${safeInfo}"></i>
+                <i class="fas fa-info-circle text-muted tool-info-icon" style="cursor:help;" data-bs-toggle="tooltip" title="${safeInfo}"></i>
                 ${allowEdit ? '<button type="button" class="edit-custom-btn" title="Bearbeiten"><i class="fas fa-pen"></i></button>' : ''}
                 <a href="${safeUrl}" target="_blank" class="tool-link" onclick="event.stopPropagation()" title="Tool öffnen">
                     <i class="fas fa-external-link-alt"></i>
                     <span class="d-none d-print-inline small text-decoration-underline text-primary">${safeUrl}</span>
                 </a>
             `;
+
+            const infoIcon = div.querySelector('.tool-info-icon');
+            if(infoIcon) {
+                infoIcon.setAttribute('data-bs-title', tooltipHtml);
+                infoIcon.setAttribute('data-bs-html', 'true');
+                infoIcon.setAttribute('title', plainInfo);
+            }
 
             if(allowEdit) {
                 const editBtn = div.querySelector('.edit-custom-btn');
@@ -1274,6 +1327,11 @@
             };
             e.dataTransfer.setData("text/plain", JSON.stringify(transferData));
             e.dataTransfer.effectAllowed = origin === 'hangar' ? 'copy' : 'move';
+            updateDeleteZoneText(isCustomToolData(toolData));
+        });
+
+        div.addEventListener('dragend', () => {
+            resetDeleteZoneText();
         });
 
         return div;
@@ -1724,8 +1782,19 @@
 
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
+            return new bootstrap.Tooltip(tooltipTriggerEl, {
+                html: tooltipTriggerEl.getAttribute('data-bs-html') === 'true'
+            })
         })
+    }
+
+    function updateDeleteZoneText(isCustomTool) {
+        if(!deleteZoneTextElement) return;
+        deleteZoneTextElement.textContent = isCustomTool ? DELETE_ZONE_CUSTOM_TEXT : DELETE_ZONE_DEFAULT_TEXT;
+    }
+
+    function resetDeleteZoneText() {
+        updateDeleteZoneText(false);
     }
 </script>
 
