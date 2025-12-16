@@ -10,7 +10,7 @@
     <style>
         /* === Layout === */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; }
-        .hangar-area { background: #ffffff; height: 100vh; overflow-y: auto; border-right: 1px solid #dee2e6; padding: 15px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); }
+        .hangar-area { background: #ffffff; height: 100vh; overflow-y: auto; border-right: 1px solid #dee2e6; padding: 15px; box-shadow: 2px 0 5px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1020; }
         .cockpit-area { padding: 20px; height: 100vh; overflow-y: auto; }
         .cat-header { font-size: 0.75rem; font-weight: 800; color: #adb5bd; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 4px; }
         .phase-col { background: #eef2f7; border-radius: 12px; min-height: 65vh; padding: 10px; border: 2px dashed #cbd5e0; transition: background 0.3s; }
@@ -123,6 +123,23 @@
         /* === A11y === */
         .tool-card:focus-visible, .delete-zone:focus-visible, .btn:focus-visible { outline: 2px solid #0d6efd; outline-offset: 2px; }
 
+        /* === Responsive Board & Layout === */
+        .cockpit-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: flex-end; }
+        .board-wrapper { overflow-x: auto; padding-bottom: 6px; }
+        .board-grid { flex-wrap: nowrap; min-height: 70vh; }
+        .board-grid > .col { min-width: 280px; flex: 0 0 auto; }
+
+        @media (max-width: 1199.98px) {
+            .hangar-area { height: auto; max-height: 70vh; }
+            .cockpit-area { height: auto; }
+            .board-wrapper { margin-top: 10px; }
+        }
+
+        @media (min-width: 1400px) {
+            .board-grid { flex-wrap: wrap; }
+            .board-grid > .col { min-width: 0; flex: 1 0 0; }
+        }
+
         /* === Responsive === */
         @media print {
             .hangar-area, .no-print, .delete-zone, .modal { display: none !important; }
@@ -198,18 +215,19 @@
         </div>
 
         <div class="col-md-9 cockpit-area">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                 <h3><i class="fas fa-plane-departure"></i> Mein Recherche-Cockpit</h3>
-                <div class="no-print">
-                    <button class="btn btn-sm btn-warning me-2" onclick="resetCockpit()"><i class="fas fa-undo"></i> Reset</button>
-                    <button class="btn btn-sm btn-outline-primary me-2" id="exportJsonButton" onclick="exportConfiguration()"><i class="fas fa-download"></i> Export JSON</button>
-                    <button class="btn btn-sm btn-outline-primary me-2" id="importJsonButton" onclick="triggerImport()"><i class="fas fa-upload"></i> Import JSON</button>
+                <div class="no-print cockpit-actions">
+                    <button class="btn btn-sm btn-warning" onclick="resetCockpit()"><i class="fas fa-undo"></i> Reset</button>
+                    <button class="btn btn-sm btn-outline-primary" id="exportJsonButton" onclick="exportConfiguration()"><i class="fas fa-download"></i> Export JSON</button>
+                    <button class="btn btn-sm btn-outline-primary" id="importJsonButton" onclick="triggerImport()"><i class="fas fa-upload"></i> Import JSON</button>
                     <input type="file" id="importJsonInput" class="d-none" accept="application/json" />
                     <button class="btn btn-sm btn-success" id="savePdfButton"><i class="fas fa-file-pdf"></i> Als PDF speichern</button>
                 </div>
             </div>
 
-            <div class="row row-cols-1 row-cols-md-6 g-2">
+            <div class="board-wrapper">
+            <div class="row row-cols-1 row-cols-md-6 g-2 board-grid flex-nowrap">
                 
                 <div class="col">
                     <div class="phase-header"><span class="step-number">1</span> Thema eingrenzen</div>
@@ -268,6 +286,7 @@
                     <div class="phase-col" id="phase-6" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                 </div>
 
+            </div>
             </div>
 
             <div class="row g-2">
