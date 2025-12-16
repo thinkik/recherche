@@ -561,7 +561,7 @@
     ].map(db => ({ isOA: false, ...db }));
 
     const LEGACY_CATEGORY_MAP = { 'Verwaltung': 'Organize & Cite' };
-    const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5', 'phase-global'];
+    const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5', 'phase-6', 'phase-global'];
     const CUSTOM_TOOLS_KEY = 'customTools';
     const DELETE_ZONE_DEFAULT_TEXT = 'Aus dem Cockpit entfernen (Tool bleibt im Hangar verfügbar)';
     const DELETE_ZONE_CUSTOM_TEXT = 'Custom Tool endgültig löschen';
@@ -709,7 +709,7 @@
             addToDeleted(toolData);
         }
 
-        showToast('Tool entfernt (in \\'Gelöschte Tools\\' wiederherstellbar).', 'info');
+        showToast("Tool entfernt (in 'Gelöschte Tools' wiederherstellbar).", 'info');
     }
 
     // === TOASTS ===
