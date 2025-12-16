@@ -395,6 +395,10 @@
             icon: 'fa-search',
             info: 'Suchmaschinen, Datenbanken und Kataloge, mit denen Sie geeignete Quellen aufspüren und Trefferlisten filtern.'
         },
+        'Lizenziert': {
+            icon: 'fa-database',
+            info: 'Lizenzierte Datenbanken und Angebote, die über die Hochschule verfügbar sind.'
+        },
         'Connectors': {
             icon: 'fa-project-diagram',
             info: 'Tools zur Visualisierung und Vernetzung von Literatur, um Forschungsstränge und Schlüsselpublikationen sichtbar zu machen.'
@@ -403,21 +407,40 @@
             icon: 'fa-microscope',
             info: 'Analysetools, die Texte zusammenfassen, erklären oder Inhalte aus PDFs und Artikeln herausarbeiten.'
         },
-        'Writers': {
-            icon: 'fa-pen-nib',
-            info: 'Schreib- und Stilhilfen für saubere Formulierungen, Grammatikprüfungen und Feedback auf wissenschaftliche Texte.'
-        },
-        'Verwaltung': {
-            icon: 'fa-folder-open',
-            info: 'Literaturverwaltungsprogramme zum Sammeln, Ordnen und Zitieren Ihrer Quellen in verschiedenen Zitationsstilen.'
-        },
         'Evaluation': {
             icon: 'fa-check-double', // Für Scite/Consensus "Publikationsformen"
             info: 'Werkzeuge zur Bewertung von Qualität und Wirkung, z. B. Kontext zu Zitierungen oder Hinweise auf den wissenschaftlichen Konsens.'
         },
+        'Writers': {
+            icon: 'fa-pen-nib',
+            info: 'Schreib- und Stilhilfen für saubere Formulierungen, Grammatikprüfungen und Feedback auf wissenschaftliche Texte.'
+        },
+        'Organize & Cite': {
+            icon: 'fa-folder-open',
+            info: 'Literaturverwaltungsprogramme zum Sammeln, Ordnen und Zitieren Ihrer Quellen in verschiedenen Zitationsstilen.'
+        },
         'Notizen': {
             icon: 'fa-note-sticky',
             info: 'Eigene Merkzettel, um Zwischenergebnisse, Recherchewege und To-dos festzuhalten.'
+        }
+    };
+
+    const flightPhases = {
+        'PRE-FLIGHT': {
+            icon: 'fa-clipboard-list',
+            categories: ['Assistants', 'Notizen']
+        },
+        'TAKE-OFF': {
+            icon: 'fa-plane-departure',
+            categories: ['Finders', 'Lizenziert']
+        },
+        'IN-FLIGHT': {
+            icon: 'fa-plane',
+            categories: ['Analyzers', 'Connectors', 'Evaluation']
+        },
+        'LANDING': {
+            icon: 'fa-plane-arrival',
+            categories: ['Writers', 'Organize & Cite']
         }
     };
 
@@ -428,10 +451,10 @@
         { id: 't2', name: 'Scispace', cats: ['Assistants'], url: 'https://www.scispace.com', isAi: true, info: 'KI-Schreibassistent' },
         
         // FINDERS
-        { id: 't4', name: 'Swisscover RZS UNI/PH', cats: ['Finders'], url: 'https://rzs.swisscovery.slsp.ch/discovery/search?vid=41SLSP_RZS:VU07', isAi: false, info: 'Bibliothekskatalog Schweiz', isLib: true },
+        { id: 't4', name: 'Swisscover RZS UNI/PH', cats: ['Finders', 'Lizenziert'], url: 'https://rzs.swisscovery.slsp.ch/discovery/search?vid=41SLSP_RZS:VU07', isAi: false, info: 'Bibliothekskatalog Schweiz', isLib: true },
         { id: 't5', name: 'Elicit', cats: ['Finders'], url: 'https://elicit.org', isAi: true, info: 'Findet Paper und extrahiert Kernaussagen' },
         { id: 't6', name: 'Google Scholar', cats: ['Finders'], url: 'https://scholar.google.com', isAi: false, info: 'Breite Suche nach wissenschaftlichen Texten' },
-        { id: 't7', name: 'EconLit', cats: ['Finders'], url: 'https://www.aeaweb.org/econlit', isAi: false, info: 'Fachportal Wirtschaft', isLib: true },
+        { id: 't7', name: 'EconLit', cats: ['Finders', 'Lizenziert'], url: 'https://www.aeaweb.org/econlit', isAi: false, info: 'Fachportal Wirtschaft', isLib: true },
 
         // CONNECTORS
         { id: 't8', name: 'ResearchRabbit', cats: ['Connectors'], url: 'https://researchrabbit.ai', isAi: true, info: 'Visualisiert Literatur-Netzwerke' },
@@ -447,13 +470,13 @@
         { id: 't14', name: 'Paperpal', cats: ['Writers'], url: 'https://paperpal.com', isAi: true, info: 'Echtzeit-Schreibfeedback' },
         { id: 't15', name: 'DeepL Write', cats: ['Writers'], url: 'https://www.deepl.com/write', isAi: true, info: 'Sprachoptimierung' },
 
-        // VERWALTUNG
-        { id: 't18', name: 'Zotero', cats: ['Verwaltung'], url: 'https://www.zotero.org', isAi: false, info: 'Literaturverwaltung (Open Source)' },
-        { id: 't19', name: 'Citavi', cats: ['Verwaltung'], url: 'https://www.citavi.com', isAi: false, info: 'Literaturverwaltung' },
+        // ORGANIZE & CITE
+        { id: 't18', name: 'Zotero', cats: ['Organize & Cite'], url: 'https://www.zotero.org', isAi: false, info: 'Literaturverwaltung (Open Source)' },
+        { id: 't19', name: 'Citavi', cats: ['Organize & Cite'], url: 'https://www.citavi.com', isAi: false, info: 'Literaturverwaltung' },
 
         // EVALUATION / PUBLIKATIONSFORMEN
-        { id: 't20', name: 'Scite_', cats: ['Evaluation', 'Finders'], url: 'https://scite.ai', isAi: true, info: 'Smart Citations - wie wurde zitiert?', isLib: true },
-        { id: 't21', name: 'Consensus', cats: ['Evaluation', 'Finders'], url: 'https://consensus.app', isAi: true, info: 'Wissenschaftlicher Konsens finden', isLib: true }
+        { id: 't20', name: 'Scite_', cats: ['Evaluation', 'Finders', 'Lizenziert'], url: 'https://scite.ai', isAi: true, info: 'Smart Citations - wie wurde zitiert?', isLib: true },
+        { id: 't21', name: 'Consensus', cats: ['Evaluation', 'Finders', 'Lizenziert'], url: 'https://consensus.app', isAi: true, info: 'Wissenschaftlicher Konsens finden', isLib: true }
     ];
 
     
@@ -498,6 +521,25 @@
         { id: 'lic38', name: 'Statistical Portal OECD Data Explorer', url: 'https://dbis.ur.de/ZHBLU/resources/106121', info: 'Interaktive Plattform der OECD, mit der sich sozioökonomische Kennzahlen verschiedener Länder vergleichen und visualisieren lassen.', cats: ['Finders'], isLib: true }
     ];
 
+    const LEGACY_CATEGORY_MAP = {
+        'Verwaltung': 'Organize & Cite'
+    };
+
+    function normalizeCategoriesList(cats) {
+        const mapped = (Array.isArray(cats) ? cats : [])
+            .map(cat => LEGACY_CATEGORY_MAP[cat] || cat)
+            .filter(Boolean);
+        return mapped.length ? mapped : ['Organize & Cite'];
+    }
+
+    function deriveCategoriesForTool(toolData = {}) {
+        const normalizedCats = normalizeCategoriesList(toolData.cats);
+        const categoriesWithLicense = toolData.isLib && !normalizedCats.includes('Lizenziert')
+            ? [...normalizedCats, 'Lizenziert']
+            : normalizedCats;
+        return Array.from(new Set(categoriesWithLicense));
+    }
+
 
     let currentDragElement = null;
     let pendingAiElement = null;
@@ -523,10 +565,13 @@
 
     // Papierkorb
     function sanitizeToolData(toolData) {
+        const normalizedCats = toolData.type === 'text'
+            ? ((toolData.cats && toolData.cats.length) ? normalizeCategoriesList(toolData.cats) : ['Notizen'])
+            : deriveCategoriesForTool(toolData);
         return {
             id: toolData.id || toolData.uniqueId || ('restored-' + Date.now()),
             name: toolData.name || 'Unbenanntes Tool',
-            cats: Array.isArray(toolData.cats) && toolData.cats.length ? toolData.cats : ['Verwaltung'],
+            cats: normalizedCats,
             url: toolData.url || '#',
             info: toolData.info || 'Gelöscht',
             isAi: !!toolData.isAi,
@@ -645,7 +690,9 @@
             return;
         }
 
-        initialTools.push({ ...db, isLib: true, cats: db.cats && db.cats.length ? db.cats : ['Finders'] });
+        const baseCats = db.cats && db.cats.length ? db.cats : ['Finders'];
+        const enhancedCats = deriveCategoriesForTool({ ...db, isLib: true, cats: baseCats });
+        initialTools.push({ ...db, isLib: true, cats: enhancedCats });
         renderHangar();
 
         const modalEl = document.getElementById('licensedDbModal');
@@ -822,39 +869,59 @@
     // --- RENDER FUNKTIONEN ---
     function renderHangar() {
         const pool = document.getElementById('tool-pool');
+        if(!pool) return;
         pool.innerHTML = '';
 
         const searchTerm = currentSearchTerm;
         const selectedCategory = currentCategoryFilter;
 
-        // Gruppen bilden
-        Object.keys(categories).forEach(catKey => {
-            const catTools = initialTools.filter(t => {
-                const hasCategory = Array.isArray(t.cats) && t.cats.includes(catKey);
-                if(!hasCategory) return false;
+        Object.entries(flightPhases).forEach(([phaseName, meta]) => {
+            const phaseCategories = meta.categories || [];
+            const categoriesWithTools = [];
 
-                const matchesCategoryFilter = !selectedCategory || (Array.isArray(t.cats) && t.cats.includes(selectedCategory));
-                if(!matchesCategoryFilter) return false;
+            phaseCategories.forEach(catKey => {
+                const catTools = initialTools.filter(tool => {
+                    const toolCategories = deriveCategoriesForTool(tool);
+                    const hasCategory = toolCategories.includes(catKey) || (catKey === 'Lizenziert' && tool.isLib);
+                    if(!hasCategory) return false;
 
-                if(!searchTerm) return true;
+                    const matchesCategoryFilter = !selectedCategory
+                        || toolCategories.includes(selectedCategory)
+                        || (selectedCategory === 'Lizenziert' && tool.isLib);
+                    if(!matchesCategoryFilter) return false;
 
-                const haystack = `${t.name || ''} ${t.info || ''} ${(t.cats || []).join(' ')}`.toLowerCase();
-                return haystack.includes(searchTerm);
+                    if(!searchTerm) return true;
+
+                    const haystack = `${tool.name || ''} ${tool.info || ''} ${toolCategories.join(' ')}`.toLowerCase();
+                    return haystack.includes(searchTerm);
+                });
+
+                if(catTools.length) {
+                    categoriesWithTools.push({ catKey, catTools });
+                }
             });
-            if(catTools.length > 0) {
-                // Header einfügen
+
+            if(!categoriesWithTools.length) return;
+
+            const phaseHeader = document.createElement('h5');
+            phaseHeader.className = 'mt-3 mb-2 d-flex align-items-center text-primary';
+            const iconClass = (meta && meta.icon) ? meta.icon : 'fa-plane';
+            phaseHeader.innerHTML = `<i class="fas ${iconClass} me-2"></i> ${phaseName}`;
+            pool.appendChild(phaseHeader);
+
+            categoriesWithTools.forEach(({ catKey, catTools }) => {
                 const header = document.createElement('div');
                 header.className = 'cat-header';
                 const catIcon = (categories[catKey] && categories[catKey].icon) ? categories[catKey].icon : 'fa-tools';
                 header.innerHTML = `<i class="fas ${catIcon} me-2"></i> ${catKey}`;
                 pool.appendChild(header);
 
-                // Tools einfügen
                 catTools.forEach(tool => {
                     const instanceId = `${tool.id}-${catKey}`;
-                    pool.appendChild(createToolElement({ ...tool, uniqueId: instanceId }, 'hangar'));
+                    const enhancedTool = { ...tool, cats: deriveCategoriesForTool(tool), uniqueId: instanceId };
+                    pool.appendChild(createToolElement(enhancedTool, 'hangar'));
                 });
-            }
+            });
         });
     }
 
@@ -925,6 +992,9 @@
         div.draggable = true;
 
         const isText = toolData.type === 'text';
+        const categoriesForTool = isText
+            ? ((toolData.cats && toolData.cats.length) ? normalizeCategoriesList(toolData.cats) : ['Notizen'])
+            : deriveCategoriesForTool(toolData);
 
         // ID Generierung
         const uniqueId = toolData.uniqueId
@@ -937,7 +1007,7 @@
         div.dataset.name = toolData.name || '';
         div.dataset.info = toolData.info || '';
         div.dataset.url = toolData.url || '';
-        div.dataset.cats = Array.isArray(toolData.cats) ? toolData.cats.join('|') : '';
+        div.dataset.cats = Array.isArray(categoriesForTool) ? categoriesForTool.join('|') : '';
         div.dataset.isAi = toolData.isAi ? '1' : '0';
         div.dataset.isLib = toolData.isLib ? '1' : '0';
         div.dataset.isCustom = toolData.isCustom ? '1' : '0';
@@ -946,7 +1016,7 @@
         }
 
         // Icon bestimmen (wenn keine Kategorie-Icon, dann Standard)
-        const primaryCat = Array.isArray(toolData.cats) && toolData.cats.length ? toolData.cats[0] : null;
+        const primaryCat = Array.isArray(categoriesForTool) && categoriesForTool.length ? categoriesForTool[0] : null;
         const iconClass = (primaryCat && categories[primaryCat] && categories[primaryCat].icon) ? categories[primaryCat].icon : 'fa-tools';
 
         if(isText) {
@@ -968,8 +1038,8 @@
                 ${toolData.isLib ? '<span class="status-badge badge-lib">Uni</span>' : ''}
             `;
 
-            const categoryList = Array.isArray(toolData.cats) && toolData.cats.length
-                ? escapeHtml(toolData.cats.join(', '))
+            const categoryList = Array.isArray(categoriesForTool) && categoriesForTool.length
+                ? escapeHtml(categoriesForTool.join(', '))
                 : 'Allgemein';
 
             const safeName = escapeHtml(toolData.name || 'Unbenanntes Tool');
@@ -1125,7 +1195,7 @@
                 const toolId = tool.id || ('cust' + Date.now() + Math.random().toString(16).slice(2));
                 const exists = initialTools.some(existing => existing.id === toolId);
                 if(!exists) {
-                    initialTools.push({ ...tool, id: toolId, isCustom: true });
+                    initialTools.push({ ...tool, id: toolId, isCustom: true, cats: deriveCategoriesForTool(tool) });
                 }
             });
         } catch (error) {
@@ -1144,10 +1214,13 @@
 
         if(!name) return;
 
+        const baseCategories = cat && cat.length ? cat : ['Organize & Cite'];
+        const normalizedCats = deriveCategoriesForTool({ cats: baseCategories, isLib });
+
         const newTool = {
             id: 'cust' + Date.now(),
             name: name,
-            cats: cat && cat.length ? cat : ['Verwaltung'],
+            cats: normalizedCats,
             url: url || '#',
             info: info || 'Benutzerdefiniert',
             isAi: isAi,
@@ -1217,7 +1290,7 @@
                         name: savedItem.name || 'Notiz',
                         info: savedItem.info || savedItem.text || 'Notiz',
                         url: '#',
-                        cats: (savedItem.cats && savedItem.cats.length) ? savedItem.cats : ['Notizen'],
+                        cats: normalizeCategoriesList((savedItem.cats && savedItem.cats.length) ? savedItem.cats : ['Notizen']),
                         type: 'text',
                         text: savedItem.text || '',
                         uniqueId: savedItem.uniqueId || ('note-' + Date.now() + Math.random().toString(16).slice(2))
@@ -1229,10 +1302,11 @@
                 let original = initialTools.find(it => it.id === savedItem.id) || initialTools.find(it => it.name === savedItem.name);
 
                 if(!original) {
+                    const fallbackCats = (savedItem.cats && savedItem.cats.length) ? savedItem.cats : ['Organize & Cite'];
                     original = {
                         id: savedItem.id || 'restored',
                         name: savedItem.name || 'Unbenannt',
-                        cats: (savedItem.cats && savedItem.cats.length) ? savedItem.cats : ['Verwaltung'],
+                        cats: fallbackCats,
                         url: savedItem.url || '#',
                         info: savedItem.info || 'Wiederhergestellt',
                         isAi: !!savedItem.isAi,
@@ -1240,16 +1314,18 @@
                     };
                 }
 
+                const mergedTool = { ...original, ...savedItem };
                 const restoredTool = {
-                    ...original,
+                    ...mergedTool,
+                    cats: deriveCategoriesForTool(mergedTool),
                     uniqueId: savedItem.uniqueId,
-                    isCustom: savedItem.isCustom,
-                    isAi: savedItem.isAi,
-                isLib: savedItem.isLib
-            };
-            phase.appendChild(createToolElement(restoredTool, 'cockpit'));
+                    isCustom: mergedTool.isCustom,
+                    isAi: mergedTool.isAi,
+                    isLib: mergedTool.isLib
+                };
+                phase.appendChild(createToolElement(restoredTool, 'cockpit'));
+            });
         });
-    });
     }
 
     function exportConfiguration() {
