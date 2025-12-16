@@ -145,7 +145,7 @@
             .row { display: flex !important; flex-wrap: nowrap !important; }
             .col, .col-md-2 { flex: 1 !important; width: calc(100% / 6) !important; }
             body { background: white; -webkit-print-color-adjust: exact; }
-            .tool-link { display: inline-flex !important; align-items: center; gap: 4px; color: #0d6efd !important; text-decoration: underline; }
+            .tool-link { display: inline-flex !important; align-items: center; gap: 4px; color: #0d6efd !important; text-decoration: underline !important; visibility: visible !important; opacity: 1 !important; }
         }
     </style>
 </head>
@@ -206,6 +206,9 @@
                 <h3><i class="fas fa-plane-departure"></i> Mein Recherche-Cockpit</h3>
                 <div class="no-print">
                     <button class="btn btn-sm btn-warning me-2" onclick="resetCockpit()"><i class="fas fa-undo"></i> Reset</button>
+                    <button class="btn btn-sm btn-outline-primary me-2" onclick="exportConfiguration()"><i class="fas fa-download"></i> Export JSON</button>
+                    <button class="btn btn-sm btn-outline-primary me-2" onclick="triggerImport()"><i class="fas fa-upload"></i> Import JSON</button>
+                    <input type="file" id="importJsonInput" class="d-none" accept="application/json" />
                     <button class="btn btn-sm btn-success" onclick="window.print()"><i class="fas fa-file-pdf"></i> Als PDF speichern</button>
                 </div>
             </div>
@@ -505,7 +508,8 @@
     let currentSearchTerm = '';
     let currentCategoryFilter = '';
 
-    const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5', 'phase-6', 'phase-global'];
+    const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5', 'phase-global'];
+    const CUSTOM_TOOLS_KEY = 'customTools';
 
     function escapeHtml(str) {
         if(!str) return '';
@@ -694,6 +698,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+        loadCustomTools();
         renderHangar();
         renderCategoryInfo();
         populateCategoryOptions();
@@ -765,6 +770,7 @@
                     if(index >= 0) initialTools.splice(index, 1);
 
                     document.querySelectorAll(`[data-base-id="${data.id}"]`).forEach(el => el.remove());
+                    saveCustomTools();
                 }
 
                 addToDeleted(data);
@@ -806,6 +812,11 @@
                 pendingAiElement = null;
             }
         });
+
+        const importInput = document.getElementById('importJsonInput');
+        if(importInput) {
+            importInput.addEventListener('change', handleImportFile);
+        }
     });
 
     // --- RENDER FUNKTIONEN ---
@@ -1100,6 +1111,28 @@
     }
 
     // --- CUSTOM TOOL ---
+    function saveCustomTools() {
+        const customTools = initialTools.filter(tool => tool.isCustom);
+        localStorage.setItem(CUSTOM_TOOLS_KEY, JSON.stringify(customTools));
+    }
+
+    function loadCustomTools() {
+        const stored = localStorage.getItem(CUSTOM_TOOLS_KEY);
+        if(!stored) return;
+        try {
+            const customTools = JSON.parse(stored) || [];
+            customTools.forEach(tool => {
+                const toolId = tool.id || ('cust' + Date.now() + Math.random().toString(16).slice(2));
+                const exists = initialTools.some(existing => existing.id === toolId);
+                if(!exists) {
+                    initialTools.push({ ...tool, id: toolId, isCustom: true });
+                }
+            });
+        } catch (error) {
+            console.error('Fehler beim Laden der benutzerdefinierten Tools', error);
+        }
+    }
+
     function addCustomTool() {
         const name = document.getElementById('customToolName').value;
         const info = document.getElementById('customToolInfo').value;
@@ -1123,6 +1156,7 @@
         };
         
         initialTools.push(newTool);
+        saveCustomTools();
         renderHangar();
         
         bootstrap.Modal.getInstance(document.getElementById('customToolModal')).hide();
@@ -1211,11 +1245,80 @@
                     uniqueId: savedItem.uniqueId,
                     isCustom: savedItem.isCustom,
                     isAi: savedItem.isAi,
-                    isLib: savedItem.isLib
-                };
-                phase.appendChild(createToolElement(restoredTool, 'cockpit'));
-            });
+                isLib: savedItem.isLib
+            };
+            phase.appendChild(createToolElement(restoredTool, 'cockpit'));
         });
+    });
+    }
+
+    function exportConfiguration() {
+        let cockpitState = {};
+        let storedCustomTools = [];
+
+        try {
+            cockpitState = JSON.parse(localStorage.getItem('cockpitState_v3')) || {};
+        } catch (error) {
+            console.error('Fehler beim Lesen des Cockpit-Status', error);
+        }
+
+        try {
+            storedCustomTools = JSON.parse(localStorage.getItem(CUSTOM_TOOLS_KEY)) || [];
+        } catch (error) {
+            console.error('Fehler beim Lesen der Custom Tools', error);
+        }
+
+        const payload = {
+            cockpitState_v3: cockpitState,
+            customTools: storedCustomTools
+        };
+
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'cockpit-konfiguration.json';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }
+
+    function triggerImport() {
+        const input = document.getElementById('importJsonInput');
+        if(input) {
+            input.value = '';
+            input.click();
+        }
+    }
+
+    function handleImportFile(event) {
+        const input = event.target;
+        if(!input || !input.files || !input.files.length) return;
+
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = (loadEvent) => {
+            try {
+                const parsed = JSON.parse(loadEvent.target.result);
+                if(parsed && typeof parsed === 'object') {
+                    if(parsed.cockpitState_v3) {
+                        localStorage.setItem('cockpitState_v3', JSON.stringify(parsed.cockpitState_v3));
+                    }
+                    if(parsed.customTools) {
+                        localStorage.setItem(CUSTOM_TOOLS_KEY, JSON.stringify(parsed.customTools));
+                    }
+                    alert('Konfiguration importiert. Die Seite wird neu geladen.');
+                    location.reload();
+                } else {
+                    alert('Die Datei enthält keine gültige Konfiguration.');
+                }
+            } catch (error) {
+                console.error('Import fehlgeschlagen', error);
+                alert('Die Datei konnte nicht gelesen werden. Bitte prüfen Sie das JSON-Format.');
+            }
+        };
+        reader.readAsText(file);
     }
 
     function resetCockpit() {
@@ -1223,6 +1326,7 @@
             localStorage.removeItem('cockpitState_v2');
             localStorage.removeItem('cockpitState_v3');
             localStorage.removeItem('cockpitDeleted_v1');
+            localStorage.removeItem(CUSTOM_TOOLS_KEY);
             location.reload();
         }
     }
