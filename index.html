@@ -41,6 +41,9 @@
         .status-badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 8px; }
         .badge-ai { background: #f3e8ff; color: #6f42c1; border: 1px solid #e0c3ff; }
         .badge-lib { background: #e8fff3; color: #0f5132; border: 1px solid #b6e2c8; }
+        .badge-oa { background: #fff4e5; color: #d35400; border: 1px solid #f6d7b0; }
+        .edit-custom-btn { border: none; background: transparent; color: #6c757d; padding: 2px 6px; }
+        .edit-custom-btn:hover { color: #0d6efd; }
 
         /* Link Button on Card */
         .tool-link {
@@ -322,7 +325,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Eigenes Tool ergänzen</h5>
+                <h5 class="modal-title" id="customToolModalTitle">Eigenes Tool ergänzen</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -347,7 +350,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="addCustomTool()">Hinzufügen</button>
+                <button type="button" class="btn btn-primary" id="customToolSubmitBtn" onclick="addCustomTool()">Hinzufügen</button>
             </div>
         </div>
     </div>
@@ -484,7 +487,7 @@
         { id: 'lic1', name: 'Academic Search Ultimate (EBSCOhost)', url: 'https://dbis.ur.de/ZHBLU/resources/101844', info: 'Multidisziplinäre Volltextdatenbank mit mehr als 9 200 Zeitschriften (über 8 400 peer-reviewed), zahlreichen Magazinen und rund 60 000 Videos seit 1930', cats: ['Finders'], isLib: true },
         { id: 'lic2', name: 'Blackwell Reference Online', url: 'https://dbis.ur.de/ZHBLU/resources/7081', info: 'Sammlung von Referenzwerken aus den Geistes- und Sozialwissenschaften (z. B. Classics, History, Language & Linguistics, Philosophy & Religion, Sociology & Anthropology)', cats: ['Finders'], isLib: true },
         { id: 'lic3', name: 'Business Source Premier', url: 'https://dbis.ur.de/ZHBLU/resources/1333', info: 'Wirtschaftswissenschaftliche Datenbank mit Volltexten aus mehr als 2 200 Zeitschriften und Magazinen, Firmenprofilen, Marktstudien und SWOT-Analysen.', cats: ['Finders'], isLib: true },
-        { id: 'lic4', name: 'CEPR Discussion Papers', url: 'https://dbis.ur.de/ZHBLU/resources/12587', info: 'Working-Paper-Reihe des Centre for Economic Policy Research, in der renommierte Ökonominnen und Ökonomen aktuelle Forschungsarbeiten publizieren.', cats: ['Finders'], isLib: true },
+        { id: 'lic4', name: 'CEPR Discussion Papers', url: 'https://dbis.ur.de/ZHBLU/resources/12587', info: 'Working-Paper-Reihe des Centre for Economic Policy Research, in der renommierte Ökonominnen und Ökonomen aktuelle Forschungsarbeiten publizieren.', cats: ['Finders'], isLib: true, isOA: true },
         { id: 'lic5', name: 'Duden Sprachwissen (Munzinger-Portal)', url: 'https://dbis.ur.de/ZHBLU/resources/11752', info: 'Enthält die Standardwerke der Duden-Reihe (u. a. Rechtschreibung, Fremdwörterbuch, Stilwörterbuch), die prägnant sprachliche Fragen beantworten.', cats: ['Finders'], isLib: true },
         { id: 'lic6', name: 'EconLit', url: 'https://dbis.ur.de/ZHBLU/resources/36', info: 'Datenbank der American Economic Association, die seit 1969 wirtschaftswissenschaftliche Veröffentlichungen verzeichnet und rund 750 Zeitschriften, Bücher, Sammelwerke und Dissertationen auswertet', cats:['Finders'], isLib: true },
         { id: 'lic7', name: 'Encyclopedia of Health Economics', url: 'https://dbis.ur.de/ZHBLU/resources/100301', info: 'Dreibändiges Nachschlagewerk über Gesundheitsökonomie, das ökonomische Analysen des Gesundheitssystems, der Gesundheitsversorgung und -politik bietet.', cats: ['Finders'], isLib: true },
@@ -518,8 +521,8 @@
         { id: 'lic35', name: 'Wiley Online Library', url: 'https://dbis.ur.de/ZHBLU/resources/838', info: 'Plattform des Wiley-Verlags mit über 1 500 Fachzeitschriften und mehr als 20 000 eBooks aus den Natur-, Gesundheits- und Sozialwissenschaften', cats: ['Finders'], isLib: true },
         { id: 'lic36', name: 'WorldTradeLaw.net', url: 'https://dbis.ur.de/ZHBLU/resources/4825', info: 'Datenbank mit WTO- und GATT-Schiedsspruchtexten, Analysen und Kommentarmaterialien zur internationalen Handelspolitik', cats: ['Finders'], isLib: true },
         { id: 'lic37', name: 'wiso', url: 'https://dbis.ur.de/ZHBLU/resources/1232', info: 'Deutschsprachige Plattform mit Literaturhinweisen, E-Books und Fachzeitschriften zu Wirtschaft und Sozialwissenschaften; ergänzt um Module zur Betriebswirtschaftspraxis, Lecturio-Erklärvideos und das Statistikportal Tilasto', cats: ['Finders'], isLib: true },
-        { id: 'lic38', name: 'Statistical Portal OECD Data Explorer', url: 'https://dbis.ur.de/ZHBLU/resources/106121', info: 'Interaktive Plattform der OECD, mit der sich sozioökonomische Kennzahlen verschiedener Länder vergleichen und visualisieren lassen.', cats: ['Finders'], isLib: true }
-    ];
+        { id: 'lic38', name: 'Statistical Portal OECD Data Explorer', url: 'https://dbis.ur.de/ZHBLU/resources/106121', info: 'Interaktive Plattform der OECD, mit der sich sozioökonomische Kennzahlen verschiedener Länder vergleichen und visualisieren lassen.', cats: ['Finders'], isLib: true, isOA: true }
+    ].map(db => ({ isOA: false, ...db }));
 
     const LEGACY_CATEGORY_MAP = {
         'Verwaltung': 'Organize & Cite'
@@ -549,6 +552,7 @@
     let deletedTools = [];
     let currentSearchTerm = '';
     let currentCategoryFilter = '';
+    let currentEditingCustomToolId = null;
 
     const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5', 'phase-global'];
     const CUSTOM_TOOLS_KEY = 'customTools';
@@ -576,6 +580,7 @@
             info: toolData.info || 'Gelöscht',
             isAi: !!toolData.isAi,
             isLib: !!toolData.isLib,
+            isOA: !!toolData.isOA,
             isCustom: !!toolData.isCustom,
             type: toolData.type || 'tool',
             text: toolData.text || ''
@@ -674,6 +679,7 @@
         const badges = [];
         if(db.isLib) badges.push('<span class="status-badge badge-lib">Uni</span>');
         if(db.isAi) badges.push('<span class="status-badge badge-ai">KI</span>');
+        if(db.isOA) badges.push('<span class="status-badge badge-oa">Open Access</span>');
         badgeEl.innerHTML = badges.join(' ');
     }
 
@@ -691,8 +697,9 @@
         }
 
         const baseCats = db.cats && db.cats.length ? db.cats : ['Finders'];
-        const enhancedCats = deriveCategoriesForTool({ ...db, isLib: true, cats: baseCats });
-        initialTools.push({ ...db, isLib: true, cats: enhancedCats });
+        const normalizedDb = { ...db, isLib: true, cats: baseCats, isOA: !!db.isOA };
+        const enhancedCats = deriveCategoriesForTool(normalizedDb);
+        initialTools.push({ ...normalizedDb, cats: enhancedCats });
         renderHangar();
 
         const modalEl = document.getElementById('licensedDbModal');
@@ -838,6 +845,11 @@
                 if(titleField) titleField.value = '';
                 if(contentField) contentField.value = '';
             });
+        }
+
+        const customModalEl = document.getElementById('customToolModal');
+        if(customModalEl) {
+            customModalEl.addEventListener('hidden.bs.modal', () => resetCustomToolForm());
         }
 
         document.getElementById('confirmAiUse').addEventListener('click', () => {
@@ -1010,6 +1022,7 @@
         div.dataset.cats = Array.isArray(categoriesForTool) ? categoriesForTool.join('|') : '';
         div.dataset.isAi = toolData.isAi ? '1' : '0';
         div.dataset.isLib = toolData.isLib ? '1' : '0';
+        div.dataset.isOa = toolData.isOA ? '1' : '0';
         div.dataset.isCustom = toolData.isCustom ? '1' : '0';
         if(toolData.text) {
             div.dataset.text = toolData.text;
@@ -1033,9 +1046,11 @@
                 <span class="status-badge badge bg-light text-muted border">Notiz</span>
             `;
         } else {
+            const allowEdit = toolData.isCustom && origin === 'cockpit';
             const statusBadges = `
                 ${toolData.isAi ? '<span class="status-badge badge-ai">KI</span>' : ''}
                 ${toolData.isLib ? '<span class="status-badge badge-lib">Uni</span>' : ''}
+                ${toolData.isOA ? '<span class="status-badge badge-oa">Open Access</span>' : ''}
             `;
 
             const categoryList = Array.isArray(categoriesForTool) && categoriesForTool.length
@@ -1056,11 +1071,24 @@
                     <div class="small text-muted text-truncate">${categoryList}</div>
                 </div>
                 <i class="fas fa-info-circle text-muted" style="cursor:help;" data-bs-toggle="tooltip" title="${safeInfo}"></i>
+                ${allowEdit ? '<button type="button" class="edit-custom-btn" title="Bearbeiten"><i class="fas fa-pen"></i></button>' : ''}
                 <a href="${safeUrl}" target="_blank" class="tool-link" onclick="event.stopPropagation()" title="Tool öffnen">
                     <i class="fas fa-external-link-alt"></i>
                     <span class="d-none d-print-inline small text-decoration-underline text-primary">${safeUrl}</span>
                 </a>
             `;
+
+            if(allowEdit) {
+                const editBtn = div.querySelector('.edit-custom-btn');
+                if(editBtn) {
+                    editBtn.setAttribute('draggable', 'false');
+                    editBtn.addEventListener('mousedown', (event) => event.stopPropagation());
+                    editBtn.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        openCustomToolEditor({ ...toolData, cats: categoriesForTool, uniqueId });
+                    });
+                }
+            }
         }
 
         // Re-Init Tooltips
@@ -1203,6 +1231,101 @@
         }
     }
 
+    function resetCustomToolForm() {
+        currentEditingCustomToolId = null;
+
+        const titleEl = document.getElementById('customToolModalTitle');
+        if(titleEl) {
+            titleEl.textContent = 'Eigenes Tool ergänzen';
+        }
+
+        const submitBtn = document.getElementById('customToolSubmitBtn');
+        if(submitBtn) {
+            submitBtn.textContent = 'Hinzufügen';
+        }
+
+        const nameField = document.getElementById('customToolName');
+        const infoField = document.getElementById('customToolInfo');
+        const urlField = document.getElementById('customToolUrl');
+        const catSelect = document.getElementById('customToolCategory');
+
+        if(nameField) nameField.value = '';
+        if(infoField) infoField.value = '';
+        if(urlField) urlField.value = '';
+
+        if(catSelect) {
+            Array.from(catSelect.options).forEach(opt => opt.selected = false);
+        }
+
+        const aiCheckbox = document.getElementById('customToolIsAi');
+        const libCheckbox = document.getElementById('customToolIsLib');
+        if(aiCheckbox) aiCheckbox.checked = false;
+        if(libCheckbox) libCheckbox.checked = false;
+    }
+
+    function openCustomToolEditor(toolData) {
+        if(!toolData) return;
+
+        currentEditingCustomToolId = toolData.id;
+
+        const titleEl = document.getElementById('customToolModalTitle');
+        if(titleEl) {
+            titleEl.textContent = 'Eigenes Tool bearbeiten';
+        }
+
+        const submitBtn = document.getElementById('customToolSubmitBtn');
+        if(submitBtn) {
+            submitBtn.textContent = 'Speichern';
+        }
+
+        const normalizedCats = deriveCategoriesForTool(toolData);
+        const nameField = document.getElementById('customToolName');
+        const infoField = document.getElementById('customToolInfo');
+        const urlField = document.getElementById('customToolUrl');
+        const catSelect = document.getElementById('customToolCategory');
+        const aiCheckbox = document.getElementById('customToolIsAi');
+        const libCheckbox = document.getElementById('customToolIsLib');
+
+        if(nameField) nameField.value = toolData.name || '';
+        if(infoField) infoField.value = toolData.info || '';
+        if(urlField) urlField.value = toolData.url || '';
+
+        if(catSelect) {
+            const normalized = normalizeCategoriesList(normalizedCats);
+            Array.from(catSelect.options).forEach(opt => {
+                opt.selected = normalized.includes(opt.value);
+            });
+        }
+
+        if(aiCheckbox) aiCheckbox.checked = !!toolData.isAi;
+        if(libCheckbox) libCheckbox.checked = !!toolData.isLib;
+
+        const modalEl = document.getElementById('customToolModal');
+        if(modalEl) {
+            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            modal.show();
+        }
+    }
+
+    function rerenderCustomToolInstances(updatedTool) {
+        document.querySelectorAll(`.tool-card[data-base-id="${updatedTool.id}"]`).forEach(card => {
+            const parent = card.parentElement;
+            if(!parent) return;
+
+            const origin = dropTargets.includes(parent.id) ? 'cockpit' : 'hangar';
+            const updatedData = {
+                ...updatedTool,
+                cats: deriveCategoriesForTool(updatedTool),
+                uniqueId: card.id,
+                type: card.dataset.type || 'tool',
+                text: card.dataset.text || ''
+            };
+
+            const refreshedCard = createToolElement(updatedData, origin);
+            parent.replaceChild(refreshedCard, card);
+        });
+    }
+
     function addCustomTool() {
         const name = document.getElementById('customToolName').value;
         const info = document.getElementById('customToolInfo').value;
@@ -1216,9 +1339,11 @@
 
         const baseCategories = cat && cat.length ? cat : ['Organize & Cite'];
         const normalizedCats = deriveCategoriesForTool({ cats: baseCategories, isLib });
+        const isEditing = !!currentEditingCustomToolId;
+        const toolId = isEditing ? currentEditingCustomToolId : ('cust' + Date.now());
 
         const newTool = {
-            id: 'cust' + Date.now(),
+            id: toolId,
             name: name,
             cats: normalizedCats,
             url: url || '#',
@@ -1227,19 +1352,30 @@
             isLib: isLib,
             isCustom: true
         };
+
+        if(isEditing) {
+            const existingIndex = initialTools.findIndex(t => t.id === toolId);
+            const mergedTool = existingIndex >= 0 ? { ...initialTools[existingIndex], ...newTool } : newTool;
+            if(existingIndex >= 0) {
+                initialTools[existingIndex] = mergedTool;
+            } else {
+                initialTools.push(mergedTool);
+            }
+            saveCustomTools();
+            renderHangar();
+            rerenderCustomToolInstances(mergedTool);
+            saveState();
+        } else {
+            initialTools.push(newTool);
+            saveCustomTools();
+            renderHangar();
+        }
         
-        initialTools.push(newTool);
-        saveCustomTools();
-        renderHangar();
-        
-        bootstrap.Modal.getInstance(document.getElementById('customToolModal')).hide();
-        // Clear fields
-        document.getElementById('customToolName').value = '';
-        document.getElementById('customToolInfo').value = '';
-        document.getElementById('customToolUrl').value = '';
-        document.getElementById('customToolCategory').selectedIndex = -1;
-        document.getElementById('customToolIsAi').checked = false;
-        document.getElementById('customToolIsLib').checked = false;
+        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('customToolModal'));
+        if(modalInstance) {
+            modalInstance.hide();
+        }
+        resetCustomToolForm();
     }
 
     // --- STORAGE ---
@@ -1260,6 +1396,7 @@
                     cats: cats,
                     isAi: card.dataset.isAi === '1' || card.dataset.isAi === 'true',
                     isLib: card.dataset.isLib === '1' || card.dataset.isLib === 'true',
+                    isOA: card.dataset.isOa === '1' || card.dataset.isOa === 'true',
                     isCustom: card.dataset.isCustom === '1' || card.dataset.isCustom === 'true',
                     type: card.dataset.type || 'tool',
                     text: card.dataset.text || ''
@@ -1310,7 +1447,8 @@
                         url: savedItem.url || '#',
                         info: savedItem.info || 'Wiederhergestellt',
                         isAi: !!savedItem.isAi,
-                        isLib: !!savedItem.isLib
+                        isLib: !!savedItem.isLib,
+                        isOA: !!savedItem.isOA
                     };
                 }
 
@@ -1321,7 +1459,8 @@
                     uniqueId: savedItem.uniqueId,
                     isCustom: mergedTool.isCustom,
                     isAi: mergedTool.isAi,
-                    isLib: mergedTool.isLib
+                    isLib: mergedTool.isLib,
+                    isOA: mergedTool.isOA
                 };
                 phase.appendChild(createToolElement(restoredTool, 'cockpit'));
             });
