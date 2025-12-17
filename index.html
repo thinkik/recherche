@@ -42,13 +42,13 @@
         .tool-card:active { cursor: grabbing; }
         .tool-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 4px; color: #555; font-size: 0.8rem; }
         .tool-card-body { min-width: 0; }
-        .tool-title-row { align-items: flex-start; gap: 8px; }
-        .tool-title { white-space: normal; line-height: 1.25; max-height: 3.75em; overflow: hidden; transition: max-height 0.2s ease; }
+        .tool-title-row { align-items: flex-start; gap: 8px; flex-wrap: wrap; }
+        .tool-title { flex: 1 1 auto; min-width: 0; white-space: normal; line-height: 1.25; max-height: 3.75em; overflow: hidden; transition: max-height 0.2s ease; }
         .tool-title.expanded { max-height: none; }
         .tool-title-toggle { border: none; background: transparent; color: #0d6efd; font-size: 0.75rem; padding: 0 4px; line-height: 1.25; }
         .tool-title-toggle:hover { text-decoration: underline; }
         .tool-title-toggle:focus-visible { outline: 2px solid #0d6efd; outline-offset: 2px; }
-        .tool-badges { display: flex; gap: 4px; flex-shrink: 0; }
+        .tool-badges { display: flex; gap: 4px; flex-shrink: 0; margin-left: auto; }
         .tool-category { white-space: normal; line-height: 1.2; }
         .is-ai { box-shadow: inset 3px 0 0 #8e44ad; }
         .is-library { box-shadow: inset 3px 0 0 #198754; }
