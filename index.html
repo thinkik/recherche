@@ -1485,18 +1485,31 @@
         document.querySelectorAll('.tooltip').forEach(t => t.remove());
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.forEach((tooltipTriggerEl) => {
-            const existing = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
-            if(existing) existing.dispose();
+            let tooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
 
-            const tooltip = new bootstrap.Tooltip(tooltipTriggerEl, {
-                html: tooltipTriggerEl.getAttribute('data-bs-html') === 'true',
-                trigger: 'manual'
-            });
+            if(tooltip) {
+                const tooltipContent = tooltipTriggerEl.getAttribute('data-bs-title')
+                    || tooltipTriggerEl.getAttribute('title')
+                    || '';
+                tooltip.setContent({ '.tooltip-inner': tooltipContent });
+            } else {
+                tooltip = new bootstrap.Tooltip(tooltipTriggerEl, {
+                    html: tooltipTriggerEl.getAttribute('data-bs-html') === 'true',
+                    trigger: 'manual',
+                    container: 'body'
+                });
+            }
 
             if(tooltipTriggerEl.dataset.tooltipBound === 'true') return;
 
-            const showTooltip = () => tooltip.show();
-            const hideTooltip = () => tooltip.hide();
+            const showTooltip = () => {
+                const instance = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+                if(instance) instance.show();
+            };
+            const hideTooltip = () => {
+                const instance = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+                if(instance) instance.hide();
+            };
 
             tooltipTriggerEl.addEventListener('focus', showTooltip);
             tooltipTriggerEl.addEventListener('blur', hideTooltip);
