@@ -614,7 +614,6 @@
     const categories = {
         'Assistants': { icon: 'fa-lightbulb', info: 'KI-Co-Piloten, die beim Brainstorming, Strukturieren und beim ersten Aufschlag von Textbausteinen unterstützen.' },
         'Finders': { icon: 'fa-search', info: 'Suchmaschinen, Datenbanken und Kataloge, mit denen Sie geeignete Quellen aufspüren und Trefferlisten filtern.' },
-        'Lizenziert': { icon: 'fa-database', info: 'Lizenzierte Datenbanken und Angebote, die über die Hochschule verfügbar sind.' },
         'Connectors': { icon: 'fa-project-diagram', info: 'Tools zur Visualisierung und Vernetzung von Literatur, um Forschungsstränge und Schlüsselpublikationen sichtbar zu machen.' },
         'Analyzers': { icon: 'fa-microscope', info: 'Analysetools, die Texte zusammenfassen, erklären oder Inhalte aus PDFs und Artikeln herausarbeiten.' },
         'Evaluation': { icon: 'fa-check-double', info: 'Werkzeuge zur Bewertung von Qualität und Wirkung, z. B. Kontext zu Zitierungen oder Hinweise auf den wissenschaftlichen Konsens.' },
@@ -627,7 +626,7 @@
 
     const flightPhases = {
         'PRE-FLIGHT': { icon: 'fa-clipboard-list', categories: ['Assistants', 'Notizen'] },
-        'TAKE-OFF': { icon: 'fa-plane-departure', categories: ['Finders', 'Lizenziert'] },
+        'TAKE-OFF': { icon: 'fa-plane-departure', categories: ['Finders'] },
         'IN-FLIGHT': { icon: 'fa-plane', categories: ['Analyzers', 'Connectors', 'Evaluation'] },
         'LANDING': { icon: 'fa-plane-arrival', categories: ['Writers', 'Organize & Cite'] }
     };
@@ -635,10 +634,10 @@
     const initialTools = [
         { id: 't1', name: 'ChatGPT', cats: ['Assistants'], url: 'https://chat.openai.com', isAi: true, info: 'Brainstorming & Gliederung' },
         { id: 't2', name: 'Scispace', cats: ['Assistants'], url: 'https://www.scispace.com', isAi: true, info: 'KI-Schreibassistent' },
-        { id: 't4', name: 'Swisscover RZS UNI/PH', cats: ['Finders', 'Lizenziert'], url: 'https://rzs.swisscovery.slsp.ch/discovery/search?vid=41SLSP_RZS:VU07', isAi: false, info: 'Bibliothekskatalog Schweiz', isLib: true },
+        { id: 't4', name: 'Swisscover RZS UNI/PH', cats: ['Finders'], url: 'https://rzs.swisscovery.slsp.ch/discovery/search?vid=41SLSP_RZS:VU07', isAi: false, info: 'Bibliothekskatalog Schweiz', isLib: true },
         { id: 't5', name: 'Elicit', cats: ['Finders'], url: 'https://elicit.org', isAi: true, info: 'Findet Paper und extrahiert Kernaussagen' },
         { id: 't6', name: 'Google Scholar', cats: ['Finders'], url: 'https://scholar.google.com', isAi: false, info: 'Breite Suche nach wissenschaftlichen Texten' },
-        { id: 't7', name: 'EconLit', cats: ['Finders', 'Lizenziert'], url: 'https://www.aeaweb.org/econlit', isAi: false, info: 'Fachportal Wirtschaft', isLib: true },
+        { id: 't7', name: 'EconLit', cats: ['Finders'], url: 'https://www.aeaweb.org/econlit', isAi: false, info: 'Fachportal Wirtschaft', isLib: true },
         { id: 't8', name: 'ResearchRabbit', cats: ['Connectors'], url: 'https://researchrabbit.ai', isAi: true, info: 'Visualisiert Literatur-Netzwerke' },
         { id: 't9', name: 'Connected Papers', cats: ['Connectors'], url: 'https://www.connectedpapers.com', isAi: false, info: 'Zeigt verwandte Arbeiten grafisch an' },
         { id: 't10', name: 'Explainpaper', cats: ['Analyzers'], url: 'https://www.explainpaper.com', isAi: true, info: 'Erklärt komplexe Textstellen' },
@@ -649,8 +648,8 @@
         { id: 't15', name: 'DeepL Write', cats: ['Writers'], url: 'https://www.deepl.com/write', isAi: true, info: 'Sprachoptimierung' },
         { id: 't18', name: 'Zotero', cats: ['Organize & Cite'], url: 'https://www.zotero.org', isAi: false, info: 'Literaturverwaltung (Open Source)' },
         { id: 't19', name: 'Citavi', cats: ['Organize & Cite'], url: 'https://www.citavi.com', isAi: false, info: 'Literaturverwaltung' },
-        { id: 't20', name: 'Scite_', cats: ['Evaluation', 'Finders', 'Lizenziert'], url: 'https://scite.ai', isAi: true, info: 'Smart Citations - wie wurde zitiert?', isLib: true },
-        { id: 't21', name: 'Consensus', cats: ['Evaluation', 'Finders', 'Lizenziert'], url: 'https://consensus.app', isAi: true, info: 'Wissenschaftlicher Konsens finden', isLib: true }
+        { id: 't20', name: 'Scite_', cats: ['Evaluation', 'Finders'], url: 'https://scite.ai', isAi: true, info: 'Smart Citations - wie wurde zitiert?', isLib: true },
+        { id: 't21', name: 'Consensus', cats: ['Evaluation', 'Finders'], url: 'https://consensus.app', isAi: true, info: 'Wissenschaftlicher Konsens finden', isLib: true }
     ];
 
     const licensedDatabases = [
@@ -720,21 +719,19 @@
     function normalizeCategoriesList(cats) {
         const mapped = (Array.isArray(cats) ? cats : [])
             .map(cat => LEGACY_CATEGORY_MAP[cat] || cat)
-            .filter(Boolean);
+            .filter(Boolean)
+            .filter(cat => cat !== 'Lizenziert');
         return mapped.length ? mapped : ['Organize & Cite'];
     }
 
     function deriveCategoriesForTool(toolData = {}) {
         const normalizedCats = normalizeCategoriesList(toolData.cats);
-        const categoriesWithLicense = toolData.isLib && !normalizedCats.includes('Lizenziert')
-            ? [...normalizedCats, 'Lizenziert']
-            : normalizedCats;
-        return Array.from(new Set(categoriesWithLicense));
+        return Array.from(new Set(normalizedCats));
     }
 
     function getFilterableCategories() {
         return Object.keys(categories)
-            .filter(catKey => catKey !== 'Lizenziert' && !HIDDEN_CATEGORIES.includes(catKey));
+            .filter(catKey => !HIDDEN_CATEGORIES.includes(catKey));
     }
 
     function escapeHtml(str) {
@@ -1138,12 +1135,11 @@
             phaseCategories.forEach(catKey => {
                 const catTools = initialTools.filter(tool => {
                     const toolCategories = deriveCategoriesForTool(tool);
-                    const hasCategory = toolCategories.includes(catKey) || (catKey === 'Lizenziert' && tool.isLib);
+                    const hasCategory = toolCategories.includes(catKey);
                     if(!hasCategory) return false;
 
                     const matchesCategoryFilter = !selectedCategory
-                        || toolCategories.includes(selectedCategory)
-                        || (selectedCategory === 'Lizenziert' && tool.isLib);
+                        || toolCategories.includes(selectedCategory);
                     if(!matchesCategoryFilter) return false;
 
                     if(!searchTerm) return true;
