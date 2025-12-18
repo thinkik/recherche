@@ -624,6 +624,8 @@
         'Notizen': { icon: 'fa-note-sticky', info: 'Eigene Merkzettel, um Zwischenergebnisse, Recherchewege und To-dos festzuhalten.' }
     };
 
+    const HIDDEN_CATEGORIES = ['Notizen'];
+
     const flightPhases = {
         'PRE-FLIGHT': { icon: 'fa-clipboard-list', categories: ['Assistants', 'Notizen'] },
         'TAKE-OFF': { icon: 'fa-plane-departure', categories: ['Finders', 'Lizenziert'] },
@@ -1181,7 +1183,9 @@
 
         grid.innerHTML = '';
 
-        Object.entries(categories).forEach(([catKey, meta]) => {
+        Object.entries(categories)
+            .filter(([catKey]) => !HIDDEN_CATEGORIES.includes(catKey))
+            .forEach(([catKey, meta]) => {
             const iconClass = (meta && meta.icon) ? meta.icon : 'fa-tools';
             const description = escapeHtml((meta && meta.info) ? meta.info : '');
 
@@ -1204,7 +1208,9 @@
 
         select.innerHTML = '';
 
-        Object.keys(categories).forEach(catKey => {
+        Object.keys(categories)
+            .filter(catKey => !HIDDEN_CATEGORIES.includes(catKey))
+            .forEach(catKey => {
             const option = document.createElement('option');
             option.value = catKey;
             option.textContent = catKey;
@@ -1219,7 +1225,8 @@
         const currentValue = select.value;
         select.innerHTML = '<option value="">Alle Kategorien</option>';
 
-        const filterableCategories = Object.keys(categories).filter(catKey => catKey !== 'Lizenziert');
+        const filterableCategories = Object.keys(categories)
+            .filter(catKey => catKey !== 'Lizenziert' && !HIDDEN_CATEGORIES.includes(catKey));
 
         filterableCategories.forEach(catKey => {
             const option = document.createElement('option');
