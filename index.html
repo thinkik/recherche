@@ -722,6 +722,8 @@
         'Assistants': { icon: 'fa-lightbulb', info: 'KI-Co-Piloten, die beim Brainstorming, Strukturieren und beim ersten Aufschlag von Textbausteinen unterstützen.' },
         'Finders': { icon: 'fa-search', info: 'Suchmaschinen, Datenbanken und Kataloge, mit denen Sie geeignete Quellen aufspüren und Trefferlisten filtern.' },
         'Connectors': { icon: 'fa-project-diagram', info: 'Tools zur Visualisierung und Vernetzung von Literatur, um Forschungsstränge und Schlüsselpublikationen sichtbar zu machen.' },
+        'Analyzers': { icon: 'fa-microscope', info: 'Analysetools, die Texte zusammenfassen, erklären oder Inhalte aus PDFs und Artikeln herausarbeiten.' },
+        'Evaluator': { icon: 'fa-check-double', info: 'Werkzeuge zur Bewertung von Qualität und Wirkung, z. B. Kontext zu Zitierungen oder Hinweise auf den wissenschaftlichen Konsens.' },
         'Evaluation': { icon: 'fa-check-double', info: 'Werkzeuge zur Bewertung von Qualität und Wirkung, z. B. Kontext zu Zitierungen oder Hinweise auf den wissenschaftlichen Konsens.' },
         'Analyzers': { icon: 'fa-microscope', info: 'Analysetools, die Texte zusammenfassen, erklären oder Inhalte aus PDFs und Artikeln herausarbeiten.' },
         'Writers': { icon: 'fa-pen-nib', info: 'Schreib- und Stilhilfen für saubere Formulierungen, Grammatikprüfungen und Feedback auf wissenschaftliche Texte.' },
@@ -734,7 +736,7 @@
     const flightPhases = {
         'PRE-FLIGHT': { icon: 'fa-clipboard-list', categories: ['Assistants'] },
         'TAKE-OFF': { icon: 'fa-plane-departure', categories: ['Finders'] },
-        'IN-FLIGHT': { icon: 'fa-plane', categories: ['Evaluation', 'Analyzers', 'Connectors'] },
+        'IN-FLIGHT': { icon: 'fa-plane', categories: ['Evaluator', 'Analyzers', 'Connectors'] },
         'LANDING': { icon: 'fa-plane-arrival', categories: ['Writers', 'Organize & Cite', 'Notizen'] }
     };
 
@@ -755,8 +757,8 @@
         { id: 't15', name: 'DeepL Write', cats: ['Writers'], url: 'https://www.deepl.com/write', isAi: true, info: 'Sprachoptimierung' },
         { id: 't18', name: 'Zotero', cats: ['Organize & Cite'], url: 'https://www.zotero.org', isAi: false, info: 'Literaturverwaltung (Open Source)' },
         { id: 't19', name: 'Citavi', cats: ['Organize & Cite'], url: 'https://www.citavi.com', isAi: false, info: 'Literaturverwaltung' },
-        { id: 't20', name: 'Scite_', cats: ['Evaluation', 'Finders'], url: 'https://scite.ai', isAi: true, info: 'Smart Citations - wie wurde zitiert?', isLib: true },
-        { id: 't21', name: 'Consensus', cats: ['Evaluation', 'Finders'], url: 'https://consensus.app', isAi: true, info: 'Wissenschaftlicher Konsens finden', isLib: true }
+        { id: 't20', name: 'Scite_', cats: ['Evaluator', 'Finders'], url: 'https://scite.ai', isAi: true, info: 'Smart Citations - wie wurde zitiert?', isLib: true },
+        { id: 't21', name: 'Consensus', cats: ['Evaluator', 'Finders'], url: 'https://consensus.app', isAi: true, info: 'Wissenschaftlicher Konsens finden', isLib: true }
     ];
 
     const licensedDatabases = [
@@ -787,7 +789,7 @@
         { id: 'lic25', name: 'Periodicals Archive Online', url: 'https://dbis.ur.de/ZHBLU/resources/7828', info: 'Archiv mit den Rückläufen von über 700 Zeitschriften der Geistes- und Sozialwissenschaften (mehr als 3 Mio. Artikel und 15 Mio. Seiten)', cats: ['Finders'], isLib: true },
         { id: 'lic26', name: 'Policy Commons', url: 'https://dbis.ur.de/ZHBLU/resources/105297', info: 'Plattform, die über 3 Mio. Publikationen von Politikexpertinnen, Think Tanks, IGOs und NGOs systematisch auffindbar macht', cats: ['Finders'], isLib: true },
         { id: 'lic27', name: 'ScienceDirect', url: 'https://dbis.ur.de/ZHBLU/resources/801', info: 'Elsevier-Plattform mit elektronischen Zeitschriften und eBooks; sie ermöglicht simultane oder getrennte Suche und Volltextzugriff je nach Lizenz', cats: ['Finders'], isLib: true },
-        { id: 'lic28', name: 'Scite', url: 'https://dbis.ur.de/ZHBLU/resources/104874', info: 'KI-gestützte Zitationsdatenbank, die den Kontext von Zitierungen analysiert und Zitate als unterstützend, widersprechend oder erwähnend klassifiziert', cats: ['Evaluation', 'Finders'], isLib: true, isAi: true },
+        { id: 'lic28', name: 'Scite', url: 'https://dbis.ur.de/ZHBLU/resources/104874', info: 'KI-gestützte Zitationsdatenbank, die den Kontext von Zitierungen analysiert und Zitate als unterstützend, widersprechend oder erwähnend klassifiziert', cats: ['Evaluator', 'Finders'], isLib: true, isAi: true },
         { id: 'lic29', name: 'Statista', url: 'https://dbis.ur.de/ZHBLU/resources/9808', info: 'Statistikportal, das Daten aus zahlreichen Instituten und Quellen bündelt; der Volltextzugriff richtet sich nach dem Lizenzumfang der Einrichtung.', cats: ['Finders'], isLib: true },
         { id: 'lic30', name: 'Tax Treaties Database (IBFD)', url: 'https://dbis.ur.de/ZHBLU/resources/8580', info: 'Datenbank des International Bureau of Fiscal Documentation (IBFD) mit über 5 000 geltenden Steuerabkommen, Protokollen und Verhandlungsdokumenten sowie Vergleichstabellen.', cats: ['Finders'], isLib: true, isOA: false },
         { id: 'lic31', name: 'UN iLibrary', url: 'https://dbis.ur.de/ZHBLU/resources/101214', info: 'Bibliothek der Vereinten Nationen mit Büchern, Zeitschriften, Arbeitspapieren und Statistiken zu UN-Themen in verschiedenen Sprachen.', cats: ['Finders'], isLib: true },
@@ -2252,7 +2254,7 @@
                 { id: 'ex-note-phase3', uniqueId: 'ex-note-phase3', name: 'Datenbanken', info: 'Start mit Scholar, ergänzend Swisscovery und wiso für deutschsprachige Quellen nutzen.', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'Reihenfolge: Scholar → Swisscovery → wiso. Filter: 2018+, peer-reviewed, Bibliometrie.' }
             ],
             'phase-4': [
-                { id: 't20', uniqueId: 'ex-phase4-tool', name: 'Scite_', info: 'Zitationskontext prüfen', url: 'https://scite.ai', cats: ['Evaluation', 'Finders'], isAi: true, isLib: true, isOA: false, isCustom: false, type: 'tool' },
+                { id: 't20', uniqueId: 'ex-phase4-tool', name: 'Scite_', info: 'Zitationskontext prüfen', url: 'https://scite.ai', cats: ['Evaluator', 'Finders'], isAi: true, isLib: true, isOA: false, isCustom: false, type: 'tool' },
                 { id: 'ex-note-phase4', uniqueId: 'ex-note-phase4', name: 'Bewertung', info: 'Scite-Labels prüfen: unterstützend vs. widersprechend; Abstracts in Explainpaper testen.', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'Top 5 Paper auswählen und in Explainpaper zusammenfassen lassen. Quellen mit vielen widersprechenden Zitierungen markieren.' }
             ],
             'phase-5': [
