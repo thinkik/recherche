@@ -240,11 +240,18 @@
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                 <h3><i class="fas fa-plane-departure"></i> Mein Recherche-Cockpit</h3>
                 <div class="no-print cockpit-actions">
-                    <button class="btn btn-sm btn-warning" onclick="resetCockpit()"><i class="fas fa-undo"></i> Reset</button>
-                    <button class="btn btn-sm btn-outline-primary" id="exportJsonButton" onclick="exportConfiguration()"><i class="fas fa-download"></i> Export JSON</button>
-                    <button class="btn btn-sm btn-outline-primary" id="importJsonButton" onclick="triggerImport()"><i class="fas fa-upload"></i> Import JSON</button>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-primary dropdown-toggle" id="flightControlsButton" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-plane"></i> Flight Controls
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="flightControlsButton">
+                            <li><button class="dropdown-item" id="savePdfButton" type="button"><i class="fas fa-file-pdf me-2"></i>Als PDF speichern</button></li>
+                            <li><button class="dropdown-item" id="exportJsonButton" type="button" onclick="exportConfiguration()"><i class="fas fa-download me-2"></i>Export JSON</button></li>
+                            <li><button class="dropdown-item" id="importJsonButton" type="button" onclick="triggerImport()"><i class="fas fa-upload me-2"></i>Import JSON</button></li>
+                            <li><button class="dropdown-item" type="button" onclick="resetCockpit()"><i class="fas fa-undo me-2"></i>Reset</button></li>
+                        </ul>
+                    </div>
                     <input type="file" id="importJsonInput" class="d-none" accept="application/json" />
-                    <button class="btn btn-sm btn-success" id="savePdfButton"><i class="fas fa-file-pdf"></i> Als PDF speichern</button>
                 </div>
             </div>
 
@@ -341,8 +348,8 @@
                         <ul class="orientation-tip-list ps-3">
                             <li><strong>Drag & Drop:</strong> Ziehen Sie Tools am Griff <i class="fas fa-grip-lines-vertical text-muted"></i> vom Hangar in die Phasen.</li>
                             <li><strong>Löschen:</strong> Entfernen Sie Tools über den roten Papierkorb-Button oder indem Sie sie in die Lösch-Zone ziehen.</li>
-                            <li><strong>Import & Export:</strong> Nutzen Sie die JSON-Buttons oben rechts, um Cockpit-Setups zu sichern oder zu teilen.</li>
-                            <li><strong>PDF / Drucken:</strong> Der PDF-Button öffnet den Druckdialog – wählen Sie dort „Als PDF speichern“.</li>
+                            <li><strong>Import & Export:</strong> Öffnen Sie das Flight-Controls-Menü oben rechts, um Cockpit-Setups als JSON zu sichern oder zu teilen.</li>
+                            <li><strong>PDF / Drucken:</strong> Im Flight-Controls-Menü finden Sie die PDF-Funktion. Sie öffnet den Druckdialog – wählen Sie dort „Als PDF speichern“.</li>
                         </ul>
                     </div>
                     <div class="col-md-5">
@@ -830,7 +837,7 @@
     const orientationOnboardingSteps = {
         drag: ['.hangar-area', '.phase-col'],
         delete: ['#delete-zone'],
-        export: ['#savePdfButton', '#exportJsonButton', '#importJsonButton']
+        export: ['#flightControlsButton', '#savePdfButton', '#exportJsonButton', '#importJsonButton']
     };
 
     function clearOrientationHighlights() {
