@@ -722,10 +722,10 @@
         'Assistants': { icon: 'fa-lightbulb', info: 'KI-Co-Piloten, die beim Brainstorming, Strukturieren und beim ersten Aufschlag von Textbausteinen unterstützen.' },
         'Finders': { icon: 'fa-search', info: 'Suchmaschinen, Datenbanken und Kataloge, mit denen Sie geeignete Quellen aufspüren und Trefferlisten filtern.' },
         'Connectors': { icon: 'fa-project-diagram', info: 'Tools zur Visualisierung und Vernetzung von Literatur, um Forschungsstränge und Schlüsselpublikationen sichtbar zu machen.' },
-        'Evaluator': { icon: 'fa-check-double', info: 'Werkzeuge zur Bewertung von Qualität und Wirkung, z. B. Kontext zu Zitierungen oder Hinweise auf den wissenschaftlichen Konsens.' },
+        'Evaluators': { icon: 'fa-check-double', info: 'Werkzeuge zur Bewertung von Qualität und Wirkung, z. B. Kontext zu Zitierungen oder Hinweise auf den wissenschaftlichen Konsens.' },
         'Analyzers': { icon: 'fa-microscope', info: 'Analysetools, die Texte zusammenfassen, erklären oder Inhalte aus PDFs und Artikeln herausarbeiten.' },
         'Writers': { icon: 'fa-pen-nib', info: 'Schreib- und Stilhilfen für saubere Formulierungen, Grammatikprüfungen und Feedback auf wissenschaftliche Texte.' },
-        'Organizer': { icon: 'fa-folder-open', info: 'Literaturverwaltungsprogramme zum Sammeln, Ordnen und Zitieren Ihrer Quellen in verschiedenen Zitationsstilen.' },
+        'Organizers': { icon: 'fa-folder-open', info: 'Literaturverwaltungsprogramme zum Sammeln, Ordnen und Zitieren Ihrer Quellen in verschiedenen Zitationsstilen.' },
         'Notizen': { icon: 'fa-note-sticky', info: 'Eigene Merkzettel, um Zwischenergebnisse, Recherchewege und To-dos festzuhalten.' }
     };
 
@@ -734,8 +734,8 @@
     const flightPhases = {
         'PRE-FLIGHT': { icon: 'fa-clipboard-list', categories: ['Assistants'] },
         'TAKE-OFF': { icon: 'fa-plane-departure', categories: ['Finders'] },
-        'IN-FLIGHT': { icon: 'fa-plane', categories: ['Evaluator', 'Analyzers', 'Connectors'] },
-        'LANDING': { icon: 'fa-plane-arrival', categories: ['Writers', 'Organizer', 'Notizen'] }
+        'IN-FLIGHT': { icon: 'fa-plane', categories: ['Evaluators', 'Analyzers', 'Connectors'] },
+        'LANDING': { icon: 'fa-plane-arrival', categories: ['Writers', 'Organizers', 'Notizen'] }
     };
 
     const initialTools = [
@@ -753,10 +753,10 @@
         { id: 't13', name: 'Writefull', cats: ['Writers'], url: 'https://writefull.com', isAi: true, info: 'Akademische Sprachprüfung' },
         { id: 't14', name: 'Paperpal', cats: ['Writers'], url: 'https://paperpal.com', isAi: true, info: 'Echtzeit-Schreibfeedback' },
         { id: 't15', name: 'DeepL Write', cats: ['Writers'], url: 'https://www.deepl.com/write', isAi: true, info: 'Sprachoptimierung' },
-        { id: 't18', name: 'Zotero', cats: ['Organizer'], url: 'https://www.zotero.org', isAi: false, info: 'Literaturverwaltung (Open Source)' },
-        { id: 't19', name: 'Citavi', cats: ['Organizer'], url: 'https://www.citavi.com', isAi: false, info: 'Literaturverwaltung' },
-        { id: 't20', name: 'Scite_', cats: ['Evaluator', 'Finders'], url: 'https://scite.ai', isAi: true, info: 'Smart Citations - wie wurde zitiert?', isLib: true },
-        { id: 't21', name: 'Consensus', cats: ['Evaluator', 'Finders'], url: 'https://consensus.app', isAi: true, info: 'Wissenschaftlicher Konsens finden', isLib: true }
+        { id: 't18', name: 'Zotero', cats: ['Organizers'], url: 'https://www.zotero.org', isAi: false, info: 'Literaturverwaltung (Open Source)' },
+        { id: 't19', name: 'Citavi', cats: ['Organizers'], url: 'https://www.citavi.com', isAi: false, info: 'Literaturverwaltung' },
+        { id: 't20', name: 'Scite_', cats: ['Evaluators', 'Finders'], url: 'https://scite.ai', isAi: true, info: 'Smart Citations - wie wurde zitiert?', isLib: true },
+        { id: 't21', name: 'Consensus', cats: ['Evaluators', 'Finders'], url: 'https://consensus.app', isAi: true, info: 'Wissenschaftlicher Konsens finden', isLib: true }
     ];
 
     const licensedDatabases = [
@@ -787,7 +787,7 @@
         { id: 'lic25', name: 'Periodicals Archive Online', url: 'https://dbis.ur.de/ZHBLU/resources/7828', info: 'Archiv mit den Rückläufen von über 700 Zeitschriften der Geistes- und Sozialwissenschaften (mehr als 3 Mio. Artikel und 15 Mio. Seiten)', cats: ['Finders'], isLib: true },
         { id: 'lic26', name: 'Policy Commons', url: 'https://dbis.ur.de/ZHBLU/resources/105297', info: 'Plattform, die über 3 Mio. Publikationen von Politikexpertinnen, Think Tanks, IGOs und NGOs systematisch auffindbar macht', cats: ['Finders'], isLib: true },
         { id: 'lic27', name: 'ScienceDirect', url: 'https://dbis.ur.de/ZHBLU/resources/801', info: 'Elsevier-Plattform mit elektronischen Zeitschriften und eBooks; sie ermöglicht simultane oder getrennte Suche und Volltextzugriff je nach Lizenz', cats: ['Finders'], isLib: true },
-        { id: 'lic28', name: 'Scite', url: 'https://dbis.ur.de/ZHBLU/resources/104874', info: 'KI-gestützte Zitationsdatenbank, die den Kontext von Zitierungen analysiert und Zitate als unterstützend, widersprechend oder erwähnend klassifiziert', cats: ['Evaluator', 'Finders'], isLib: true, isAi: true },
+        { id: 'lic28', name: 'Scite', url: 'https://dbis.ur.de/ZHBLU/resources/104874', info: 'KI-gestützte Zitationsdatenbank, die den Kontext von Zitierungen analysiert und Zitate als unterstützend, widersprechend oder erwähnend klassifiziert', cats: ['Evaluators', 'Finders'], isLib: true, isAi: true },
         { id: 'lic29', name: 'Statista', url: 'https://dbis.ur.de/ZHBLU/resources/9808', info: 'Statistikportal, das Daten aus zahlreichen Instituten und Quellen bündelt; der Volltextzugriff richtet sich nach dem Lizenzumfang der Einrichtung.', cats: ['Finders'], isLib: true },
         { id: 'lic30', name: 'Tax Treaties Database (IBFD)', url: 'https://dbis.ur.de/ZHBLU/resources/8580', info: 'Datenbank des International Bureau of Fiscal Documentation (IBFD) mit über 5 000 geltenden Steuerabkommen, Protokollen und Verhandlungsdokumenten sowie Vergleichstabellen.', cats: ['Finders'], isLib: true, isOA: false },
         { id: 'lic31', name: 'UN iLibrary', url: 'https://dbis.ur.de/ZHBLU/resources/101214', info: 'Bibliothek der Vereinten Nationen mit Büchern, Zeitschriften, Arbeitspapieren und Statistiken zu UN-Themen in verschiedenen Sprachen.', cats: ['Finders'], isLib: true },
@@ -800,7 +800,7 @@
         { id: 'lic38', name: 'Statistical Portal OECD Data Explorer', url: 'https://dbis.ur.de/ZHBLU/resources/106121', info: 'Interaktive Plattform der OECD, mit der sich sozioökonomische Kennzahlen verschiedener Länder vergleichen und visualisieren lassen.', cats: ['Finders'], isLib: true, isOA: true }
     ].map(db => ({ isOA: false, ...db }));
 
-    const LEGACY_CATEGORY_MAP = { 'Verwaltung': 'Organizer' };
+    const LEGACY_CATEGORY_MAP = { 'Verwaltung': 'Organizers' };
     const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5', 'phase-6', 'phase-global'];
     const CUSTOM_TOOLS_KEY = 'customTools';
     const MAX_IMPORT_FILE_SIZE_BYTES = 2 * 1024 * 1024;
@@ -827,7 +827,7 @@
             .map(cat => LEGACY_CATEGORY_MAP[cat] || cat)
             .filter(Boolean)
             .filter(cat => cat !== 'Lizenziert');
-        return mapped.length ? mapped : ['Organizer'];
+        return mapped.length ? mapped : ['Organizers'];
     }
 
     function deriveCategoriesForTool(toolData = {}) {
@@ -970,7 +970,7 @@
             name: cardEl.dataset.name || (cardEl.querySelector('.fw-bold') ? cardEl.querySelector('.fw-bold').innerText : 'Tool'),
             info: cardEl.dataset.info || '',
             url: cardEl.dataset.url || '#',
-            cats: cats.length ? cats : ['Organizer'],
+            cats: cats.length ? cats : ['Organizers'],
             isAi: cardEl.dataset.isAi === '1' || cardEl.dataset.isAi === 'true',
             isLib: cardEl.dataset.isLib === '1' || cardEl.dataset.isLib === 'true',
             isOA: cardEl.dataset.isOa === '1' || cardEl.dataset.isOa === 'true',
@@ -1965,7 +1965,7 @@
 
         if(!name) return;
 
-        const baseCategories = cat && cat.length ? cat : ['Organizer'];
+        const baseCategories = cat && cat.length ? cat : ['Organizers'];
         const normalizedCats = deriveCategoriesForTool({ cats: baseCategories, isLib });
         const isEditing = !!currentEditingCustomToolId;
         const toolId = isEditing ? currentEditingCustomToolId : ('cust' + Date.now());
@@ -2067,7 +2067,7 @@
                 let original = initialTools.find(it => it.id === savedItem.id) || initialTools.find(it => it.name === savedItem.name);
 
                 if(!original) {
-                    const fallbackCats = (savedItem.cats && savedItem.cats.length) ? savedItem.cats : ['Organizer'];
+                    const fallbackCats = (savedItem.cats && savedItem.cats.length) ? savedItem.cats : ['Organizers'];
                     original = {
                         id: savedItem.id || 'restored',
                         name: savedItem.name || 'Unbenannt',
@@ -2252,7 +2252,7 @@
                 { id: 'ex-note-phase3', uniqueId: 'ex-note-phase3', name: 'Datenbanken', info: 'Start mit Scholar, ergänzend Swisscovery und wiso für deutschsprachige Quellen nutzen.', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'Reihenfolge: Scholar → Swisscovery → wiso. Filter: 2018+, peer-reviewed, Bibliometrie.' }
             ],
             'phase-4': [
-                { id: 't20', uniqueId: 'ex-phase4-tool', name: 'Scite_', info: 'Zitationskontext prüfen', url: 'https://scite.ai', cats: ['Evaluator', 'Finders'], isAi: true, isLib: true, isOA: false, isCustom: false, type: 'tool' },
+                { id: 't20', uniqueId: 'ex-phase4-tool', name: 'Scite_', info: 'Zitationskontext prüfen', url: 'https://scite.ai', cats: ['Evaluators', 'Finders'], isAi: true, isLib: true, isOA: false, isCustom: false, type: 'tool' },
                 { id: 'ex-note-phase4', uniqueId: 'ex-note-phase4', name: 'Bewertung', info: 'Scite-Labels prüfen: unterstützend vs. widersprechend; Abstracts in Explainpaper testen.', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'Top 5 Paper auswählen und in Explainpaper zusammenfassen lassen. Quellen mit vielen widersprechenden Zitierungen markieren.' }
             ],
             'phase-5': [
@@ -2264,7 +2264,7 @@
                 { id: 'ex-note-phase6', uniqueId: 'ex-note-phase6', name: 'Schreibplan', info: 'Einleitung mit Problemaufriss, dann Methodik der Vergleichsstudien, Ergebnisse, Grenzen, Ausblick.', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'Gliederung: 1) Ausgangslage, 2) Methoden der KI-gestützten Suche, 3) Bewertungsergebnisse, 4) Bias & Grenzen, 5) Fazit.' }
             ],
             'phase-global': [
-                { id: 't18', uniqueId: 'ex-phase-global-tool', name: 'Zotero', info: 'Literatur verwalten und Exporte vorbereiten', url: 'https://www.zotero.org', cats: ['Organizer'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'tool' },
+                { id: 't18', uniqueId: 'ex-phase-global-tool', name: 'Zotero', info: 'Literatur verwalten und Exporte vorbereiten', url: 'https://www.zotero.org', cats: ['Organizers'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'tool' },
                 { id: 'ex-note-phase-global', uniqueId: 'ex-note-phase-global', name: 'Projekt-Checkliste', info: 'Versionierung in Zotero, regelmäßige Backups, wöchentliche Auswertung der Fortschritte.', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'To-dos: Ordnerstruktur in Zotero anlegen, Tags für Studienart nutzen, wöchentlich Export der Bibtex-Datei.' }
             ]
         };
