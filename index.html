@@ -1434,7 +1434,7 @@
                 });
             }
         } else {
-            const allowEdit = toolData.isCustom && origin === 'cockpit';
+            const allowEdit = isCustomToolData(toolData) && origin === 'cockpit';
             const statusBadges = `
                 ${toolData.isAi ? '<span class="status-badge badge-ai">KI</span>' : ''}
                 ${toolData.isLib ? '<span class="status-badge badge-lib">Uni</span>' : ''}
@@ -1887,7 +1887,8 @@
                 cats: deriveCategoriesForTool(updatedTool),
                 uniqueId: card.id,
                 type: card.dataset.type || 'tool',
-                text: card.dataset.text || ''
+                text: card.dataset.text || '',
+                isCustom: isCustomToolData(updatedTool)
             };
 
             const refreshedCard = createToolElement(updatedData, origin);
