@@ -69,6 +69,16 @@
             outline-offset: 3px;
             box-shadow: 0 0 0 6px rgba(13, 110, 253, 0.2);
             transition: outline-offset 0.2s ease, box-shadow 0.2s ease;
+            const editNoteBtn = div.querySelector('.edit-note-btn');
+            if(editNoteBtn) {
+                editNoteBtn.setAttribute('aria-label', 'Notiz bearbeiten');
+                editNoteBtn.setAttribute('draggable', 'false');
+                editNoteBtn.addEventListener('mousedown', (event) => event.stopPropagation());
+                editNoteBtn.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    startNoteEditing(div);
+                });
+            }
         }
         .orientation-onboarding-tag {
             display: inline-flex;
@@ -761,6 +771,8 @@
     let orientationFocusTrapCleanup = null;
     let lastFocusedElement = null;
     let targetPhaseForNote = null;
+    let currentEditingNoteId = null;
+    let defaultNoteModalTitle = '';
     let deletedTools = [];
     let currentSearchTerm = '';
     let currentCategoryFilter = '';
@@ -925,6 +937,12 @@
             text: cardEl.dataset.text || '',
             uniqueId: cardEl.id
         };
+    }
+
+    function startNoteEditing(noteElement) {
+        if(!noteElement) return;
+        const parentId = noteElement.parentElement ? noteElement.parentElement.id : null;
+        openTextModal(parentId, noteElement);
     }
 
     function handleCardRemoval(cardEl) {
@@ -1405,9 +1423,12 @@
                 <div class="tool-icon"><i class="fas fa-note-sticky"></i></div>
                 <div class="flex-grow-1 tool-card-body">
                     <div class="d-flex tool-title-row">
-                        <div class="fw-bold tool-title">${displayTitle}</div>
+                        <div class="fw-bold tool-title note-title">${displayTitle}</div>
+                        <button type="button" class="edit-custom-btn edit-note-btn" title="Notiz bearbeiten">
+                            <i class="fas fa-pen"></i>
+                        </button>
                     </div>
-                    <div class="small text-muted text-wrap">${displayText || 'Kein Text hinterlegt'}</div>
+                    <div class="small text-muted text-wrap note-body-text">${displayText || 'Kein Text hinterlegt'}</div>
                 </div>
                 <span class="status-badge badge bg-light text-muted border">Notiz</span>
             `;
@@ -1648,8 +1669,32 @@
     }
 
     // === NOTIZEN ===
-    function openTextModal(targetId) {
-        targetPhaseForNote = targetId;
+    function openTextModal(targetId, noteElement = null) {
+        targetPhaseForNote = targetId || (noteElement && noteElement.parentElement ? noteElement.parentElement.id : null);
+        currentEditingNoteId = noteElement ? noteElement.id : null;
+
+        const titleField = document.getElementById('noteTitle');
+        const contentField = document.getElementById('noteContent');
+        const modalTitleEl = document.getElementById('textNoteModalTitle');
+
+        if(modalTitleEl && defaultNoteModalTitle === '') {
+            defaultNoteModalTitle = modalTitleEl.innerHTML;
+        }
+
+        if(noteElement) {
+            if(modalTitleEl) {
+                modalTitleEl.innerHTML = '<i class="fas fa-note-sticky me-2"></i>Notiz bearbeiten';
+            }
+            if(titleField) titleField.value = noteElement.dataset.name || '';
+            if(contentField) contentField.value = noteElement.dataset.text || noteElement.dataset.info || '';
+        } else {
+            if(modalTitleEl && defaultNoteModalTitle) {
+                modalTitleEl.innerHTML = defaultNoteModalTitle;
+            }
+            if(titleField) titleField.value = '';
+            if(contentField) contentField.value = '';
+        }
+
         if(!textModal) {
             const modalEl = document.getElementById('textNoteModal');
             if(modalEl) {
@@ -1662,9 +1707,15 @@
     }
 
     function addTextBlock() {
-        if(!targetPhaseForNote) return;
+        if(!targetPhaseForNote && !currentEditingNoteId) return;
 
-        const target = document.getElementById(targetPhaseForNote);
+        let target = null;
+        if(currentEditingNoteId) {
+            const existingNote = document.getElementById(currentEditingNoteId);
+            target = existingNote ? existingNote.parentElement : null;
+        } else {
+            target = document.getElementById(targetPhaseForNote);
+        }
         if(!target) return;
 
         const titleField = document.getElementById('noteTitle');
@@ -1673,6 +1724,34 @@
         const content = contentField ? contentField.value.trim() : '';
 
         if(!content && !title) return;
+
+        if(currentEditingNoteId) {
+            const existing = document.getElementById(currentEditingNoteId);
+            if(existing) {
+                const finalTitle = title || 'Notiz';
+                const finalContent = content || 'Notiz';
+                existing.dataset.name = finalTitle;
+                existing.dataset.info = finalContent;
+                existing.dataset.text = content;
+
+                const titleEl = existing.querySelector('.note-title');
+                if(titleEl) titleEl.textContent = finalTitle;
+
+                const bodyEl = existing.querySelector('.note-body-text');
+                if(bodyEl) {
+                    const displayText = escapeHtml(content || '').replace(/\n/g, '<br>');
+                    bodyEl.innerHTML = displayText || 'Kein Text hinterlegt';
+                }
+
+                saveState();
+            }
+
+            if(textModal) {
+                textModal.hide();
+            }
+
+            return;
+        }
 
         const noteId = 'note-' + Date.now() + Math.random().toString(16).slice(2);
         const noteData = {
@@ -2128,13 +2207,22 @@
 
         const textModalEl = document.getElementById('textNoteModal');
         if(textModalEl) {
+            const modalTitleEl = document.getElementById('textNoteModalTitle');
+            if(modalTitleEl) {
+                defaultNoteModalTitle = modalTitleEl.innerHTML;
+            }
             textModal = new bootstrap.Modal(textModalEl);
             textModalEl.addEventListener('hidden.bs.modal', () => {
                 targetPhaseForNote = null;
+                currentEditingNoteId = null;
                 const titleField = document.getElementById('noteTitle');
                 const contentField = document.getElementById('noteContent');
                 if(titleField) titleField.value = '';
                 if(contentField) contentField.value = '';
+                const modalTitleEl = document.getElementById('textNoteModalTitle');
+                if(modalTitleEl && defaultNoteModalTitle) {
+                    modalTitleEl.innerHTML = defaultNoteModalTitle;
+                }
             });
         }
 
