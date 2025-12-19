@@ -725,7 +725,7 @@
         'Evaluator': { icon: 'fa-check-double', info: 'Werkzeuge zur Bewertung von Qualität und Wirkung, z. B. Kontext zu Zitierungen oder Hinweise auf den wissenschaftlichen Konsens.' },
         'Analyzers': { icon: 'fa-microscope', info: 'Analysetools, die Texte zusammenfassen, erklären oder Inhalte aus PDFs und Artikeln herausarbeiten.' },
         'Writers': { icon: 'fa-pen-nib', info: 'Schreib- und Stilhilfen für saubere Formulierungen, Grammatikprüfungen und Feedback auf wissenschaftliche Texte.' },
-        'Organize & Cite': { icon: 'fa-folder-open', info: 'Literaturverwaltungsprogramme zum Sammeln, Ordnen und Zitieren Ihrer Quellen in verschiedenen Zitationsstilen.' },
+        'Organizer': { icon: 'fa-folder-open', info: 'Literaturverwaltungsprogramme zum Sammeln, Ordnen und Zitieren Ihrer Quellen in verschiedenen Zitationsstilen.' },
         'Notizen': { icon: 'fa-note-sticky', info: 'Eigene Merkzettel, um Zwischenergebnisse, Recherchewege und To-dos festzuhalten.' }
     };
 
@@ -735,7 +735,7 @@
         'PRE-FLIGHT': { icon: 'fa-clipboard-list', categories: ['Assistants'] },
         'TAKE-OFF': { icon: 'fa-plane-departure', categories: ['Finders'] },
         'IN-FLIGHT': { icon: 'fa-plane', categories: ['Evaluator', 'Analyzers', 'Connectors'] },
-        'LANDING': { icon: 'fa-plane-arrival', categories: ['Writers', 'Organize & Cite', 'Notizen'] }
+        'LANDING': { icon: 'fa-plane-arrival', categories: ['Writers', 'Organizer', 'Notizen'] }
     };
 
     const initialTools = [
@@ -753,8 +753,8 @@
         { id: 't13', name: 'Writefull', cats: ['Writers'], url: 'https://writefull.com', isAi: true, info: 'Akademische Sprachprüfung' },
         { id: 't14', name: 'Paperpal', cats: ['Writers'], url: 'https://paperpal.com', isAi: true, info: 'Echtzeit-Schreibfeedback' },
         { id: 't15', name: 'DeepL Write', cats: ['Writers'], url: 'https://www.deepl.com/write', isAi: true, info: 'Sprachoptimierung' },
-        { id: 't18', name: 'Zotero', cats: ['Organize & Cite'], url: 'https://www.zotero.org', isAi: false, info: 'Literaturverwaltung (Open Source)' },
-        { id: 't19', name: 'Citavi', cats: ['Organize & Cite'], url: 'https://www.citavi.com', isAi: false, info: 'Literaturverwaltung' },
+        { id: 't18', name: 'Zotero', cats: ['Organizer'], url: 'https://www.zotero.org', isAi: false, info: 'Literaturverwaltung (Open Source)' },
+        { id: 't19', name: 'Citavi', cats: ['Organizer'], url: 'https://www.citavi.com', isAi: false, info: 'Literaturverwaltung' },
         { id: 't20', name: 'Scite_', cats: ['Evaluator', 'Finders'], url: 'https://scite.ai', isAi: true, info: 'Smart Citations - wie wurde zitiert?', isLib: true },
         { id: 't21', name: 'Consensus', cats: ['Evaluator', 'Finders'], url: 'https://consensus.app', isAi: true, info: 'Wissenschaftlicher Konsens finden', isLib: true }
     ];
@@ -800,7 +800,7 @@
         { id: 'lic38', name: 'Statistical Portal OECD Data Explorer', url: 'https://dbis.ur.de/ZHBLU/resources/106121', info: 'Interaktive Plattform der OECD, mit der sich sozioökonomische Kennzahlen verschiedener Länder vergleichen und visualisieren lassen.', cats: ['Finders'], isLib: true, isOA: true }
     ].map(db => ({ isOA: false, ...db }));
 
-    const LEGACY_CATEGORY_MAP = { 'Verwaltung': 'Organize & Cite' };
+    const LEGACY_CATEGORY_MAP = { 'Verwaltung': 'Organizer' };
     const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5', 'phase-6', 'phase-global'];
     const CUSTOM_TOOLS_KEY = 'customTools';
     const MAX_IMPORT_FILE_SIZE_BYTES = 2 * 1024 * 1024;
@@ -827,7 +827,7 @@
             .map(cat => LEGACY_CATEGORY_MAP[cat] || cat)
             .filter(Boolean)
             .filter(cat => cat !== 'Lizenziert');
-        return mapped.length ? mapped : ['Organize & Cite'];
+        return mapped.length ? mapped : ['Organizer'];
     }
 
     function deriveCategoriesForTool(toolData = {}) {
@@ -970,7 +970,7 @@
             name: cardEl.dataset.name || (cardEl.querySelector('.fw-bold') ? cardEl.querySelector('.fw-bold').innerText : 'Tool'),
             info: cardEl.dataset.info || '',
             url: cardEl.dataset.url || '#',
-            cats: cats.length ? cats : ['Organize & Cite'],
+            cats: cats.length ? cats : ['Organizer'],
             isAi: cardEl.dataset.isAi === '1' || cardEl.dataset.isAi === 'true',
             isLib: cardEl.dataset.isLib === '1' || cardEl.dataset.isLib === 'true',
             isOA: cardEl.dataset.isOa === '1' || cardEl.dataset.isOa === 'true',
@@ -1965,7 +1965,7 @@
 
         if(!name) return;
 
-        const baseCategories = cat && cat.length ? cat : ['Organize & Cite'];
+        const baseCategories = cat && cat.length ? cat : ['Organizer'];
         const normalizedCats = deriveCategoriesForTool({ cats: baseCategories, isLib });
         const isEditing = !!currentEditingCustomToolId;
         const toolId = isEditing ? currentEditingCustomToolId : ('cust' + Date.now());
@@ -2067,7 +2067,7 @@
                 let original = initialTools.find(it => it.id === savedItem.id) || initialTools.find(it => it.name === savedItem.name);
 
                 if(!original) {
-                    const fallbackCats = (savedItem.cats && savedItem.cats.length) ? savedItem.cats : ['Organize & Cite'];
+                    const fallbackCats = (savedItem.cats && savedItem.cats.length) ? savedItem.cats : ['Organizer'];
                     original = {
                         id: savedItem.id || 'restored',
                         name: savedItem.name || 'Unbenannt',
@@ -2264,7 +2264,7 @@
                 { id: 'ex-note-phase6', uniqueId: 'ex-note-phase6', name: 'Schreibplan', info: 'Einleitung mit Problemaufriss, dann Methodik der Vergleichsstudien, Ergebnisse, Grenzen, Ausblick.', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'Gliederung: 1) Ausgangslage, 2) Methoden der KI-gestützten Suche, 3) Bewertungsergebnisse, 4) Bias & Grenzen, 5) Fazit.' }
             ],
             'phase-global': [
-                { id: 't18', uniqueId: 'ex-phase-global-tool', name: 'Zotero', info: 'Literatur verwalten und Exporte vorbereiten', url: 'https://www.zotero.org', cats: ['Organize & Cite'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'tool' },
+                { id: 't18', uniqueId: 'ex-phase-global-tool', name: 'Zotero', info: 'Literatur verwalten und Exporte vorbereiten', url: 'https://www.zotero.org', cats: ['Organizer'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'tool' },
                 { id: 'ex-note-phase-global', uniqueId: 'ex-note-phase-global', name: 'Projekt-Checkliste', info: 'Versionierung in Zotero, regelmäßige Backups, wöchentliche Auswertung der Fortschritte.', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'To-dos: Ordnerstruktur in Zotero anlegen, Tags für Studienart nutzen, wöchentlich Export der Bibtex-Datei.' }
             ]
         };
