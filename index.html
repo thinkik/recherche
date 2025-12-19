@@ -109,6 +109,34 @@
         .toast-error { border-left-color: #dc2626; }
         .toast-error .toast-icon { color: #dc2626; }
 
+        /* === License Badge === */
+        .license-badge {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            background: #ffffff;
+            color: #495057;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 8px 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1100;
+        }
+
+        .license-badge a {
+            color: #0d6efd;
+            text-decoration: none;
+        }
+
+        .license-badge a:hover,
+        .license-badge a:focus-visible {
+            text-decoration: underline;
+        }
+
         @media (max-width: 576px) {
             .toast-container { left: 0.75rem; right: 0.75rem; top: auto; bottom: 1rem; align-items: flex-end; }
             .toast-item { width: 100%; max-width: none; }
@@ -172,6 +200,11 @@
 <body>
 
 <div id="toast-container" class="toast-container no-print" aria-live="polite" aria-atomic="true" role="region" aria-label="Systembenachrichtigungen"></div>
+
+<div class="license-badge no-print" aria-label="Lizenzhinweis">
+    <i class="fas fa-balance-scale"></i>
+    <span>Lizenz: <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a></span>
+</div>
 
 <div class="container-fluid">
     <div class="row">
