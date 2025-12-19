@@ -69,16 +69,6 @@
             outline-offset: 3px;
             box-shadow: 0 0 0 6px rgba(13, 110, 253, 0.2);
             transition: outline-offset 0.2s ease, box-shadow 0.2s ease;
-            const editNoteBtn = div.querySelector('.edit-note-btn');
-            if(editNoteBtn) {
-                editNoteBtn.setAttribute('aria-label', 'Notiz bearbeiten');
-                editNoteBtn.setAttribute('draggable', 'false');
-                editNoteBtn.addEventListener('mousedown', (event) => event.stopPropagation());
-                editNoteBtn.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    startNoteEditing(div);
-                });
-            }
         }
         .orientation-onboarding-tag {
             display: inline-flex;
@@ -1416,11 +1406,11 @@
         const primaryCat = Array.isArray(categoriesForTool) && categoriesForTool.length ? categoriesForTool[0] : null;
         const iconClass = (primaryCat && categories[primaryCat] && categories[primaryCat].icon) ? categories[primaryCat].icon : 'fa-tools';
 
-        if(isText) {
-            const displayText = escapeHtml(toolData.text || toolData.info || '').replace(/\n/g, '<br>');
-            const displayTitle = escapeHtml(toolData.name || 'Notiz');
-            div.innerHTML = `
-                <div class="tool-icon"><i class="fas fa-note-sticky"></i></div>
+            if(isText) {
+                const displayText = escapeHtml(toolData.text || toolData.info || '').replace(/\n/g, '<br>');
+                const displayTitle = escapeHtml(toolData.name || 'Notiz');
+                div.innerHTML = `
+                    <div class="tool-icon"><i class="fas fa-note-sticky"></i></div>
                 <div class="flex-grow-1 tool-card-body">
                     <div class="d-flex tool-title-row">
                         <div class="fw-bold tool-title note-title">${displayTitle}</div>
@@ -1432,6 +1422,17 @@
                 </div>
                 <span class="status-badge badge bg-light text-muted border">Notiz</span>
             `;
+
+            const editNoteBtn = div.querySelector('.edit-note-btn');
+            if(editNoteBtn) {
+                editNoteBtn.setAttribute('aria-label', 'Notiz bearbeiten');
+                editNoteBtn.setAttribute('draggable', 'false');
+                editNoteBtn.addEventListener('mousedown', (event) => event.stopPropagation());
+                editNoteBtn.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    startNoteEditing(div);
+                });
+            }
         } else {
             const allowEdit = toolData.isCustom && origin === 'cockpit';
             const statusBadges = `
