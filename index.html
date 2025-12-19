@@ -1001,8 +1001,13 @@
         }
 
         if(origin === 'cockpit') {
+            if(toolData.type === 'text') {
+                addToDeleted(toolData);
+                showToast("Notiz entfernt (in 'Gelöschte Tools & Notizen' wiederherstellbar).", 'info');
+            } else {
+                showToast('Tool entfernt.', 'info');
+            }
             saveState();
-            showToast('Tool entfernt.', 'info');
             return;
         } else {
             if(toolData.isCustom) {
