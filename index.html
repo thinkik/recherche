@@ -292,6 +292,7 @@
                             <li><button class="dropdown-item" id="savePdfButton" type="button"><i class="fas fa-file-pdf me-2"></i>Als PDF speichern</button></li>
                             <li><button class="dropdown-item" id="exportJsonButton" type="button" onclick="exportConfiguration()"><i class="fas fa-download me-2"></i>Export JSON</button></li>
                             <li><button class="dropdown-item" id="importJsonButton" type="button" onclick="triggerImport()"><i class="fas fa-upload me-2"></i>Import JSON</button></li>
+                            <li><button class="dropdown-item" type="button" onclick="loadExampleCockpit()"><i class="fas fa-lightbulb me-2"></i>Beispiel</button></li>
                             <li><button class="dropdown-item" type="button" onclick="resetCockpit()"><i class="fas fa-undo me-2"></i>Reset</button></li>
                         </ul>
                     </div>
@@ -2225,6 +2226,61 @@
             localStorage.removeItem(CUSTOM_TOOLS_KEY);
             location.reload();
         }
+    }
+
+    function loadExampleCockpit() {
+        const confirmed = confirm('Das aktuelle Cockpit wird zurückgesetzt und ein Beispiel geladen. Fortfahren?');
+        if(!confirmed) return;
+
+        const exampleState = {
+            'phase-1': [
+                { id: 't1', uniqueId: 'ex-phase1-tool', name: 'ChatGPT', info: 'Ideen für den thematischen Fokus sammeln', url: 'https://chat.openai.com', cats: ['Assistants'], isAi: true, isLib: false, isOA: false, isCustom: false, type: 'tool' },
+                { id: 'ex-note-phase1', uniqueId: 'ex-note-phase1', name: 'Forschungsfrage', info: 'Erste Leitfrage: Welche Folgen hat KI-gestützte Literaturrecherche auf die Ergebnisqualität?', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'Welche Auswirkungen hat KI-gestützte Recherche auf die Qualität von Studien in der Informationswissenschaft?' }
+            ],
+            'phase-2': [
+                { id: 't5', uniqueId: 'ex-phase2-tool', name: 'Elicit', info: 'Schlüsselbegriffe und Synonyme sammeln', url: 'https://elicit.org', cats: ['Finders'], isAi: true, isLib: false, isOA: false, isCustom: false, type: 'tool' },
+                { id: 'ex-note-phase2', uniqueId: 'ex-note-phase2', name: 'Suchbegriffe', info: 'KI-assisted search, evaluation metrics, scholarly quality, bias mitigation', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'Suchstrings: "AI-assisted literature search", "scholarly quality", "systematic review tools", "bias mitigation".' }
+            ],
+            'phase-3': [
+                { id: 't6', uniqueId: 'ex-phase3-tool', name: 'Google Scholar', info: 'Breite Suche nach relevanten Studien', url: 'https://scholar.google.com', cats: ['Finders'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'tool' },
+                { id: 'ex-note-phase3', uniqueId: 'ex-note-phase3', name: 'Datenbanken', info: 'Start mit Scholar, ergänzend Swisscovery und wiso für deutschsprachige Quellen nutzen.', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'Reihenfolge: Scholar → Swisscovery → wiso. Filter: 2018+, peer-reviewed, Bibliometrie.' }
+            ],
+            'phase-4': [
+                { id: 't20', uniqueId: 'ex-phase4-tool', name: 'Scite_', info: 'Zitationskontext prüfen', url: 'https://scite.ai', cats: ['Evaluation', 'Finders'], isAi: true, isLib: true, isOA: false, isCustom: false, type: 'tool' },
+                { id: 'ex-note-phase4', uniqueId: 'ex-note-phase4', name: 'Bewertung', info: 'Scite-Labels prüfen: unterstützend vs. widersprechend; Abstracts in Explainpaper testen.', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'Top 5 Paper auswählen und in Explainpaper zusammenfassen lassen. Quellen mit vielen widersprechenden Zitierungen markieren.' }
+            ],
+            'phase-5': [
+                { id: 't11', uniqueId: 'ex-phase5-tool', name: 'Humata', info: 'PDFs interaktiv auswerten', url: 'https://humata.ai', cats: ['Analyzers'], isAi: true, isLib: false, isOA: false, isCustom: false, type: 'tool' },
+                { id: 'ex-note-phase5', uniqueId: 'ex-note-phase5', name: 'Lesestrategie', info: 'Schlüsselabschnitte markieren, methodische Details extrahieren.', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'Leseliste priorisieren: 3 systematische Reviews, 2 Vergleichsstudien. Fokus auf Methodik-Abschnitte.' }
+            ],
+            'phase-6': [
+                { id: 't13', uniqueId: 'ex-phase6-tool', name: 'Writefull', info: 'Entwurf sprachlich glätten', url: 'https://writefull.com', cats: ['Writers'], isAi: true, isLib: false, isOA: false, isCustom: false, type: 'tool' },
+                { id: 'ex-note-phase6', uniqueId: 'ex-note-phase6', name: 'Schreibplan', info: 'Einleitung mit Problemaufriss, dann Methodik der Vergleichsstudien, Ergebnisse, Grenzen, Ausblick.', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'Gliederung: 1) Ausgangslage, 2) Methoden der KI-gestützten Suche, 3) Bewertungsergebnisse, 4) Bias & Grenzen, 5) Fazit.' }
+            ],
+            'phase-global': [
+                { id: 't18', uniqueId: 'ex-phase-global-tool', name: 'Zotero', info: 'Literatur verwalten und Exporte vorbereiten', url: 'https://www.zotero.org', cats: ['Organize & Cite'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'tool' },
+                { id: 'ex-note-phase-global', uniqueId: 'ex-note-phase-global', name: 'Projekt-Checkliste', info: 'Versionierung in Zotero, regelmäßige Backups, wöchentliche Auswertung der Fortschritte.', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'To-dos: Ordnerstruktur in Zotero anlegen, Tags für Studienart nutzen, wöchentlich Export der Bibtex-Datei.' }
+            ]
+        };
+
+        localStorage.removeItem('cockpitState_v2');
+        localStorage.removeItem('cockpitDeleted_v1');
+        localStorage.removeItem(CUSTOM_TOOLS_KEY);
+
+        const baseTools = initialTools.filter(tool => !tool.isCustom);
+        initialTools.splice(0, initialTools.length, ...baseTools);
+
+        localStorage.setItem('cockpitState_v3', JSON.stringify(exampleState));
+
+        renderHangar();
+        loadState();
+
+        const titleInput = document.getElementById('cockpitTitleInput');
+        if(titleInput) {
+            titleInput.value = 'Beispiel-Cockpit: KI-gestützte Literaturrecherche';
+        }
+
+        showToast('Beispiel-Cockpit geladen.', 'success');
     }
 
     // === INITIALISIERUNG ===
