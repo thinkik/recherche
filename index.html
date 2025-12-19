@@ -1597,6 +1597,22 @@
         if(target) target.classList.remove('drag-over');
     }
 
+    function getDropReference(container, clientY, excludeId) {
+        const items = Array.from(container.querySelectorAll('.tool-card'))
+            .filter(card => !excludeId || card.id !== excludeId);
+
+        return items.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = clientY - (box.top + box.height / 2);
+
+            if(offset < 0 && offset > closest.offset) {
+                return { offset, element: child };
+            }
+
+            return closest;
+        }, { offset: Number.NEGATIVE_INFINITY, element: null }).element;
+    }
+
     function drop(e) {
         e.preventDefault();
         const target = e.target.closest('.phase-col');
@@ -1607,13 +1623,14 @@
         if(!rawData) return;
 
         const data = JSON.parse(rawData);
+        const referenceEl = getDropReference(target, e.clientY, data.uniqueId);
 
         if (data.origin === 'hangar') {
             const newTool = createToolElement({
                 ...data,
                 uniqueId: 'c-' + Date.now() + Math.random().toString(16).slice(2)
             }, 'cockpit');
-            target.appendChild(newTool);
+            target.insertBefore(newTool, referenceEl);
 
             if(data.isAi) {
                 pendingAiElement = newTool;
@@ -1624,7 +1641,7 @@
         } else {
             const existingEl = document.getElementById(data.uniqueId);
             if(existingEl) {
-                target.appendChild(existingEl);
+                target.insertBefore(existingEl, referenceEl);
                 saveState();
             }
         }
