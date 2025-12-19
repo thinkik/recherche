@@ -212,11 +212,8 @@
             <button class="btn btn-sm btn-outline-success w-100 mt-2 no-print" data-bs-toggle="modal" data-bs-target="#licensedDbModal">
                 <i class="fas fa-database"></i> + Lizenzierte Datenbank ergänzen
             </button>
-            
+
             <div class="mt-auto no-print">
-                <button class="btn ki-check-btn w-100 mb-3" data-bs-toggle="modal" data-bs-target="#kiSourcesModal">
-                    <i class="fas fa-shield-alt me-2"></i> KI & Quellen-Check
-                </button>
                 <div class="delete-zone" id="delete-zone" role="region" aria-label="In diesen Bereich ziehen, um Tools zu entfernen" tabindex="0">
                     <i class="fas fa-trash"></i> <span id="delete-zone-text">Aus dem Cockpit entfernen (Tool bleibt im Hangar verfügbar)</span>
                 </div>
@@ -239,6 +236,10 @@
                     <button id="orientationButton" type="button" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#orientationModal">
                         <i class="fas fa-compass"></i>
                         <span>Compass</span>
+                    </button>
+                    <button class="btn ki-check-btn btn-sm d-inline-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#kiSourcesModal">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>AI & Source Check</span>
                     </button>
                     <div class="dropdown">
                         <button class="btn btn-sm btn-primary dropdown-toggle" id="flightControlsButton" type="button" data-bs-toggle="dropdown" aria-expanded="false">
