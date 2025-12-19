@@ -1001,8 +1001,9 @@
         }
 
         if(origin === 'cockpit') {
-            addToDeleted(toolData);
             saveState();
+            showToast('Tool entfernt.', 'info');
+            return;
         } else {
             if(toolData.isCustom) {
                 const index = initialTools.findIndex(t => t.id === toolData.id);
