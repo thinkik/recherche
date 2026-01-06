@@ -455,7 +455,6 @@
             <div class="modal-footer orientation-modal-footer">
                 <span class="small text-muted">ESC schließt das Fenster. Fokus bleibt im Modal.</span>
                 <div class="btn-group" role="group" aria-label="Modalaktionen">
-                    <button type="button" class="btn btn-outline-secondary" id="resetOnboardingHighlights">Hervorhebungen zurücksetzen</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Schließen</button>
                 </div>
             </div>
@@ -2354,10 +2353,6 @@
                 btn.addEventListener('click', () => applyOnboardingStep(btn.dataset.onboardingStep));
             });
 
-            const resetHighlightsBtn = document.getElementById('resetOnboardingHighlights');
-            if(resetHighlightsBtn) {
-                resetHighlightsBtn.addEventListener('click', clearOrientationHighlights);
-            }
         }
 
         document.getElementById('confirmAiUse').addEventListener('click', () => {
