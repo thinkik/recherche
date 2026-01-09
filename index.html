@@ -598,6 +598,11 @@
                             <i class="fas fa-clipboard-check me-1"></i> CRAAP-Test
                         </button>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="ki-guide-tab" data-bs-toggle="pill" data-bs-target="#ki-guide" type="button" role="tab" aria-controls="ki-guide" aria-selected="false">
+                            <i class="fas fa-graduation-cap me-1"></i> KI-Guide
+                        </button>
+                    </li>
                 </ul>
 
                 <div class="tab-content mt-3">
@@ -678,6 +683,154 @@
                                     </div>
                                 </li>
                             </ul>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="ki-guide" role="tabpanel" aria-labelledby="ki-guide-tab">
+                        <div class="ki-callout mb-3">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <i class="fas fa-graduation-cap text-warning"></i>
+                                <span class="fw-semibold">🎓 Guide: KI im Studium smart &amp; regelkonform nutzen</span>
+                            </div>
+                            <p class="mb-2 small text-muted"><strong>Eine praktische Checkliste für den Umgang mit KI-Tools in wissenschaftlichen Arbeiten.</strong></p>
+                            <p class="mb-3 small text-muted">Dieser Leitfaden fasst die Kernpunkte für dich zusammen. Er hilft dir, KI (Künstliche Intelligenz) als mächtiges Werkzeug zu nutzen, ohne dabei die wissenschaftliche Integrität zu gefährden.</p>
+
+                            <h6 class="fw-semibold text-warning mb-2">1. Der Ausgangspunkt</h6>
+                            <p class="small text-muted">KI kann dich hervorragend unterstützen – etwa bei der Literaturrecherche, Gliederung oder Textoptimierung. Doch die zentrale Frage lautet stets:</p>
+                            <blockquote class="blockquote small mb-3">Wie nutze ich KI so, dass meine Eigenleistung erkennbar bleibt und ich den Einsatz korrekt nachweise?</blockquote>
+
+                            <hr class="my-3">
+
+                            <h6 class="fw-semibold text-warning mb-2">2. Der Vor-Check: Kenne die Regeln</h6>
+                            <p class="small text-muted">Bevor du ChatGPT, DeepL oder Elicit öffnest, kläre die Rahmenbedingungen. Es gibt keine "Eine Regel für alle".</p>
+                            <ol class="small text-muted mb-3">
+                                <li><strong>Fakultät/Institut prüfen:</strong> Gibt es offizielle Merkblätter, KI-Leitlinien oder Richtlinien auf der Website deiner Fakultät?</li>
+                                <li><strong>Betreuung fragen:</strong> Wenn nichts Schriftliches vorliegt, frage direkt deine Betreuungsperson: <em>"Darf ich KI-Tools nutzen, und wenn ja, in welchem Umfang?"</em></li>
+                            </ol>
+
+                            <hr class="my-3">
+
+                            <h6 class="fw-semibold text-warning mb-2">3. Der Kompass: Drei Prinzipien guter wissenschaftlicher Praxis</h6>
+                            <p class="small text-muted">Dein KI-Einsatz steht und fällt mit diesen drei Säulen. Wenn du sie beachtest, bist du auf der sicheren Seite.</p>
+
+                            <div class="mb-3">
+                                <div class="fw-semibold small">🛡️ Prinzip 1: Verantwortung ("Human in the Loop")</div>
+                                <p class="small text-muted mb-2">Du bist der Regisseur, die KI ist nur der Assistent. Du darfst Inhalte generieren lassen, aber niemals blind übernehmen.</p>
+                                <ul class="small text-muted mb-2">
+                                    <li><strong>Deine Aufgabe:</strong> Ergebnisse hinterfragen, auf Plausibilität prüfen und Fakten verifizieren.</li>
+                                    <li><strong>Das Ziel:</strong> Du musst jede Zeile deiner Arbeit erklären und verteidigen können.</li>
+                                </ul>
+                                <div class="small text-muted mb-2">Mini-Check:</div>
+                                <div class="form-check small">
+                                    <input class="form-check-input" type="checkbox" disabled>
+                                    <label class="form-check-label">Habe ich Fakten und Quellen der KI gegengeprüft (Halluzinationen vermeiden)?</label>
+                                </div>
+                                <div class="form-check small">
+                                    <input class="form-check-input" type="checkbox" disabled>
+                                    <label class="form-check-label">Habe ich entschieden, was relevant ist, und nicht die KI entscheiden lassen?</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="fw-semibold small">🧠 Prinzip 2: Eigenleistung</div>
+                                <p class="small text-muted mb-2">Wissenschaftliches Arbeiten ist der Beweis deiner eigenen Denkfähigkeit. Strukturieren, Argumentieren und Schlussfolgern ist <strong>dein</strong> Job.</p>
+                                <ul class="small text-muted mb-2">
+                                    <li><strong>Die Grenze:</strong> Die KI kann formulieren helfen oder Impulse geben, aber die intellektuelle Schöpfung (die "rote Linie") muss von dir stammen.</li>
+                                    <li><strong>Achtung:</strong> Viele Hochschulen verlangen eine <strong>Selbständigkeitserklärung</strong>, in der du bestätigst, dass die Arbeit <em>deine</em> Leistung ist.</li>
+                                </ul>
+                                <div class="small text-muted mb-2">Mini-Check:</div>
+                                <div class="form-check small">
+                                    <input class="form-check-input" type="checkbox" disabled>
+                                    <label class="form-check-label">Könnte ich meine Kernargumente auch ohne KI mündlich erklären?</label>
+                                </div>
+                                <div class="form-check small">
+                                    <input class="form-check-input" type="checkbox" disabled>
+                                    <label class="form-check-label">Ist meine eigene Analyse deutlich von KI-Textbausteinen unterscheidbar?</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="fw-semibold small">🔍 Prinzip 3: Transparenz</div>
+                                <p class="small text-muted mb-2">Verstecke den KI-Einsatz nicht. Lege offen, wie Ergebnisse entstanden sind.</p>
+                                <ul class="small text-muted mb-2">
+                                    <li><strong>Leitlinie:</strong> <em>"So transparent wie nötig, so einfach wie möglich."</em></li>
+                                    <li><strong>Die Dokumentation:</strong> Führe während des Schreibens ein einfaches Protokoll ("Prompt-Tagebuch"). Das schafft Sicherheit, falls später Fragen aufkommen.</li>
+                                </ul>
+                            </div>
+
+                            <hr class="my-3">
+
+                            <h6 class="fw-semibold text-warning mb-2">4. Praxis-Tipp: Das KI-Protokoll</h6>
+                            <p class="small text-muted mb-2">Dokumentiere deine KI-Nutzung laufend (z. B. in einer einfachen Excel- oder Word-Tabelle). Das spart dir am Ende Stress.</p>
+                            <div class="table-responsive mb-3">
+                                <table class="table table-sm table-bordered align-middle small">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Datum</th>
+                                            <th>Tool (Vers.)</th>
+                                            <th>Zweck / Aufgabe</th>
+                                            <th>Mein Input (kurz)</th>
+                                            <th>Ergebnis &amp; Weiterverarbeitung</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><em>12.05.</em></td>
+                                            <td><em>ChatGPT-4o</em></td>
+                                            <td><em>Ideenfindung</em></td>
+                                            <td><em>"Nenne 5 Gegenargumente zu These X"</em></td>
+                                            <td><em>3 Argumente als Inspiration genutzt, Quellen dazu selbst recherchiert.</em></td>
+                                        </tr>
+                                        <tr>
+                                            <td><em>14.05.</em></td>
+                                            <td><em>DeepL Write</em></td>
+                                            <td><em>Stil-Korrektur</em></td>
+                                            <td><em>Einleitungstext (selbst verfasst)</em></td>
+                                            <td><em>Formulierungen geglättet, Inhalt unverändert.</em></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <hr class="my-3">
+
+                            <h6 class="fw-semibold text-warning mb-2">5. Quintessenz</h6>
+                            <blockquote class="blockquote small mb-3">
+                                Wissenschaftliches Arbeiten heißt nicht, alles allein zu tun.
+                                Es bedeutet, Verantwortung für das Ergebnis zu übernehmen und Hilfsmittel (egal ob Bücher, Betreuer oder KI) reflektiert und transparent zu nutzen.
+                            </blockquote>
+
+                            <hr class="my-3">
+
+                            <h6 class="fw-semibold text-warning mb-2">✅ Die 1-Seiten-Checkliste (Take-Away)</h6>
+                            <div class="small text-muted mb-2"><strong>Vor dem Start</strong></div>
+                            <div class="form-check small">
+                                <input class="form-check-input" type="checkbox" disabled>
+                                <label class="form-check-label">Richtlinien des Instituts gelesen oder Betreuungsperson gefragt.</label>
+                            </div>
+                            <div class="small text-muted mt-3 mb-2"><strong>Während der Arbeit</strong></div>
+                            <div class="form-check small">
+                                <input class="form-check-input" type="checkbox" disabled>
+                                <label class="form-check-label"><strong>Human in the Loop:</strong> Alle KI-Ergebnisse kritisch geprüft und überarbeitet.</label>
+                            </div>
+                            <div class="form-check small">
+                                <input class="form-check-input" type="checkbox" disabled>
+                                <label class="form-check-label"><strong>Eigenleistung:</strong> Die Struktur und Argumentationslinie stammen von mir.</label>
+                            </div>
+                            <div class="form-check small">
+                                <input class="form-check-input" type="checkbox" disabled>
+                                <label class="form-check-label"><strong>Dokumentation:</strong> Ich führe ein laufendes Protokoll über genutzte Tools und Prompts.</label>
+                            </div>
+                            <div class="small text-muted mt-3 mb-2"><strong>Vor der Abgabe</strong></div>
+                            <div class="form-check small">
+                                <input class="form-check-input" type="checkbox" disabled>
+                                <label class="form-check-label">KI-Einsatz an der geforderten Stelle offengelegt (z. B. im Anhang oder in der Erklärung).</label>
+                            </div>
+                            <div class="form-check small">
+                                <input class="form-check-input" type="checkbox" disabled>
+                                <label class="form-check-label">Ich fühle mich sicher, die Arbeit inhaltlich vollumfänglich zu verteidigen.</label>
+                            </div>
+
+                            <p class="small text-muted mt-3 mb-0"><strong>Möchtest du, dass ich dir basierend auf Punkt 4 eine Vorlage für das "KI-Protokoll" als Tabelle erstelle, die du direkt in Word oder Excel kopieren kannst?</strong></p>
                         </div>
                     </div>
                 </div>
