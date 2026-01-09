@@ -156,14 +156,26 @@
             z-index: 1100;
         }
 
-        .license-badge a {
+        .license-badge a,
+        .license-badge .btn-link {
             color: #0d6efd;
             text-decoration: none;
         }
 
         .license-badge a:hover,
-        .license-badge a:focus-visible {
+        .license-badge a:focus-visible,
+        .license-badge .btn-link:hover,
+        .license-badge .btn-link:focus-visible {
             text-decoration: underline;
+        }
+
+        .license-badge .btn-link {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .license-badge .badge-separator {
+            color: #adb5bd;
         }
 
         @media (max-width: 576px) {
@@ -233,6 +245,8 @@
 <div class="license-badge no-print" aria-label="Lizenzhinweis">
     <i class="fas fa-balance-scale"></i>
     <span>Lizenz: <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a></span>
+    <span class="badge-separator">|</span>
+    <button type="button" class="btn btn-link p-0 align-baseline" data-bs-toggle="modal" data-bs-target="#privacyModal">Datenschutz</button>
 </div>
 
 <div class="container-fluid">
@@ -934,6 +948,101 @@
                     Dokumentieren Sie Entscheidungen in Ihren Notizen.
                 </div>
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Schließen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="privacyModal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="privacyModalLabel">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h5 class="modal-title" id="privacyModalLabel">Datenschutzerklärung</h5>
+                    <div class="text-muted small">Recherche-Cockpit | thinkik.github.io/recherche/</div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+            </div>
+            <div class="modal-body">
+                <div class="small text-muted mb-3">Stand: 09.01.2026</div>
+
+                <p>Diese Datenschutzerklärung informiert darüber, welche Daten beim Besuch und bei der Nutzung des Recherche-Cockpits verarbeitet werden, wo diese Daten anfallen (Browser / Hosting / Drittanbieter) und wie Sie Daten wieder löschen können.</p>
+
+                <h6 class="fw-bold mt-4">1) Verantwortliche Stelle</h6>
+                <p class="mb-2">Zentral- und Hochschulbibliothek Luzern (ZHB Luzern)<br>
+                    Sempacherstrasse 10, Postfach 4469, 6002 Luzern (CH)<br>
+                    Kontakt (fachlich): <a href="mailto:wirtschaft@zhbluzern.ch">wirtschaft@zhbluzern.ch</a> (Team Wirtschaft; siehe Kontaktangabe im Cockpit).</p>
+                <p class="mb-0"><strong>Hinweis zum Hosting:</strong> Diese Seite wird technisch über GitHub Pages bereitgestellt. GitHub verarbeitet dabei gewisse technische Zugriffsdaten (siehe Ziff. 3).</p>
+
+                <h6 class="fw-bold mt-4">2) Grundprinzip: Keine serverseitige Speicherung Ihrer Cockpit-Inhalte</h6>
+                <p>Das Recherche-Cockpit ist als client-seitiges Tool konzipiert:</p>
+                <ul>
+                    <li>Notizen, Board-Setup, gelöschte Elemente und selbst hinzugefügte Tools werden lokal in Ihrem Browser gespeichert (Local Storage) – nicht auf einem Server der ZHB.</li>
+                    <li>Es gibt kein Login, keine Nutzerkonten und keine Eingabeformulare, die Inhalte an einen ZHB-Server senden.</li>
+                </ul>
+
+                <h6 class="fw-bold mt-4">3) Hosting &amp; Zugriffsdaten (GitHub Pages)</h6>
+                <p>Beim Aufruf der Website werden durch den Hosting-Anbieter GitHub Pages aus Sicherheitsgründen Zugriffsdaten verarbeitet. Dazu können insbesondere gehören:</p>
+                <ul>
+                    <li>IP-Adresse, Datum/Uhrzeit, aufgerufene Seite, technische Informationen (z.&nbsp;B. Browser/OS), Referrer.</li>
+                </ul>
+                <p>GitHub dokumentiert, dass bei GitHub Pages die IP-Adresse protokolliert und zu Sicherheitszwecken gespeichert wird. Weitere Informationen: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank" rel="noreferrer noopener">GitHub Privacy Statement</a>.</p>
+
+                <h6 class="fw-bold mt-4">4) Externe Bibliotheken/CDNs (Einbindung von Drittanbietern)</h6>
+                <p>Damit die Seite performant funktioniert, werden einige Bibliotheken von externen Content-Delivery-Netzwerken (CDNs) geladen. Beim Laden dieser Dateien erhält der jeweilige CDN-Anbieter technisch bedingt u.&nbsp;a. Ihre IP-Adresse sowie Request-Metadaten.</p>
+                <p>Aktuell werden eingebunden:</p>
+                <ul>
+                    <li>Bootstrap über <a href="https://www.jsdelivr.com/" target="_blank" rel="noreferrer noopener">jsDelivr</a></li>
+                    <li>Font Awesome über <a href="https://cdnjs.cloudflare.com/" target="_blank" rel="noreferrer noopener">cdnjs.cloudflare.com</a> (Cloudflare)</li>
+                    <li>Intro.js über <a href="https://unpkg.com/" target="_blank" rel="noreferrer noopener">unpkg.com</a> (CDN-Abruf)</li>
+                </ul>
+                <p class="mb-0">Hinweis: jsDelivr weist explizit darauf hin, dass bei CDN-Traffic Drittanbieter Zugriff auf IP-Adresse u.&nbsp;a. Informationen haben können (Sub-Prozessoren). Für cdnjs gilt die <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noreferrer noopener">Cloudflare-Datenschutzerklärung</a>.</p>
+                <p class="mt-2">Datenschutz-Optimierung (optional, aber empfehlenswert): Wenn Sie Datenübermittlungen an CDNs minimieren möchten, können diese Bibliotheken auch lokal in der HTML-Datei bzw. im Repo mit ausgeliefert werden (Self-Hosting). Dadurch entfallen CDN-Requests beim Seitenaufruf.</p>
+
+                <h6 class="fw-bold mt-4">5) Lokale Speicherung im Browser (Local Storage) – transparent aufgeschlüsselt</h6>
+                <p>Das Tool speichert Zustände ausschließlich in Ihrem Browser (Local Storage). Dabei werden insbesondere folgende Schlüssel genutzt:</p>
+                <ul>
+                    <li><strong>cockpitState_v3</strong>: Speichert das Cockpit-Board (welche Tools in welcher Phase liegen, Notizen, Tool-Metadaten wie Name/Beschreibung/URL/Kategorien, Badges wie „KI“/„Uni“, Status-Attribute wie „custom tool“/„open access“ etc.).</li>
+                    <li><strong>cockpitDeleted_v1</strong>: Speichert gelöschte Tools/Notizen, damit diese im Bereich „Gelöschte Tools &amp; Notizen“ wiederhergestellt werden können.</li>
+                    <li><strong>customTools</strong>: Speichert von Ihnen selbst hinzugefügte Tools (Name, URL, Beschreibung, Kategorien, Badges).</li>
+                    <li><strong>tourCompleted</strong>: Speichert, ob die Guided Tour bereits abgeschlossen/übersprungen wurde (damit sie nicht bei jedem Start automatisch läuft).</li>
+                </ul>
+                <p><strong>Wie löschen Sie diese Daten?</strong></p>
+                <ul>
+                    <li>In der Anwendung: „Reset“ setzt das Board zurück (je nach Implementierung inkl. lokaler Speicherstände).</li>
+                    <li>Im Browser: Löschen Sie Website-Daten/Local-Storage für thinkik.github.io (Browser-Einstellungen → Datenschutz → Website-Daten löschen).</li>
+                </ul>
+
+                <h6 class="fw-bold mt-4">6) Export/Import &amp; PDF</h6>
+                <ul>
+                    <li><strong>Export (JSON):</strong> Beim Export wird eine Datei auf Ihrem Gerät erstellt. Es erfolgt keine automatische Übertragung an Dritte.</li>
+                    <li><strong>Import (JSON):</strong> Beim Import wird eine von Ihnen gewählte Datei lokal eingelesen; anschließend wird der Zustand lokal gespeichert.</li>
+                    <li><strong>Als PDF speichern:</strong> Nutzt die Druck-/PDF-Funktion Ihres Browsers (lokaler Prozess).</li>
+                </ul>
+
+                <h6 class="fw-bold mt-4">7) Externe Links &amp; verlinkte Tools (z.&nbsp;B. KI-Tools, Datenbanken)</h6>
+                <p>Das Cockpit enthält Links zu externen Angeboten (Recherche-Tools, Datenbanken, KI-Dienste, Beratungsformulare). Wenn Sie diese öffnen, gilt:</p>
+                <ul>
+                    <li>Ihr Browser stellt eine direkte Verbindung zum jeweiligen Anbieter her; dabei werden technisch bedingt u.&nbsp;a. IP-Adresse und Browser-Informationen übertragen.</li>
+                    <li>Welche Daten dort verarbeitet werden, regelt die Datenschutzerklärung des jeweiligen Anbieters.</li>
+                </ul>
+                <p class="mb-0"><strong>Wichtiger Hinweis bei KI-Tools:</strong> Geben Sie keine sensiblen personenbezogenen Daten oder urheberrechtlich geschützten Volltexte ein, wenn Sie nicht sicher sind, wie der Anbieter diese verarbeitet.</p>
+
+                <h6 class="fw-bold mt-4">8) Cookies &amp; Tracking</h6>
+                <p>Das Recherche-Cockpit selbst setzt keine Tracking-Cookies und nutzt keine Web-Analytics (z.&nbsp;B. Google Analytics/Matomo). Technisch notwendige Cookies können durch GitHub oder CDN-Anbieter gesetzt werden (z.&nbsp;B. für Sicherheits-/Performance-Zwecke); Details dazu finden Sie in den jeweiligen Datenschutzerklärungen.</p>
+
+                <h6 class="fw-bold mt-4">9) Rechtsgrundlagen</h6>
+                <p>Für die Bearbeitung von Personendaten durch die ZHB gelten die einschlägigen Datenschutzbestimmungen (u.&nbsp;a. kantonales Recht; ggf. DSGVO, falls anwendbar). Da das Cockpit Ihre Inhalte primär lokal speichert, fällt der Großteil der Datenbearbeitung in Ihre eigene Browser-Umgebung.</p>
+
+                <h6 class="fw-bold mt-4">10) Ihre Rechte / Kontakt</h6>
+                <p>Wenn Sie Fragen zur Datenbearbeitung im Zusammenhang mit diesem Angebot haben (insbesondere zu Hosting-Logs und organisatorischen Punkten), kontaktieren Sie bitte: <a href="mailto:wirtschaft@zhbluzern.ch">wirtschaft@zhbluzern.ch</a>.</p>
+                <p>Für rein lokale Daten (Notizen/Board-Setup) ist der effektivste Weg die Löschung im Browser (Ziff. 5).</p>
+
+                <h6 class="fw-bold mt-4">11) Änderungen</h6>
+                <p class="mb-0">Diese Datenschutzerklärung kann angepasst werden, wenn sich Funktionen (z.&nbsp;B. zusätzliche Speichermechanismen, neue CDNs, Analytics) ändern. Die jeweils aktuelle Version sollte auf der Website abrufbar sein.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Schließen</button>
             </div>
         </div>
     </div>
