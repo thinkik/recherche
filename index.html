@@ -79,19 +79,22 @@
         .introjs-tooltipbuttons {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-end;
             gap: 8px;
             flex-wrap: wrap;
         }
         .introjs-tooltipbuttons .introjs-skipbutton {
             margin: 0;
-            order: -1;
+            order: 4;
         }
         .introjs-tooltipbuttons .introjs-prevbutton,
         .introjs-tooltipbuttons .introjs-nextbutton,
         .introjs-tooltipbuttons .introjs-donebutton {
             float: none;
         }
+        .introjs-tooltipbuttons .introjs-prevbutton { order: 1; }
+        .introjs-tooltipbuttons .introjs-nextbutton { order: 2; }
+        .introjs-tooltipbuttons .introjs-donebutton { order: 3; }
 
         /* === Modal === */
         .tool-link .d-print-inline { color: #0d6efd !important; }
@@ -2678,7 +2681,7 @@
             const skipButton = tooltip.querySelector('.introjs-skipbutton');
             const buttonRow = tooltip.querySelector('.introjs-tooltipbuttons');
             if(skipButton && buttonRow && !buttonRow.contains(skipButton)) {
-                buttonRow.insertBefore(skipButton, buttonRow.firstChild);
+                buttonRow.appendChild(skipButton);
             }
         };
 
