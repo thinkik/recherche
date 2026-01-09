@@ -76,6 +76,22 @@
         .introjs-progress { background: #e7f1ff; }
         .introjs-progressbar { background: #0d6efd; }
         .introjs-button:focus-visible { outline: 3px solid #0a58ca; outline-offset: 2px; }
+        .introjs-tooltipbuttons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .introjs-tooltipbuttons .introjs-skipbutton {
+            margin: 0;
+            order: -1;
+        }
+        .introjs-tooltipbuttons .introjs-prevbutton,
+        .introjs-tooltipbuttons .introjs-nextbutton,
+        .introjs-tooltipbuttons .introjs-donebutton {
+            float: none;
+        }
 
         /* === Modal === */
         .tool-link .d-print-inline { color: #0d6efd !important; }
@@ -2656,6 +2672,16 @@
             }
         ].filter(step => step.element);
 
+        const moveSkipButton = () => {
+            const tooltip = document.querySelector('.introjs-tooltip');
+            if(!tooltip) return;
+            const skipButton = tooltip.querySelector('.introjs-skipbutton');
+            const buttonRow = tooltip.querySelector('.introjs-tooltipbuttons');
+            if(skipButton && buttonRow && !buttonRow.contains(skipButton)) {
+                buttonRow.insertBefore(skipButton, buttonRow.firstChild);
+            }
+        };
+
         const introInstance = introJs();
         introInstance.setOptions({
             steps,
@@ -2666,6 +2692,14 @@
             prevLabel: 'Zurück',
             skipLabel: 'Tour überspringen',
             doneLabel: 'Fertig'
+        });
+
+        introInstance.onstart(() => {
+            moveSkipButton();
+        });
+
+        introInstance.onafterchange(() => {
+            moveSkipButton();
         });
 
         introInstance.oncomplete(() => {
