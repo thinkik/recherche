@@ -71,7 +71,6 @@
         .introjs-tooltiptext { color: #1f2937; }
         .introjs-button { border-radius: 8px; border: 1px solid #0d6efd; color: #0d6efd; background: #e7f1ff; }
         .introjs-button:hover { background: #dbeafe; color: #0a58ca; }
-        .introjs-skipbutton { border-color: transparent; background: transparent; color: #6c757d; }
         .introjs-bullets ul li a.active { background: #0d6efd; }
         .introjs-progress { background: #e7f1ff; }
         .introjs-progressbar { background: #0d6efd; }
@@ -82,10 +81,6 @@
             justify-content: flex-end;
             gap: 8px;
             flex-wrap: wrap;
-        }
-        .introjs-tooltipbuttons .introjs-skipbutton {
-            margin: 0;
-            order: 4;
         }
         .introjs-tooltipbuttons .introjs-prevbutton,
         .introjs-tooltipbuttons .introjs-nextbutton,
@@ -2675,34 +2670,22 @@
             }
         ].filter(step => step.element);
 
-        const moveSkipButton = () => {
-            const tooltip = document.querySelector('.introjs-tooltip');
-            if(!tooltip) return;
-            const skipButton = tooltip.querySelector('.introjs-skipbutton');
-            const buttonRow = tooltip.querySelector('.introjs-tooltipbuttons');
-            if(skipButton && buttonRow && !buttonRow.contains(skipButton)) {
-                buttonRow.appendChild(skipButton);
-            }
-        };
-
         const introInstance = introJs();
         introInstance.setOptions({
             steps,
             showProgress: true,
             showBullets: true,
             showStepNumbers: false,
+            showSkipButton: false,
+            exitOnOverlayClick: true,
+            exitOnEsc: true,
             nextLabel: 'Weiter',
             prevLabel: 'Zurück',
-            skipLabel: 'Tour überspringen',
             doneLabel: 'Fertig'
         });
 
         introInstance.onstart(() => {
-            moveSkipButton();
-        });
-
-        introInstance.onafterchange(() => {
-            moveSkipButton();
+            showToast('Tipp: Mit Esc oder Klick auf den Hintergrund beenden Sie die Tour jederzeit.', 'info', 4500);
         });
 
         introInstance.oncomplete(() => {
