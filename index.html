@@ -325,7 +325,11 @@
                     </button>
                     <button id="ai-source-check-btn" class="btn ki-check-btn btn-sm d-inline-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#kiSourcesModal">
                         <i class="fas fa-shield-alt"></i>
-                        <span>AI & Source Check</span>
+                        <span>Reflektierter Umgang mit KI</span>
+                    </button>
+                    <button id="craap-check-btn" class="btn btn-sm btn-outline-warning d-inline-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#craapModal">
+                        <i class="fas fa-clipboard-check"></i>
+                        <span>CRAAP-Test</span>
                     </button>
                     <button id="guided-tour-btn" type="button" class="btn btn-sm btn-outline-info d-inline-flex align-items-center gap-2">
                         <i class="fas fa-route"></i>
@@ -472,7 +476,7 @@
                     <ul class="small mb-0 ps-3">
                         <li><strong>Badges erkennen:</strong> Tools mit einem grünen „Uni“-Badge sind lizenzierte Angebote Ihrer Hochschule; der Zugriff ist i.d.R. nur im Campus-WLAN oder über VPN möglich. Ein lila „KI“-Badge kennzeichnet KI-gestützte Tools. Einige Tools tragen beide Badges.</li>
                         <li><strong>Verantwortungsvoll entscheiden:</strong> KI-Modelle können halluzinieren oder fehlerhafte Quellen angeben. Nutzen Sie KI-Tools nur, wenn Sie Fakten sorgfältig prüfen, Rechte klären und Ergebnisse transparent kennzeichnen.</li>
-                        <li><strong>AI &amp; Source Check nutzen:</strong> Der Button „AI &amp; Source Check“ führt zu einer Checkliste für KI-Reflexion und zum CRAAP-Test. Gehen Sie diese Fragen durch, bevor Sie KI-Ergebnisse übernehmen.</li>
+                        <li><strong>Reflektierter Umgang mit KI nutzen:</strong> Der Button „Reflektierter Umgang mit KI“ führt zu Leitfäden und Reflexionsfragen. Der CRAAP-Test steht als eigener Button bereit, um Quellen systematisch zu prüfen.</li>
                     </ul>
                 </div>
                 <div class="row g-3">
@@ -621,28 +625,16 @@
             <div class="modal-header bg-warning-subtle">
                 <h5 class="modal-title" id="kiSourcesModalLabel">
                     <i class="fas fa-shield-alt text-warning me-2"></i>
-                    Reflektierter Umgang mit KI & Quellen
+                    Reflektierter Umgang mit KI
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="ki-callout d-flex align-items-start gap-3 mb-3" id="kiSourcesModalDesc">
-                    <div class="icon-wrap"><i class="fas fa-triangle-exclamation"></i></div>
-                    <div>
-                        <div class="fw-bold text-warning mb-1">Verantwortungsvoll entscheiden</div>
-                        <div class="text-muted small">Nutzen Sie KI nur, wenn Sie Quellen prüfen, Rechte klären und transparent kennzeichnen. Dieser Check hilft, Risiken früh zu erkennen.</div>
-                    </div>
-                </div>
-
+                <p class="small text-muted mb-3" id="kiSourcesModalDesc">Materialien und Fragen für einen reflektierten Einsatz von KI in der Literaturrecherche.</p>
                 <ul class="nav nav-pills" id="kiSourcesTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="ki-reflexion-tab" data-bs-toggle="pill" data-bs-target="#ki-reflexion" type="button" role="tab" aria-controls="ki-reflexion" aria-selected="true">
                             <i class="fas fa-brain me-1"></i> KI-Reflexion
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="craap-tab" data-bs-toggle="pill" data-bs-target="#craap" type="button" role="tab" aria-controls="craap" aria-selected="false">
-                            <i class="fas fa-clipboard-check me-1"></i> CRAAP-Test
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
@@ -696,202 +688,81 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="craap" role="tabpanel" aria-labelledby="craap-tab">
-                        <div class="ki-callout">
-                            <div class="d-flex align-items-center gap-2 mb-2">
-                                <i class="fas fa-list-check text-warning"></i>
-                                <span class="fw-semibold">CRAAP-Test (Checkliste)</span>
-                            </div>
-                            <p class="mb-2 small text-muted">Bewerten Sie Quellen systematisch, bevor Sie sie übernehmen.</p>
-                            <ul class="list-group ki-checklist">
-                                <li class="list-group-item">
-                                    <div class="d-flex align-items-start gap-2">
-                                        <i class="fas fa-clock text-warning mt-1"></i>
-                                        <div><div class="fw-semibold">Currency</div><div class="text-muted small">Wie aktuell sind Daten und Publikation?</div></div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="d-flex align-items-start gap-2">
-                                        <i class="fas fa-bullseye text-warning mt-1"></i>
-                                        <div><div class="fw-semibold">Relevance</div><div class="text-muted small">Passt der Inhalt genau zu Ihrer Fragestellung?</div></div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="d-flex align-items-start gap-2">
-                                        <i class="fas fa-user-tie text-warning mt-1"></i>
-                                        <div><div class="fw-semibold">Authority</div><div class="text-muted small">Wer steht hinter der Quelle und ist sie qualifiziert?</div></div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="d-flex align-items-start gap-2">
-                                        <i class="fas fa-check-double text-warning mt-1"></i>
-                                        <div><div class="fw-semibold">Accuracy</div><div class="text-muted small">Sind Aussagen belegt, konsistent und nachvollziehbar?</div></div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="d-flex align-items-start gap-2">
-                                        <i class="fas fa-bullhorn text-warning mt-1"></i>
-                                        <div><div class="fw-semibold">Purpose</div><div class="text-muted small">Warum existiert die Quelle? Information, Verkauf, Meinung?</div></div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
                     <div class="tab-pane fade" id="ki-guide" role="tabpanel" aria-labelledby="ki-guide-tab">
                         <div class="ki-callout mb-3">
                             <div class="d-flex align-items-center gap-2 mb-2">
                                 <i class="fas fa-graduation-cap text-warning"></i>
-                                <span class="fw-semibold">🎓 Guide: KI im Studium smart &amp; regelkonform nutzen</span>
+                                <span class="fw-semibold">KI-Guide</span>
                             </div>
-                            <p class="mb-2 small text-muted"><strong>Eine praktische Checkliste für den Umgang mit KI-Tools in wissenschaftlichen Arbeiten.</strong></p>
-                            <p class="mb-3 small text-muted">Dieser Leitfaden fasst die Kernpunkte für dich zusammen. Er hilft dir, KI (Künstliche Intelligenz) als mächtiges Werkzeug zu nutzen, ohne dabei die wissenschaftliche Integrität zu gefährden.</p>
+                            <p class="mb-3 small text-muted">Dieser Leitfaden zeigt auf, wie KI im Rahmen der Literaturrecherche im Studium genutzt werden darf und welche Anforderungen an die Offenlegung ihres Einsatzes bestehen.</p>
 
-                            <h6 class="fw-semibold text-warning mb-2">1. Der Ausgangspunkt</h6>
-                            <p class="small text-muted">KI kann dich hervorragend unterstützen – etwa bei der Literaturrecherche, Gliederung oder Textoptimierung. Doch die zentrale Frage lautet stets:</p>
-                            <blockquote class="blockquote small mb-3">Wie nutze ich KI so, dass meine Eigenleistung erkennbar bleibt und ich den Einsatz korrekt nachweise?</blockquote>
+                            <h6 class="fw-semibold text-warning mb-2">1. Der Vor-Check: Kenne die Regeln</h6>
+                            <p class="small text-muted">Bevor Sie KI-Tools für die Literaturrecherche verwenden, klären Sie die Rahmenbedingungen. Es gibt keine "Eine Regel für alle".</p>
+                            <ul class="small text-muted mb-3">
+                                <li><strong>Fakultät / Institut prüfen:</strong> Gibt es offizielle Merkblätter, KI-Leitlinien oder Richtlinien auf der Website Ihrer Fakultät?</li>
+                                <li><strong>Betreuung fragen:</strong> Wenn nichts Schriftliches vorliegt, fragen Sie direkt Ihre Betreuungsperson: <em>"Darf ich KI-Tools nutzen, und wenn ja, in welchem Umfang?"</em></li>
+                            </ul>
 
-                            <hr class="my-3">
-
-                            <h6 class="fw-semibold text-warning mb-2">2. Der Vor-Check: Kenne die Regeln</h6>
-                            <p class="small text-muted">Bevor du ChatGPT, DeepL oder Elicit öffnest, kläre die Rahmenbedingungen. Es gibt keine "Eine Regel für alle".</p>
-                            <ol class="small text-muted mb-3">
-                                <li><strong>Fakultät/Institut prüfen:</strong> Gibt es offizielle Merkblätter, KI-Leitlinien oder Richtlinien auf der Website deiner Fakultät?</li>
-                                <li><strong>Betreuung fragen:</strong> Wenn nichts Schriftliches vorliegt, frage direkt deine Betreuungsperson: <em>"Darf ich KI-Tools nutzen, und wenn ja, in welchem Umfang?"</em></li>
-                            </ol>
-
-                            <hr class="my-3">
-
-                            <h6 class="fw-semibold text-warning mb-2">3. Der Kompass: Drei Prinzipien guter wissenschaftlicher Praxis</h6>
-                            <p class="small text-muted">Dein KI-Einsatz steht und fällt mit diesen drei Säulen. Wenn du sie beachtest, bist du auf der sicheren Seite.</p>
+                            <h6 class="fw-semibold text-warning mb-2">2. Der Kompass: Drei Prinzipien guter wissenschaftlicher Praxis</h6>
+                            <p class="small text-muted">Ihr KI-Einsatz steht und fällt mit diesen drei Säulen. Wenn Sie die Prinzipien beachten, sind Sie auf der sicheren Seite.</p>
 
                             <div class="mb-3">
-                                <div class="fw-semibold small">🛡️ Prinzip 1: Verantwortung ("Human in the Loop")</div>
-                                <p class="small text-muted mb-2">Du bist der Regisseur, die KI ist nur der Assistent. Du darfst Inhalte generieren lassen, aber niemals blind übernehmen.</p>
+                                <div class="fw-semibold small">Prinzip 1: Verantwortung ("Human in the Loop")</div>
+                                <p class="small text-muted mb-2">Sie sind der Regisseur, die KI-Tools sind nur Ihre Assistenten. Übernehmen Sie nie blind KI-generierte Inhalte und Quellen!</p>
                                 <ul class="small text-muted mb-2">
-                                    <li><strong>Deine Aufgabe:</strong> Ergebnisse hinterfragen, auf Plausibilität prüfen und Fakten verifizieren.</li>
-                                    <li><strong>Das Ziel:</strong> Du musst jede Zeile deiner Arbeit erklären und verteidigen können.</li>
+                                    <li><strong>Ihre Aufgabe:</strong> KI-Outputs hinterfragen, prüfen und überarbeiten.</li>
+                                    <li><strong>Das Ziel:</strong> Sie müssen jede Zeile Ihrer Arbeit erklären und verteidigen können.</li>
                                 </ul>
-                                <div class="small text-muted mb-2">Mini-Check:</div>
-                                <div class="form-check small">
-                                    <input class="form-check-input" type="checkbox" disabled>
-                                    <label class="form-check-label">Habe ich Fakten und Quellen der KI gegengeprüft (Halluzinationen vermeiden)?</label>
-                                </div>
-                                <div class="form-check small">
-                                    <input class="form-check-input" type="checkbox" disabled>
-                                    <label class="form-check-label">Habe ich entschieden, was relevant ist, und nicht die KI entscheiden lassen?</label>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="fw-semibold small">🧠 Prinzip 2: Eigenleistung</div>
-                                <p class="small text-muted mb-2">Wissenschaftliches Arbeiten ist der Beweis deiner eigenen Denkfähigkeit. Strukturieren, Argumentieren und Schlussfolgern ist <strong>dein</strong> Job.</p>
-                                <ul class="small text-muted mb-2">
-                                    <li><strong>Die Grenze:</strong> Die KI kann formulieren helfen oder Impulse geben, aber die intellektuelle Schöpfung (die "rote Linie") muss von dir stammen.</li>
-                                    <li><strong>Achtung:</strong> Viele Hochschulen verlangen eine <strong>Selbständigkeitserklärung</strong>, in der du bestätigst, dass die Arbeit <em>deine</em> Leistung ist.</li>
-                                </ul>
-                                <div class="small text-muted mb-2">Mini-Check:</div>
-                                <div class="form-check small">
-                                    <input class="form-check-input" type="checkbox" disabled>
-                                    <label class="form-check-label">Könnte ich meine Kernargumente auch ohne KI mündlich erklären?</label>
-                                </div>
-                                <div class="form-check small">
-                                    <input class="form-check-input" type="checkbox" disabled>
-                                    <label class="form-check-label">Ist meine eigene Analyse deutlich von KI-Textbausteinen unterscheidbar?</label>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <div class="fw-semibold small">🔍 Prinzip 3: Transparenz</div>
-                                <p class="small text-muted mb-2">Verstecke den KI-Einsatz nicht. Lege offen, wie Ergebnisse entstanden sind.</p>
-                                <ul class="small text-muted mb-2">
-                                    <li><strong>Leitlinie:</strong> <em>"So transparent wie nötig, so einfach wie möglich."</em></li>
-                                    <li><strong>Die Dokumentation:</strong> Führe während des Schreibens ein einfaches Protokoll ("Prompt-Tagebuch"). Das schafft Sicherheit, falls später Fragen aufkommen.</li>
+                                <div class="small text-muted mb-2">Hilfen:</div>
+                                <ul class="small text-muted mb-0">
+                                    <li>
+                                        <a href="#ki-reflexion-fragen" class="link-primary" data-bs-toggle="pill" role="tab" aria-controls="ki-reflexion-fragen">KI-Reflexion – konkrete Fragen, die Sie sich stellen können</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="link-primary" data-bs-toggle="modal" data-bs-target="#craapModal">CRAAP-Test</a>
+                                    </li>
                                 </ul>
                             </div>
 
-                            <hr class="my-3">
-
-                            <h6 class="fw-semibold text-warning mb-2">4. Praxis-Tipp: Das KI-Protokoll</h6>
-                            <p class="small text-muted mb-2">Dokumentiere deine KI-Nutzung laufend (z. B. in einer einfachen Excel- oder Word-Tabelle). Das spart dir am Ende Stress.</p>
-                            <div class="table-responsive mb-3">
-                                <table class="table table-sm table-bordered align-middle small">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Datum</th>
-                                            <th>Tool (Vers.)</th>
-                                            <th>Zweck / Aufgabe</th>
-                                            <th>Mein Input (kurz)</th>
-                                            <th>Ergebnis &amp; Weiterverarbeitung</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><em>12.05.</em></td>
-                                            <td><em>ChatGPT-4o</em></td>
-                                            <td><em>Ideenfindung</em></td>
-                                            <td><em>"Nenne 5 Gegenargumente zu These X"</em></td>
-                                            <td><em>3 Argumente als Inspiration genutzt, Quellen dazu selbst recherchiert.</em></td>
-                                        </tr>
-                                        <tr>
-                                            <td><em>14.05.</em></td>
-                                            <td><em>DeepL Write</em></td>
-                                            <td><em>Stil-Korrektur</em></td>
-                                            <td><em>Einleitungstext (selbst verfasst)</em></td>
-                                            <td><em>Formulierungen geglättet, Inhalt unverändert.</em></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="mb-3">
+                                <div class="fw-semibold small">Prinzip 2: Eigenleistung</div>
+                                <p class="small text-muted mb-2">Wissenschaftliches Arbeiten ist der Beweis Ihrer eigenen Denkfähigkeit. Strukturieren, Argumentieren und Schlussfolgern ist Ihr Job.</p>
+                                <ul class="small text-muted mb-2">
+                                    <li><strong>Die Grenze:</strong> Die KI kann Impulse geben, aber die intellektuelle Schöpfung (die "rote Linie") muss von Ihnen stammen.</li>
+                                    <li><strong>Achtung:</strong> Am Ende einer wissenschaftlichen Arbeit steht eine Selbständigkeitserklärung, mittlerweile an vielen Unis inkl. Abschnitt zu KI-Nutzung.</li>
+                                </ul>
                             </div>
 
-                            <hr class="my-3">
+                            <div class="mb-3">
+                                <div class="fw-semibold small">Prinzip 3: Transparenz</div>
+                                <p class="small text-muted mb-2">Verstecken Sie den KI-Einsatz nicht. Legen Sie offen, wie Ergebnisse entstanden sind.</p>
+                                <ul class="small text-muted mb-2">
+                                    <li><strong>Leitlinie:</strong> "So transparent wie nötig, so einfach wie möglich."</li>
+                                    <li><strong>Die Dokumentation:</strong> Führen Sie während des Schreibens ein einfaches Protokoll ("Prompt-Tagebuch"). Das schafft Sicherheit, falls später Fragen aufkommen.</li>
+                                </ul>
+                            </div>
+
+                            <h6 class="fw-semibold text-warning mb-2">3. Praxis-Tipp: Das KI-Protokoll</h6>
+                            <p class="small text-muted">Dokumentieren Sie Ihre KI-Nutzung laufend (z. B. in einer einfachen Excel- oder Word-Tabelle). Das spart Ihnen am Ende Stress.</p>
+
+                            <h6 class="fw-semibold text-warning mb-2">4. Anwendungsbeispiel: Wie konkret KI-Nutzung offenlegen?</h6>
+                            <p class="small text-muted">
+                                Informieren Sie sich hierzu im Merkblatt des Center für Human Resource Management an der Uni Luzern:
+                                <a class="link-primary" href="https://www.unilu.ch/fileadmin/fakultaeten/wf/institute/hrm/dok/Studium/DE_Merkblatt_fuer_den_Umgang_mit_Kuenstlicher_Intelligenz__KI__.pdf" target="_blank" rel="noreferrer noopener">Merkblatt zum Umgang mit KI</a>.
+                            </p>
 
                             <h6 class="fw-semibold text-warning mb-2">5. Quintessenz</h6>
-                            <blockquote class="blockquote small mb-3">
-                                Wissenschaftliches Arbeiten heißt nicht, alles allein zu tun.
-                                Es bedeutet, Verantwortung für das Ergebnis zu übernehmen und Hilfsmittel (egal ob Bücher, Betreuer oder KI) reflektiert und transparent zu nutzen.
-                            </blockquote>
-
-                            <hr class="my-3">
-
-                            <h6 class="fw-semibold text-warning mb-2">✅ Die 1-Seiten-Checkliste (Take-Away)</h6>
-                            <div class="small text-muted mb-2"><strong>Vor dem Start</strong></div>
-                            <div class="form-check small">
-                                <input class="form-check-input" type="checkbox" disabled>
-                                <label class="form-check-label">Richtlinien des Instituts gelesen oder Betreuungsperson gefragt.</label>
-                            </div>
-                            <div class="small text-muted mt-3 mb-2"><strong>Während der Arbeit</strong></div>
-                            <div class="form-check small">
-                                <input class="form-check-input" type="checkbox" disabled>
-                                <label class="form-check-label"><strong>Human in the Loop:</strong> Alle KI-Ergebnisse kritisch geprüft und überarbeitet.</label>
-                            </div>
-                            <div class="form-check small">
-                                <input class="form-check-input" type="checkbox" disabled>
-                                <label class="form-check-label"><strong>Eigenleistung:</strong> Die Struktur und Argumentationslinie stammen von mir.</label>
-                            </div>
-                            <div class="form-check small">
-                                <input class="form-check-input" type="checkbox" disabled>
-                                <label class="form-check-label"><strong>Dokumentation:</strong> Ich führe ein laufendes Protokoll über genutzte Tools und Prompts.</label>
-                            </div>
-                            <div class="small text-muted mt-3 mb-2"><strong>Vor der Abgabe</strong></div>
-                            <div class="form-check small">
-                                <input class="form-check-input" type="checkbox" disabled>
-                                <label class="form-check-label">KI-Einsatz an der geforderten Stelle offengelegt (z. B. im Anhang oder in der Erklärung).</label>
-                            </div>
-                            <div class="form-check small">
-                                <input class="form-check-input" type="checkbox" disabled>
-                                <label class="form-check-label">Ich fühle mich sicher, die Arbeit inhaltlich vollumfänglich zu verteidigen.</label>
-                            </div>
-
+                            <p class="small text-muted mb-0">Wissenschaftliches Arbeiten heißt nicht, alles allein zu tun. Es bedeutet, Verantwortung für das Ergebnis zu übernehmen und alle Hilfen – egal ob Literatur, Betreuer/innen, Kommiliton/innen oder KI-Tools – reflektiert und transparent zu nutzen.</p>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="ki-reflexion-fragen" role="tabpanel" aria-labelledby="ki-reflexion-fragen-tab">
                         <div class="ki-callout mb-3">
                             <div class="d-flex align-items-center gap-2 mb-2">
                                 <i class="fas fa-comments text-warning"></i>
-                                <span class="fw-semibold">Wie KI reflektiert einsetzen? – Fragen, die Sie sich immer wieder stellen können</span>
+                                <span class="fw-semibold">Wie kann ich KI reflektiert einsetzen? – Fragen, die Sie sich immer wieder stellen können</span>
                             </div>
                             <p class="mb-3 small text-muted">
-                                KI-Tools können wertvolle Assistenten bei der Literaturrecherche sein – doch die Regie müssen Sie übernehmen. Sie sind verantwortlich für die Inhalte und Quellen Ihrer Arbeit. Deshalb gilt: Verwenden Sie nur Inhalte und Quellen, die Sie selbst nachvollziehen und erklären können. Für eine reflektierte Verwendung von KI-Tools können Sie sich immer wieder folgende Fragen stellen:
+                                KI-Tools können wertvolle Assistenten bei der Literaturrecherche sein – doch die Regie müssen Sie übernehmen. Sie sind verantwortlich für die Inhalte und Quellen Ihrer Arbeit. Deshalb gilt: Verwenden Sie nur Inhalte und Quellen, die Sie selbst nachvollziehen und erklären können. Dazu können Sie sich immer wieder folgende Fragen stellen:
                             </p>
                             <ol class="small text-muted mb-0">
                                 <li class="mb-2">
@@ -923,8 +794,8 @@
                                     <ul class="mt-1">
                                         <li>Passt der Inhalt zu meiner Fragestellung oder führt er auf ein Nebengleis?</li>
                                         <li>Ist die Quelle relevant und zuverlässig? (z. B. mit dem CRAAP-Test prüfen)</li>
-                                        <li>Stammen die Autorinnen und Autoren aus der VWL?</li>
-                                        <li>Welche Literatur finde ich mit klassischen Suchinstrumenten? (z. B. mit EconLit)</li>
+                                        <li>Stammen die Autor/innen aus meinem Fachgebiet?</li>
+                                        <li>Welche Literatur finde ich mit klassischen Suchinstrumenten?</li>
                                     </ul>
                                 </li>
                                 <li class="mb-2">
@@ -947,6 +818,64 @@
                     <i class="fas fa-circle-exclamation text-warning"></i>
                     Dokumentieren Sie Entscheidungen in Ihren Notizen.
                 </div>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Schließen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="craapModal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="craapModalLabel" aria-describedby="craapModalDesc">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border border-warning shadow-lg">
+            <div class="modal-header bg-warning-subtle">
+                <h5 class="modal-title" id="craapModalLabel">
+                    <i class="fas fa-clipboard-check text-warning me-2"></i>
+                    CRAAP-Test
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="ki-callout" id="craapModalDesc">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="fas fa-list-check text-warning"></i>
+                        <span class="fw-semibold">Soll ich die Quelle zitieren oder nicht? – CRAAP-Test (Checkliste)</span>
+                    </div>
+                    <p class="mb-2 small text-muted">Bewerten Sie Quellen systematisch, bevor Sie sie übernehmen.</p>
+                    <ul class="list-group ki-checklist">
+                        <li class="list-group-item">
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="fas fa-clock text-warning mt-1"></i>
+                                <div><div class="fw-semibold">Currency</div><div class="text-muted small">Wie aktuell sind Daten und Publikation?</div></div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="fas fa-bullseye text-warning mt-1"></i>
+                                <div><div class="fw-semibold">Relevance</div><div class="text-muted small">Passt der Inhalt genau zu Ihrer Fragestellung?</div></div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="fas fa-user-tie text-warning mt-1"></i>
+                                <div><div class="fw-semibold">Authority</div><div class="text-muted small">Wer steht hinter der Quelle? Kommen die Autor/innen aus der Wissenschaft? Sind sie Expert/innen im Thema?</div></div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="fas fa-check-double text-warning mt-1"></i>
+                                <div><div class="fw-semibold">Accuracy</div><div class="text-muted small">Sind Aussagen belegt, konsistent und nachvollziehbar?</div></div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="d-flex align-items-start gap-2">
+                                <i class="fas fa-bullhorn text-warning mt-1"></i>
+                                <div><div class="fw-semibold">Purpose</div><div class="text-muted small">Warum existiert die Quelle? Information, Verkauf, Meinung?</div></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Schließen</button>
             </div>
         </div>
@@ -2764,8 +2693,8 @@
             },
             {
                 element: document.querySelector('#ai-source-check-btn'),
-                title: 'AI & Source Check',
-                intro: 'Nutzen Sie diese Checkliste, um KI-Ergebnisse kritisch zu prüfen und Quellen abzusichern.'
+                title: 'Reflektierter Umgang mit KI',
+                intro: 'Nutzen Sie diese Inhalte, um Ihren KI-Einsatz zu reflektieren und Leitlinien zu beachten.'
             },
             {
                 element: document.querySelector('#flightControlsButton'),
