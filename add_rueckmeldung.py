@@ -1,30 +1,40 @@
 #!/usr/bin/env python3
-"""Fügt eine Rückmeldung in die erste freie Zeile der Excel-Datei ein."""
+"""Fügt eine Rückmeldung in die erste freie Zeile der CSV-Datei ein."""
 
+from __future__ import annotations
+
+import csv
 from pathlib import Path
 
-from openpyxl import load_workbook
+FILE_PATH = Path(__file__).resolve().parent / "testdatei.csv"
+HEADER = ("Vorname", "Nachname", "Rueckmeldung")
 
-FILE_PATH = Path(__file__).resolve().parent / "rueckmeldungen.xlsx"
+
+def needs_header(rows: list[list[str]]) -> bool:
+    if not rows:
+        return True
+    return rows[0] != list(HEADER)
 
 
-def first_free_row(worksheet, columns=(1, 2, 3)) -> int:
-    for row in range(1, worksheet.max_row + 1):
-        if all(worksheet.cell(row=row, column=col).value in (None, "") for col in columns):
-            return row
-    return worksheet.max_row + 1
+def read_rows(path: Path) -> list[list[str]]:
+    if not path.exists():
+        return []
+    with path.open(newline="", encoding="utf-8") as file:
+        return [row for row in csv.reader(file)]
+
+
+def write_rows(path: Path, rows: list[list[str]]) -> None:
+    with path.open("w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerows(rows)
 
 
 def main() -> None:
-    workbook = load_workbook(FILE_PATH)
-    worksheet = workbook.active
-
-    target_row = first_free_row(worksheet)
-    worksheet.cell(row=target_row, column=1, value="Lukas")
-    worksheet.cell(row=target_row, column=2, value="Hubolt")
-    worksheet.cell(row=target_row, column=3, value="Sehr gute Einführung")
-
-    workbook.save(FILE_PATH)
+    rows = read_rows(FILE_PATH)
+    if needs_header(rows):
+        rows = [list(HEADER)] + rows
+    rows.append(["Lukas", "Hubolt", "Sehr gute Einführung"])
+    write_rows(FILE_PATH, rows)
 
 
 if __name__ == "__main__":
