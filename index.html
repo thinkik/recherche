@@ -32,7 +32,8 @@
         .ki-checklist .list-group-item:last-child { border-bottom: none; }
 
         /* === Cards === */
-        .tool-card { background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 8px; margin-bottom: 8px; cursor: grab; display: flex; align-items: center; gap: 8px; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05); font-size: 0.9rem; position: relative; }
+        .tool-card { background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 8px 36px 8px 8px; margin-bottom: 8px; cursor: grab; display: flex; align-items: center; gap: 8px; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.05); font-size: 0.9rem; position: relative; }
+        .tool-card.tool-card--chatgpt { min-height: 56px; }
         .tool-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-color: #0d6efd; z-index: 10; }
         .tool-card:active { cursor: grabbing; }
         .tool-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 4px; color: #555; font-size: 0.8rem; }
@@ -993,7 +994,9 @@
 
     const initialTools = [
         { id: 't1', name: 'ChatGPT', cats: ['Assistants'], url: 'https://chat.openai.com', isAi: true, info: 'Brainstorming & Gliederung' },
-        { id: 't2', name: 'Scispace', cats: ['Assistants'], url: 'https://www.scispace.com', isAi: true, info: 'KI-Schreibassistent' },
+        { id: 't1b', name: 'Microsoft 365 Copilot', cats: ['Assistants'], url: 'https://m365.cloud.microsoft/', isAi: true, info: 'Microsoft 365 Arbeitsassistent' },
+        { id: 't1c', name: 'Gemini', cats: ['Assistants'], url: 'https://deepmind.google/models/gemini/', isAi: true, info: 'Google DeepMind KI-Assistent' },
+        { id: 't2', name: 'Scispace', cats: ['Finders', 'Analyzers'], url: 'https://www.scispace.com', isAi: true, info: 'KI-Schreibassistent' },
         { id: 't4', name: 'Swisscover RZS UNI/PH', cats: ['Finders'], url: 'https://rzs.swisscovery.slsp.ch/discovery/search?vid=41SLSP_RZS:VU07', isAi: false, info: 'Bibliothekskatalog Schweiz', isLib: true },
         { id: 't5', name: 'Elicit', cats: ['Finders'], url: 'https://elicit.org', isAi: true, info: 'Findet Paper und extrahiert Kernaussagen' },
         { id: 't6', name: 'Google Scholar', cats: ['Finders'], url: 'https://scholar.google.com', isAi: false, info: 'Breite Suche nach wissenschaftlichen Texten' },
@@ -1690,6 +1693,7 @@
         let classes = 'tool-card';
         if(toolData.isAi) classes += ' is-ai';
         if(toolData.isLib) classes += ' is-library';
+        if(toolData.name === 'ChatGPT') classes += ' tool-card--chatgpt';
 
         div.className = classes;
         div.draggable = true;
