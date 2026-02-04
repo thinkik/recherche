@@ -21,7 +21,6 @@
         .global-drop { min-height: 160px; background: #e8f4ff; border-color: #0d6efd99; box-shadow: inset 0 0 0 1px #0d6efd33; }
         .global-drop.drag-over { background: #d0e7ff; border-color: #0d6efd; }
         .phase-header { font-weight: 700; text-align: center; margin-bottom: 15px; color: #495057; font-size: 0.85rem; min-height: 40px; display: flex; align-items: center; justify-content: center; }
-        .step-number { background: #6c757d; color: white; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; margin-right: 6px; font-size: 0.75rem; }
         .deleted-wrapper { border: 1px dashed #ced4da; border-radius: 8px; padding: 10px; background: #f8f9fa; }
         .deleted-item { background: white; border: 1px solid #e0e0e0; border-radius: 6px; padding: 6px 8px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.9rem; }
         .deleted-item:last-child { margin-bottom: 0; }
@@ -309,12 +308,11 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li class="dropdown-header">Ziel auswählen</li>
-                            <li><button class="dropdown-item" type="button" onclick="openTextModal('phase-1')">Phase 1: Thema eingrenzen</button></li>
-                            <li><button class="dropdown-item" type="button" onclick="openTextModal('phase-2')">Phase 2: Suchbegriffe sammeln</button></li>
-                            <li><button class="dropdown-item" type="button" onclick="openTextModal('phase-3')">Phase 3: Literatur suchen</button></li>
-                            <li><button class="dropdown-item" type="button" onclick="openTextModal('phase-4')">Phase 4: Literatur bewerten</button></li>
-                            <li><button class="dropdown-item" type="button" onclick="openTextModal('phase-5')">Phase 5: Literatur lesen</button></li>
-                            <li><button class="dropdown-item" type="button" onclick="openTextModal('phase-6')">Phase 6: Text schreiben</button></li>
+                            <li><button class="dropdown-item" type="button" onclick="openTextModal('phase-1')">Thema eingrenzen</button></li>
+                            <li><button class="dropdown-item" type="button" onclick="openTextModal('phase-2')">Suchbegriffe sammeln</button></li>
+                            <li><button class="dropdown-item" type="button" onclick="openTextModal('phase-3')">Literatur suchen</button></li>
+                            <li><button class="dropdown-item" type="button" onclick="openTextModal('phase-5')">Literatur lesen</button></li>
+                            <li><button class="dropdown-item" type="button" onclick="openTextModal('phase-6')">Text schreiben</button></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><button class="dropdown-item" type="button" onclick="openTextModal('phase-global')">Gesamter Rechercheprozess</button></li>
                         </ul>
@@ -361,11 +359,11 @@
             </div>
 
             <div class="board-wrapper">
-            <div class="row row-cols-1 row-cols-md-6 g-2 board-grid flex-nowrap">
+            <div class="row row-cols-1 row-cols-md-5 g-2 board-grid flex-nowrap">
                 
                 <div class="col">
-                    <div class="phase-header"><span class="step-number">1</span> Thema eingrenzen</div>
-                    <div class="phase-col" id="phase-1" role="region" aria-label="Phase 1: Thema eingrenzen" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                    <div class="phase-header">Thema eingrenzen</div>
+                    <div class="phase-col" id="phase-1" role="region" aria-label="Thema eingrenzen" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                     <div class="no-print mt-2">
                         <button class="btn btn-link p-0 text-decoration-none small d-flex align-items-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#phase1Help" aria-expanded="false" aria-controls="phase1Help">
                             <i class="fas fa-circle-question text-primary"></i>
@@ -378,8 +376,8 @@
                 </div>
 
                 <div class="col">
-                    <div class="phase-header"><span class="step-number">2</span> Suchbegriffe sammeln</div>
-                    <div class="phase-col" id="phase-2" role="region" aria-label="Phase 2: Suchbegriffe sammeln" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                    <div class="phase-header">Suchbegriffe sammeln</div>
+                    <div class="phase-col" id="phase-2" role="region" aria-label="Suchbegriffe sammeln" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                     <div class="no-print mt-2">
                         <button class="btn btn-link p-0 text-decoration-none small d-flex align-items-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#phase2Help" aria-expanded="false" aria-controls="phase2Help">
                             <i class="fas fa-circle-question text-primary"></i>
@@ -392,8 +390,8 @@
                 </div>
 
                 <div class="col">
-                    <div class="phase-header"><span class="step-number">3</span> Literatur suchen</div>
-                    <div class="phase-col" id="phase-3" role="region" aria-label="Phase 3: Literatur suchen" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                    <div class="phase-header">Literatur suchen</div>
+                    <div class="phase-col" id="phase-3" role="region" aria-label="Literatur suchen" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                     <div class="no-print mt-2">
                         <button class="btn btn-link p-0 text-decoration-none small d-flex align-items-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#phase3Help" aria-expanded="false" aria-controls="phase3Help">
                             <i class="fas fa-circle-question text-primary"></i>
@@ -406,22 +404,8 @@
                 </div>
 
                 <div class="col">
-                    <div class="phase-header"><span class="step-number">4</span> Literatur bewerten</div>
-                    <div class="phase-col" id="phase-4" role="region" aria-label="Phase 4: Literatur bewerten" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
-                    <div class="no-print mt-2">
-                        <button class="btn btn-link p-0 text-decoration-none small d-flex align-items-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#phase4Help" aria-expanded="false" aria-controls="phase4Help">
-                            <i class="fas fa-circle-question text-primary"></i>
-                            <span class="fw-semibold text-secondary">Hinweise</span>
-                        </button>
-                        <div class="collapse" id="phase4Help">
-                            <div class="small text-muted ps-4 pt-1">Prüfe Peer-Review-Status, Methodik, Zitierungen und Autor:innen; sortiere KI-generierte Inhalte separat und kennzeichne sie klar.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="phase-header"><span class="step-number">5</span> Literatur lesen</div>
-                    <div class="phase-col" id="phase-5" role="region" aria-label="Phase 5: Literatur lesen" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                    <div class="phase-header">Literatur lesen</div>
+                    <div class="phase-col" id="phase-5" role="region" aria-label="Literatur lesen" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                     <div class="no-print mt-2">
                         <button class="btn btn-link p-0 text-decoration-none small d-flex align-items-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#phase5Help" aria-expanded="false" aria-controls="phase5Help">
                             <i class="fas fa-circle-question text-primary"></i>
@@ -434,8 +418,8 @@
                 </div>
 
                 <div class="col">
-                    <div class="phase-header"><span class="step-number">6</span> Text schreiben</div>
-                    <div class="phase-col" id="phase-6" role="region" aria-label="Phase 6: Text schreiben" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
+                    <div class="phase-header">Text schreiben</div>
+                    <div class="phase-col" id="phase-6" role="region" aria-label="Text schreiben" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"></div>
                     <div class="no-print mt-2">
                         <button class="btn btn-link p-0 text-decoration-none small d-flex align-items-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#phase6Help" aria-expanded="false" aria-controls="phase6Help">
                             <i class="fas fa-circle-question text-primary"></i>
@@ -1074,7 +1058,7 @@
     ].map(db => ({ isOA: false, ...db }));
 
     const LEGACY_CATEGORY_MAP = { 'Verwaltung': 'Organizers' };
-    const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-4', 'phase-5', 'phase-6', 'phase-global'];
+    const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-5', 'phase-6', 'phase-global'];
     const CUSTOM_TOOLS_KEY = 'customTools';
     const MAX_IMPORT_FILE_SIZE_BYTES = 2 * 1024 * 1024;
     const ORIENTATION_HIGHLIGHT_CLASS = 'orientation-highlight';
@@ -2522,10 +2506,6 @@
             'phase-3': [
                 { id: 't6', uniqueId: 'ex-phase3-tool', name: 'Google Scholar', info: 'Breite Suche nach relevanten Studien', url: 'https://scholar.google.com', cats: ['Finders'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'tool' },
                 { id: 'ex-note-phase3', uniqueId: 'ex-note-phase3', name: 'Datenbanken', info: 'Start mit Scholar, ergänzend Swisscovery und wiso für deutschsprachige Quellen nutzen.', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'Reihenfolge: Scholar → Swisscovery → wiso. Filter: 2018+, peer-reviewed, Bibliometrie.' }
-            ],
-            'phase-4': [
-                { id: 't20', uniqueId: 'ex-phase4-tool', name: 'Scite_', info: 'Zitationskontext prüfen', url: 'https://scite.ai', cats: ['Evaluators', 'Finders'], isAi: true, isLib: true, isOA: false, isCustom: false, type: 'tool' },
-                { id: 'ex-note-phase4', uniqueId: 'ex-note-phase4', name: 'Bewertung', info: 'Scite-Labels prüfen: unterstützend vs. widersprechend; Abstracts in Explainpaper testen.', url: '#', cats: ['Notizen'], isAi: false, isLib: false, isOA: false, isCustom: false, type: 'text', text: 'Top 5 Paper auswählen und in Explainpaper zusammenfassen lassen. Quellen mit vielen widersprechenden Zitierungen markieren.' }
             ],
             'phase-5': [
                 { id: 't11', uniqueId: 'ex-phase5-tool', name: 'Humata', info: 'PDFs interaktiv auswerten', url: 'https://humata.ai', cats: ['Analyzers'], isAi: true, isLib: false, isOA: false, isCustom: false, type: 'tool' },
