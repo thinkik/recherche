@@ -243,9 +243,9 @@
 
 <div id="toast-container" class="toast-container no-print" aria-live="polite" aria-atomic="true" role="region" aria-label="Systembenachrichtigungen"></div>
 
-<div class="license-badge no-print" aria-label="Lizenzhinweis">
+<div class="license-badge no-print" aria-label="Unihinweis">
     <i class="fas fa-balance-scale"></i>
-    <span>Lizenz: <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a></span>
+    <span>Uni: <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a></span>
     <span class="badge-separator">|</span>
     <button type="button" class="btn btn-link p-0 align-baseline" data-bs-toggle="modal" data-bs-target="#privacyModal">Datenschutz</button>
 </div>
@@ -463,7 +463,7 @@
                         <li><strong>Badges erkennen:</strong> Tools mit einem grünen „Uni“-Badge sind lizenzierte Angebote Ihrer Hochschule; der Zugriff ist i.d.R. nur im Campus-WLAN oder über VPN möglich. Ein lila „KI“-Badge kennzeichnet KI-gestützte Tools. Einige Tools tragen mehrere Badges.</li>
                         <li><strong>Verantwortungsvoll entscheiden:</strong> KI-Modelle können halluzinieren oder fehlerhafte Quellen angeben. Nutzen Sie KI-Tools nur, wenn Sie Fakten sorgfältig prüfen, Rechte klären und Ergebnisse transparent kennzeichnen.</li>
                         <li><strong>Reflektierter Umgang mit KI nutzen:</strong> Der Button „Reflektierter Umgang mit KI“ führt zu Leitfäden und Reflexionsfragen. Der CRAAP-Test steht als eigener Button bereit, um Quellen systematisch zu prüfen.</li>
-                        <li><strong>Hinweis zur Toolauswahl:</strong> „Literaturrecherche mit KI“ ist ein sehr dynamisches Feld; die Angaben können schnell veralten. Stand: Februar 2026.</li>
+                        <li><strong>Hinweis zur Toolauswahl:</strong> Da das Feld „Literaturrecherche mit KI“ sehr dynamisch ist, können die hier enthaltenen Informationen schon nach kurzer Zeit veraltet sein. Die hier bereitgestellten Informationen stellen den Stand von Februar 2026 dar.</li>
                     </ul>
                 </div>
                 <div class="row g-3">
@@ -1038,7 +1038,7 @@
         { id: 'lic14', name: 'Lexology Pro', url: 'https://dbis.ur.de/ZHBLU/resources/103456', info: 'Informationsdienst mit Fachartikeln von Anwaltskanzleien über Gesetzesänderungen und juristische Entwicklungen weltweit.', cats: ['Finders'], isLib: true },
         { id: 'lic15', name: 'LinkedIn Learning', url: 'https://dbis.ur.de/ZHBLU/resources/103054', info: 'Lernplattform mit Videokursen zu Business-, Technologie- und Kreativthemen, moderiert von Branchenexpertinnen und -experten.', cats: ['Finders'], isLib: true },
         { id: 'lic16', name: 'Munzinger Online / Länder', url: 'https://dbis.ur.de/ZHBLU/resources/2165', info: 'Deutsches Nachschlagewerk mit Länderprofilen, aktuellen Daten und Hintergrundinformationen zu Staaten, Organisationen und Persönlichkeiten.', cats: ['Finders'], isLib: true },
-        { id: 'lic17', name: 'NBER Working Papers', url: 'https://dbis.ur.de/ZHBLU/resources/9453', info: 'Veröffentlichungsreihe des National Bureau of Economic Research, die aktuelle ökonomische Forschungsergebnisse vorab zugänglich macht.', cats: ['Finders'], isLib: true },
+        { id: 'lic17', name: 'NBER Papers', url: 'https://dbis.ur.de/ZHBLU/resources/9453', info: 'Veröffentlichungsreihe des National Bureau of Economic Research, die aktuelle ökonomische Forschungsergebnisse vorab zugänglich macht.', cats: ['Finders'], isLib: true },
         { id: 'lic18', name: 'New Palgrave Dictionary of Economics', url: 'https://dbis.ur.de/ZHBLU/resources/8045', info: 'Enzyklopädisches Wörterbuch der Ökonomie mit Artikeln zu wirtschaftstheoretischen Konzepten, Methoden und ökonomischen Schulen.', cats: ['Finders'], isLib: true },
         { id: 'lic19', name: 'New York Times / ProQuest Historical Newspapers', url: 'https://dbis.ur.de/ZHBLU/resources/101464', info: 'Bietet digitalisierte Ausgaben der New York Times ab 1851 – nützlich für wirtschaftshistorische Recherchen.', cats: ['Finders'], isLib: true },
         { id: 'lic20', name: 'Nexis Uni', url: 'https://dbis.ur.de/ZHBLU/resources/1670', info: 'Rechercheplattform von LexisNexis mit Nachrichtenquellen, Rechtsfällen, Unternehmensdaten und juristischen Fachartikeln für die Hochschullehre.', cats: ['Finders'], isLib: true },
@@ -1098,6 +1098,14 @@
     function deriveCategoriesForTool(toolData = {}) {
         const normalizedCats = normalizeCategoriesList(toolData.cats);
         return Array.from(new Set(normalizedCats));
+    }
+
+    function orderCategoriesForDisplay(categoriesList, preferredCategory) {
+        const uniqueCategories = Array.from(new Set(categoriesList || []));
+        if(preferredCategory && uniqueCategories.includes(preferredCategory)) {
+            return [preferredCategory, ...uniqueCategories.filter(cat => cat !== preferredCategory)];
+        }
+        return uniqueCategories;
     }
 
     function getFilterableCategories() {
@@ -1546,7 +1554,9 @@
 
                 catTools.forEach(tool => {
                     const instanceId = `${tool.id}-${catKey}`;
-                    const enhancedTool = { ...tool, cats: deriveCategoriesForTool(tool), uniqueId: instanceId };
+                    const toolCategories = deriveCategoriesForTool(tool);
+                    const displayCategories = orderCategoriesForDisplay(toolCategories, catKey);
+                    const enhancedTool = { ...tool, cats: displayCategories, uniqueId: instanceId };
                     pool.appendChild(createToolElement(enhancedTool, 'hangar'));
                 });
             });
@@ -2681,32 +2691,38 @@
             {
                 element: document.querySelector('.hangar-area'),
                 title: 'Hangar',
-                intro: 'Hier finden Sie alle Tools. Ziehen Sie sie per Drag & Drop in die sechs Phasen des Recherche-Boards.'
+                intro: 'Hier finden Sie alle Tools. Ziehen Sie sie per Drag & Drop in die fünf Phasen des Recherche-Boards.',
+                position: 'right'
             },
             {
                 element: document.querySelector('#noteDropdownButton'),
                 title: 'Notizen hinzufügen',
-                intro: 'Erstellen Sie Notizen und Fragen direkt pro Phase oder für den gesamten Prozess.'
+                intro: 'Erstellen Sie Notizen und Fragen direkt pro Phase oder für den gesamten Prozess.',
+                position: 'bottom'
             },
             {
                 element: document.querySelector('#orientationButton'),
                 title: 'Compass',
-                intro: 'Der Compass öffnet die Onboarding-Infos mit Tipps zum Aufbau Ihres Cockpits.'
+                intro: 'Der Compass öffnet die Onboarding-Infos mit Tipps zum Aufbau Ihres Cockpits.',
+                position: 'bottom'
             },
             {
                 element: document.querySelector('#ai-source-check-btn'),
                 title: 'Reflektierter Umgang mit KI',
-                intro: 'Nutzen Sie diese Inhalte, um Ihren KI-Einsatz zu reflektieren und Leitlinien zu beachten.'
+                intro: 'Nutzen Sie diese Inhalte, um Ihren KI-Einsatz zu reflektieren und Leitlinien zu beachten.',
+                position: 'bottom'
             },
             {
                 element: document.querySelector('#flightControlsButton'),
                 title: 'Flight Controls',
-                intro: 'Exportieren, importieren oder laden Sie ein Beispiel-Board für einen schnellen Start.'
+                intro: 'Exportieren, importieren oder laden Sie ein Beispiel-Board.',
+                position: 'bottom'
             },
             {
                 element: document.querySelector('#phase-1'),
                 title: 'Phase auswählen',
-                intro: 'Ziehen Sie ein Tool aus dem Hangar in eine Phase, um Ihren Workflow zu starten.'
+                intro: 'Ziehen Sie ein Tool aus dem Hangar in eine Phase, um Ihren Workflow zu starten.',
+                position: 'right'
             }
         ].filter(step => step.element);
 
@@ -2719,6 +2735,8 @@
             showSkipButton: false,
             exitOnOverlayClick: true,
             exitOnEsc: true,
+            scrollToElement: true,
+            scrollPadding: 80,
             nextLabel: 'Weiter',
             prevLabel: 'Zurück',
             doneLabel: 'Fertig'
