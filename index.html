@@ -1795,7 +1795,7 @@
                     <i class="fas fa-info-circle"></i>
                 </button>
                 ${allowEdit ? '<button type="button" class="edit-custom-btn" title="Bearbeiten"><i class="fas fa-pen"></i></button>' : ''}
-                <a href="${safeUrl}" target="_blank" class="tool-link" onclick="event.stopPropagation()" title="Tool öffnen" aria-label="Tool öffnen: ${safeName}">
+                <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="tool-link" onclick="event.stopPropagation()" title="Tool öffnen" aria-label="Tool öffnen: ${safeName}">
                     <i class="fas fa-external-link-alt"></i>
                     <span class="d-none d-print-inline small text-decoration-underline text-primary">${safeUrl}</span>
                 </a>
