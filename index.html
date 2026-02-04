@@ -972,6 +972,7 @@
 
     const categories = {
         'Assistants': { icon: 'fa-lightbulb', info: 'KI-Co-Piloten, die beim Brainstorming, Strukturieren und beim ersten Aufschlag von Textbausteinen unterstützen.' },
+        'Keywords': { icon: 'fa-key', info: 'Wortlisten, Thesauri und Vorlagen, die passende Suchbegriffe und Synonyme für die Recherche vorbereiten.' },
         'Finders': { icon: 'fa-search', info: 'Suchmaschinen, Datenbanken und Kataloge, mit denen Sie geeignete Quellen aufspüren und Trefferlisten filtern.' },
         'Connectors': { icon: 'fa-project-diagram', info: 'Tools zur Visualisierung und Vernetzung von Literatur, um Forschungsstränge und Schlüsselpublikationen sichtbar zu machen.' },
         'Evaluators': { icon: 'fa-check-double', info: 'Werkzeuge zur Bewertung von Qualität und Wirkung, z. B. Kontext zu Zitierungen oder Hinweise auf den wissenschaftlichen Konsens.' },
@@ -984,7 +985,7 @@
     const HIDDEN_CATEGORIES = ['Notizen'];
 
     const flightPhases = {
-        'PRE-FLIGHT': { icon: 'fa-clipboard-list', categories: ['Assistants'] },
+        'PRE-FLIGHT': { icon: 'fa-clipboard-list', categories: ['Assistants', 'Keywords'] },
         'TAKE-OFF': { icon: 'fa-plane-departure', categories: ['Finders'] },
         'IN-FLIGHT': { icon: 'fa-plane', categories: ['Evaluators', 'Analyzers', 'Connectors'] },
         'LANDING': { icon: 'fa-plane-arrival', categories: ['Writers', 'Organizers', 'Notizen'] }
@@ -1011,7 +1012,8 @@
         { id: 't19', name: 'Citavi', cats: ['Organizers'], url: 'https://www.citavi.com', isAi: false, info: 'Literaturverwaltung' },
         { id: 't20', name: 'Scite_', cats: ['Evaluators', 'Finders'], url: 'https://scite.ai', isAi: true, info: 'Smart Citations - wie wurde zitiert?', isLib: true },
         { id: 't21', name: 'Consensus', cats: ['Evaluators', 'Finders'], url: 'https://consensus.app', isAi: true, info: 'Wissenschaftlicher Konsens finden', isLib: true },
-        { id: 't22', name: 'STW Thesaurus for Economics', cats: ['Finders'], url: 'https://zbw.eu/stw/version/latest/about.de.html', isAi: false, info: 'Kontrolliertes Vokabular für wirtschaftswissenschaftliche Begriffe (ZBW).' }
+        { id: 't22', name: 'STW Thesaurus for Economics', cats: ['Keywords'], url: 'https://zbw.eu/stw/version/latest/about.de.html', isAi: false, info: 'Kontrolliertes Vokabular für wirtschaftswissenschaftliche Begriffe (ZBW).' },
+        { id: 't23', name: 'Worttabelle (Handout)', cats: ['Keywords'], url: 'https://www.pearltrees.com/s/file/preview/368368493/worttabelle%20leer.docx.pdf?pearlId=759172325', isAi: false, info: 'Handout zur Sammlung von Keywords und Synonymen für die Recherche.' }
     ];
 
     const licensedDatabases = [
