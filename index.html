@@ -2225,6 +2225,25 @@
         });
     }
 
+    function isAllowedCustomToolUrl(rawUrl) {
+        if(!rawUrl) return true;
+        if(rawUrl.trim() === '') return true;
+        if(rawUrl === '#') return true;
+        try {
+            const parsedUrl = new URL(rawUrl);
+            return ['http:', 'https:', 'mailto:'].includes(parsedUrl.protocol);
+        } catch (error) {
+            return false;
+        }
+    }
+
+    function sanitizeCustomToolUrl(rawUrl) {
+        if(isAllowedCustomToolUrl(rawUrl)) {
+            return rawUrl || '#';
+        }
+        return '#';
+    }
+
     function addCustomTool() {
         const name = document.getElementById('customToolName').value;
         const info = document.getElementById('customToolInfo').value;
@@ -2235,6 +2254,10 @@
         const isLib = document.getElementById('customToolIsLib').checked;
 
         if(!name) return;
+        if(url && !isAllowedCustomToolUrl(url)) {
+            showToast('Nur http/https/mailto-URLs sind erlaubt.', 'error');
+            return;
+        }
 
         const baseCategories = cat && cat.length ? cat : ['Organizers'];
         const normalizedCats = deriveCategoriesForTool({ cats: baseCategories, isLib });
@@ -2245,7 +2268,7 @@
             id: toolId,
             name: name,
             cats: normalizedCats,
-            url: url || '#',
+            url: sanitizeCustomToolUrl(url),
             info: info || 'Benutzerdefiniert',
             isAi: isAi,
             isLib: isLib,
@@ -2436,7 +2459,18 @@
 
     function applyImportedConfiguration(payload) {
         const sanitizedState = (payload && payload.cockpitState_v3 && typeof payload.cockpitState_v3 === 'object') ? payload.cockpitState_v3 : {};
-        const sanitizedCustomTools = Array.isArray(payload.customTools) ? payload.customTools : [];
+        const sanitizedCustomTools = Array.isArray(payload.customTools)
+            ? payload.customTools.map(tool => ({ ...tool, url: sanitizeCustomToolUrl(tool.url) }))
+            : [];
+
+        Object.keys(sanitizedState).forEach(phaseId => {
+            const phaseItems = Array.isArray(sanitizedState[phaseId]) ? sanitizedState[phaseId] : [];
+            phaseItems.forEach(item => {
+                if(item && item.isCustom) {
+                    item.url = sanitizeCustomToolUrl(item.url);
+                }
+            });
+        });
 
         localStorage.setItem('cockpitState_v3', JSON.stringify(sanitizedState));
         localStorage.setItem(CUSTOM_TOOLS_KEY, JSON.stringify(sanitizedCustomTools));
