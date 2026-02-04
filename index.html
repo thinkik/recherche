@@ -53,7 +53,7 @@
         .badge-ai { background: #f3e8ff; color: #6f42c1; border: 1px solid #e0c3ff; }
         .badge-lib { background: #e8fff3; color: #0f5132; border: 1px solid #b6e2c8; }
         .badge-oa { background: #fff4e5; color: #d35400; border: 1px solid #f6d7b0; }
-        .badge-wp { background: #e6f4ff; color: #0b5ed7; border: 1px solid #b6dcff; }
+        .badge-vwl { background: #e8f2ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
         .tool-link { color: #495057; margin-left: auto; padding: 2px 6px; border-radius: 4px; transition: 0.2s; }
         .tool-link:hover { background-color: #e9ecef; color: #0d6efd; }
         .tool-remove-btn { position: absolute; top: 6px; right: 6px; border: none; background: transparent; color: #6c757d; padding: 4px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
@@ -458,11 +458,12 @@
             </div>
             <div class="modal-body">
                 <div class="alert alert-info py-2 px-3 mb-3" role="status">
-                    <div class="small mb-1 fw-semibold text-primary">Lizenz- und KI-Hinweis</div>
+                    <div class="small mb-1 fw-semibold text-primary">Uni- und KI-Hinweis</div>
                     <ul class="small mb-0 ps-3">
-                        <li><strong>Badges erkennen:</strong> Tools mit einem grünen „Lizenz“-Badge sind lizenzierte Angebote Ihrer Hochschule; der Zugriff ist i.d.R. nur im Campus-WLAN oder über VPN möglich. Ein lila „KI“-Badge kennzeichnet KI-gestützte Tools. Ein blaues „Working papers“-Badge weist auf Vorabpublikationen hin. Einige Tools tragen mehrere Badges.</li>
+                        <li><strong>Badges erkennen:</strong> Tools mit einem grünen „Uni“-Badge sind lizenzierte Angebote Ihrer Hochschule; der Zugriff ist i.d.R. nur im Campus-WLAN oder über VPN möglich. Ein lila „KI“-Badge kennzeichnet KI-gestützte Tools. Einige Tools tragen mehrere Badges.</li>
                         <li><strong>Verantwortungsvoll entscheiden:</strong> KI-Modelle können halluzinieren oder fehlerhafte Quellen angeben. Nutzen Sie KI-Tools nur, wenn Sie Fakten sorgfältig prüfen, Rechte klären und Ergebnisse transparent kennzeichnen.</li>
                         <li><strong>Reflektierter Umgang mit KI nutzen:</strong> Der Button „Reflektierter Umgang mit KI“ führt zu Leitfäden und Reflexionsfragen. Der CRAAP-Test steht als eigener Button bereit, um Quellen systematisch zu prüfen.</li>
+                        <li><strong>Hinweis zur Toolauswahl:</strong> „Literaturrecherche mit KI“ ist ein sehr dynamisches Feld; die Angaben können schnell veralten. Stand: Februar 2026.</li>
                     </ul>
                 </div>
                 <div class="row g-3">
@@ -470,7 +471,7 @@
                         <h6 class="fw-bold">Was kann ich hier tun?</h6>
                         <ul class="orientation-tip-list ps-3">
                             <li><strong>Recherche-Board einrichten:</strong> Ziehen Sie Tools am Griff <i class="fas fa-grip-lines-vertical text-muted"></i> aus dem Hangar in die sechs Phasen des Rechercheprozesses oder zurück in den Hangar. Nutzen Sie die „Notiz hinzufügen“-Funktion, um Fragen, Erinnerungen oder Quellen pro Phase zu dokumentieren. Definieren Sie oben einen Titel für Ihr Cockpit und eine Pilot:in.</li>
-                            <li><strong>Tools finden und erweitern:</strong> Verwenden Sie das Suchfeld und den Kategorien-Filter im Hangar, um bestimmte Tools zu finden. Mit „Eigenes Tool ergänzen“ können Sie eigene Recherche-Methoden oder Webseiten hinzufügen (Name, Beschreibung, URL, Kategorien und KI/Lizenz-Badges). Über „Lizenzierte Datenbank ergänzen“ lassen sich lizenzierte Fachdatenbanken aus einer Liste in den Hangar aufnehmen.</li>
+                            <li><strong>Tools finden und erweitern:</strong> Verwenden Sie das Suchfeld und den Kategorien-Filter im Hangar, um bestimmte Tools zu finden. Mit „Eigenes Tool ergänzen“ können Sie eigene Recherche-Methoden oder Webseiten hinzufügen (Name, Beschreibung, URL, Kategorien und KI/Uni-Badges). Über „Lizenzierte Datenbank ergänzen“ lassen sich lizenzierte Fachdatenbanken aus einer Liste in den Hangar aufnehmen.</li>
                             <li><strong>Löschen &amp; wiederherstellen:</strong> Tools und Notizen löschen Sie über das „x“ an der jeweiligen Karte. Gelöschte Einträge erscheinen anschließend im Bereich „Gelöschte Tools &amp; Notizen“ im Hangar und lassen sich dort wiederherstellen. Ein Ziehen in diesen Bereich ist nicht möglich.</li>
                             <li><strong>Setups speichern &amp; teilen:</strong> Über die Flight Controls (oben rechts) können Sie Ihr Cockpit als PDF exportieren, Export/Import von JSON-Dateien durchführen oder sich ein Beispiel-Layout anzeigen lassen. Die Option Reset stellt das Board in den Ausgangszustand zurück.</li>
                             <li><strong>Phasen-Hinweise nutzen:</strong> Jede Spalte enthält einen Link „Hinweise“ mit konkreten Tipps für die jeweilige Phase (z. B. Brainstorming mit KI, Synonyme sammeln, Filter in Datenbanken nutzen, Peer-Review prüfen). Klicken Sie den Link, um die Hinweise einzublenden.</li>
@@ -569,7 +570,7 @@
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="customToolIsLib">
                     <label class="form-check-label" for="customToolIsLib">
-                        Lizenz
+                        Uni
                     </label>
                 </div>
             </div>
@@ -921,7 +922,7 @@
                 <h6 class="fw-bold mt-4">5) Lokale Speicherung im Browser (Local Storage) – transparent aufgeschlüsselt</h6>
                 <p>Das Tool speichert Zustände ausschließlich in Ihrem Browser (Local Storage). Dabei werden insbesondere folgende Schlüssel genutzt:</p>
                 <ul>
-                    <li><strong>cockpitState_v3</strong>: Speichert das Cockpit-Board (welche Tools in welcher Phase liegen, Notizen, Tool-Metadaten wie Name/Beschreibung/URL/Kategorien, Badges wie „KI“/„Lizenz“/„Working papers“, Status-Attribute wie „custom tool“/„open access“ etc.).</li>
+                    <li><strong>cockpitState_v3</strong>: Speichert das Cockpit-Board (welche Tools in welcher Phase liegen, Notizen, Tool-Metadaten wie Name/Beschreibung/URL/Kategorien, Badges wie „KI“/„Uni“/„VWL“/„Open Access“, Status-Attribute wie „custom tool“/„open access“ etc.).</li>
                     <li><strong>cockpitDeleted_v1</strong>: Speichert gelöschte Tools/Notizen, damit diese im Bereich „Gelöschte Tools &amp; Notizen“ wiederhergestellt werden können.</li>
                     <li><strong>customTools</strong>: Speichert von Ihnen selbst hinzugefügte Tools (Name, URL, Beschreibung, Kategorien, Badges).</li>
                     <li><strong>tourCompleted</strong>: Speichert, ob die Guided Tour bereits abgeschlossen/übersprungen wurde (damit sie nicht bei jedem Start automatisch läuft).</li>
@@ -1001,9 +1002,9 @@
         { id: 't4', name: 'Swisscovery RZS Uni/PH', cats: ['Finders'], url: 'https://rzs.swisscovery.slsp.ch/discovery/search?vid=41SLSP_RZS:VU07', isAi: false, info: 'Bibliothekskatalog Schweiz', isLib: true },
         { id: 't5', name: 'Elicit', cats: ['Finders'], url: 'https://elicit.org', isAi: true, info: 'Findet Paper und extrahiert Kernaussagen' },
         { id: 't6', name: 'Google Scholar', cats: ['Finders'], url: 'https://scholar.google.com', isAi: false, info: 'Breite Suche nach wissenschaftlichen Texten' },
-        { id: 't7', name: 'EconLit', cats: ['Finders'], url: 'https://www.aeaweb.org/econlit', isAi: false, info: `<strong>EconLit – Top-Datenbank für VWL-Artikel</strong><ul><li>Journalartikel sind die zentrale Publikationsform in der VWL – hier finden Sie aktuelle Forschung und Diskussion.</li><li>Thematische Suche in rund 750 renommierten volkswirtschaftlichen Journals.</li><li>Nur Fachgebiet VWL – keine irrelevante Literatur.</li><li>Qualitätsgeprüfte Forschungsergebnisse.</li></ul>`, isLib: true },
+        { id: 't7', name: 'EconLit', cats: ['Finders'], url: 'https://www.aeaweb.org/econlit', isAi: false, info: `<strong>EconLit – Top-Datenbank für VWL-Artikel</strong><ul><li>Journalartikel sind die zentrale Publikationsform in der VWL – hier finden Sie aktuelle Forschung und Diskussion.</li><li>Thematische Suche in rund 750 renommierten volkswirtschaftlichen Journals.</li><li>Nur Fachgebiet VWL – keine irrelevante Literatur.</li><li>Qualitätsgeprüfte Forschungsergebnisse.</li></ul>`, isLib: true, isVwl: true },
         { id: 't7b', name: 'Swissdox', cats: ['Finders'], url: 'https://dbis.ur.de/ZHBLU/resources/103168', isAi: false, info: `<strong>Swissdox – Zugriff auf Schweizer Presse</strong><ul><li>Schweizer Tages-, Wochen- und Sonntagszeitungen sowie Magazine für aktuelle politische Relevanz.</li><li>Ergänzt wissenschaftliche Analysen mit praxisnahen Perspektiven.</li><li>Zugriff auf NZZ, Luzerner Zeitung u. v. m.</li></ul>`, isLib: true },
-        { id: 't7c', name: 'RePEc', cats: ['Finders'], url: 'https://dbis.ur.de/ZHBLU/resources/3286', isAi: false, isWP: true, info: `<strong>RePEc – Research Papers in Economics</strong><ul><li>Zugriff auf Working &amp; Discussion Papers sowie Infos zu Autorinnen und Autoren und Institutionen.</li><li>Preprints: frühe Forschungsergebnisse, meist ohne Peer Review.</li><li>Vor Verwendung wissenschaftliche Qualität prüfen.</li></ul>` },
+        { id: 't7c', name: 'RePEc', cats: ['Finders'], url: 'https://dbis.ur.de/ZHBLU/resources/3286', isAi: false, info: `<strong>RePEc – Research Papers in Economics</strong><ul><li>Zugriff auf Working &amp; Discussion Papers sowie Infos zu Autorinnen und Autoren und Institutionen.</li><li>Preprints: frühe Forschungsergebnisse, meist ohne Peer Review.</li><li>Vor Verwendung wissenschaftliche Qualität prüfen.</li></ul>`, isVwl: true },
         { id: 't8', name: 'ResearchRabbit', cats: ['Connectors'], url: 'https://researchrabbit.ai', isAi: true, info: 'Visualisiert Literatur-Netzwerke' },
         { id: 't9', name: 'Connected Papers', cats: ['Connectors'], url: 'https://www.connectedpapers.com', isAi: false, info: 'Zeigt verwandte Arbeiten grafisch an' },
         { id: 't10', name: 'Explainpaper', cats: ['Analyzers'], url: 'https://www.explainpaper.com', isAi: true, info: 'Erklärt komplexe Textstellen' },
@@ -1026,7 +1027,7 @@
         { id: 'lic3', name: 'Business Source Premier', url: 'https://dbis.ur.de/ZHBLU/resources/1333', info: 'Wirtschaftswissenschaftliche Datenbank mit Volltexten aus mehr als 2 200 Zeitschriften und Magazinen, Firmenprofilen, Marktstudien und SWOT-Analysen.', cats: ['Finders'], isLib: true },
         { id: 'lic4', name: 'CEPR Discussion Papers', url: 'https://dbis.ur.de/ZHBLU/resources/12587', info: 'Working-Paper-Reihe des Centre for Economic Policy Research, in der renommierte Ökonominnen und Ökonomen aktuelle Forschungsarbeiten publizieren.', cats: ['Finders'], isLib: true, isOA: true },
         { id: 'lic5', name: 'Duden Sprachwissen (Munzinger-Portal)', url: 'https://dbis.ur.de/ZHBLU/resources/11752', info: 'Enthält die Standardwerke der Duden-Reihe (u. a. Rechtschreibung, Fremdwörterbuch, Stilwörterbuch), die prägnant sprachliche Fragen beantworten.', cats: ['Finders'], isLib: true },
-        { id: 'lic6', name: 'EconLit', url: 'https://dbis.ur.de/ZHBLU/resources/36', info: `<strong>EconLit – Top-Datenbank für VWL-Artikel</strong><ul><li>Journalartikel sind die zentrale Publikationsform in der VWL – hier finden Sie aktuelle Forschung und Diskussion.</li><li>Thematische Suche in rund 750 renommierten volkswirtschaftlichen Journals.</li><li>Nur Fachgebiet VWL – keine irrelevante Literatur.</li><li>Qualitätsgeprüfte Forschungsergebnisse.</li></ul>`, cats:['Finders'], isLib: true },
+        { id: 'lic6', name: 'EconLit', url: 'https://dbis.ur.de/ZHBLU/resources/36', info: `<strong>EconLit – Top-Datenbank für VWL-Artikel</strong><ul><li>Journalartikel sind die zentrale Publikationsform in der VWL – hier finden Sie aktuelle Forschung und Diskussion.</li><li>Thematische Suche in rund 750 renommierten volkswirtschaftlichen Journals.</li><li>Nur Fachgebiet VWL – keine irrelevante Literatur.</li><li>Qualitätsgeprüfte Forschungsergebnisse.</li></ul>`, cats:['Finders'], isLib: true, isVwl: true },
         { id: 'lic7', name: 'Encyclopedia of Health Economics', url: 'https://dbis.ur.de/ZHBLU/resources/100301', info: 'Dreibändiges Nachschlagewerk über Gesundheitsökonomie, das ökonomische Analysen des Gesundheitssystems, der Gesundheitsversorgung und -politik bietet.', cats: ['Finders'], isLib: true },
         { id: 'lic8', name: 'Factiva', url: 'https://dbis.ur.de/ZHBLU/resources/4042', info: 'Dow-Jones-Datenbank für internationale Nachrichten und Wirtschaftsinformationen mit Presseartikeln, Nachrichtendiensten und Unternehmensmeldungen.', cats: ['Finders'], isLib:true },
         { id: 'lic9', name: 'International Bibliography of the Social Sciences (IBSS)', url: 'https://dbis.ur.de/ZHBLU/resources/1030', info: 'Bibliografische Datenbank von ProQuest, die internationale Literatur aus Soziologie, Politikwissenschaft, Wirtschaft und Anthropologie verzeichnet.', cats: ['Finders'], isLib: true },
@@ -1059,10 +1060,10 @@
         { id: 'lic36', name: 'WorldTradeLaw.net', url: 'https://dbis.ur.de/ZHBLU/resources/4825', info: 'Datenbank mit WTO- und GATT-Schiedsspruchtexten, Analysen und Kommentarmaterialien zur internationalen Handelspolitik', cats: ['Finders'], isLib: true },
         { id: 'lic37', name: 'wiso', url: 'https://dbis.ur.de/ZHBLU/resources/1232', info: 'Deutschsprachige Plattform mit Literaturhinweisen, E-Books und Fachzeitschriften zu Wirtschaft und Sozialwissenschaften; ergänzt um Module zur Betriebswirtschaftspraxis, Lecturio-Erklärvideos und das Statistikportal Tilasto', cats: ['Finders'], isLib: true },
         { id: 'lic38', name: 'Statistical Portal OECD Data Explorer', url: 'https://dbis.ur.de/ZHBLU/resources/106121', info: 'Interaktive Plattform der OECD, mit der sich sozioökonomische Kennzahlen verschiedener Länder vergleichen und visualisieren lassen.', cats: ['Finders'], isLib: true, isOA: true },
-        { id: 'lic39', name: 'RePEc', url: 'https://dbis.ur.de/ZHBLU/resources/3286', info: 'RePEc (Research Papers in Economics) bündelt Working und Discussion Papers sowie Autorinnen-, Autoren- und Institutsprofile für die VWL-Recherche.', cats: ['Finders'], isLib: true, isOA: true, isWP: true },
+        { id: 'lic39', name: 'RePEc', url: 'https://dbis.ur.de/ZHBLU/resources/3286', info: 'RePEc (Research Papers in Economics) bündelt Working und Discussion Papers sowie Autorinnen-, Autoren- und Institutsprofile für die VWL-Recherche.', cats: ['Finders'], isLib: true, isOA: true, isVwl: true },
         { id: 'lic40', name: 'Swissdox', url: 'https://dbis.ur.de/ZHBLU/resources/103168', info: 'Presse- und Medienarchiv mit Schweizer Tages-, Wochen- und Sonntagszeitungen sowie Magazinen für aktuelle wirtschaftspolitische Analysen.', cats: ['Finders'], isLib: true },
         { id: 'lic41', name: 'The Economist', url: 'https://www.pressreader.com/de/magazines/m/the-economist-eu', info: 'Digitale Magazin-Ausgabe von The Economist über PressReader; nützlich für wirtschaftspolitische Kommentare und Hintergrundberichte.', cats: ['Finders'], isLib: true }
-    ].map(db => ({ isOA: false, isWP: false, ...db }));
+    ].map(db => ({ isOA: false, ...db }));
 
     const LEGACY_CATEGORY_MAP = { 'Verwaltung': 'Organizers' };
     const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-5', 'phase-6', 'phase-global'];
@@ -1157,7 +1158,7 @@
             isAi: !!toolData.isAi,
             isLib: !!toolData.isLib,
             isOA: !!toolData.isOA,
-            isWP: !!toolData.isWP,
+            isVwl: !!toolData.isVwl,
             isCustom: !!toolData.isCustom,
             type: toolData.type || 'tool',
             text: toolData.text || ''
@@ -1239,7 +1240,7 @@
             isAi: cardEl.dataset.isAi === '1' || cardEl.dataset.isAi === 'true',
             isLib: cardEl.dataset.isLib === '1' || cardEl.dataset.isLib === 'true',
             isOA: cardEl.dataset.isOa === '1' || cardEl.dataset.isOa === 'true',
-            isWP: cardEl.dataset.isWp === '1' || cardEl.dataset.isWp === 'true',
+            isVwl: cardEl.dataset.isVwl === '1' || cardEl.dataset.isVwl === 'true',
             isCustom: cardEl.dataset.isCustom === '1' || cardEl.dataset.isCustom === 'true',
             type: cardEl.dataset.type || 'tool',
             text: cardEl.dataset.text || '',
@@ -1660,10 +1661,10 @@
         descEl.textContent = db.info || '';
 
         const badges = [];
-        if(db.isLib) badges.push('<span class="status-badge badge-lib">Lizenz</span>');
+        if(db.isLib) badges.push('<span class="status-badge badge-lib">Uni</span>');
         if(db.isAi) badges.push('<span class="status-badge badge-ai">KI</span>');
+        if(db.isVwl) badges.push('<span class="status-badge badge-vwl">VWL</span>');
         if(db.isOA) badges.push('<span class="status-badge badge-oa">Open Access</span>');
-        if(db.isWP) badges.push('<span class="status-badge badge-wp">Working papers</span>');
         badgeEl.innerHTML = badges.join(' ');
     }
 
@@ -1681,7 +1682,7 @@
         }
 
         const baseCats = db.cats && db.cats.length ? db.cats : ['Finders'];
-        const normalizedDb = { ...db, isLib: true, cats: baseCats, isOA: !!db.isOA, isWP: !!db.isWP };
+        const normalizedDb = { ...db, isLib: true, cats: baseCats, isOA: !!db.isOA, isVwl: !!db.isVwl };
         const enhancedCats = deriveCategoriesForTool(normalizedDb);
         initialTools.push({ ...normalizedDb, cats: enhancedCats });
         renderHangar();
@@ -1722,7 +1723,7 @@
         div.dataset.isAi = toolData.isAi ? '1' : '0';
         div.dataset.isLib = toolData.isLib ? '1' : '0';
         div.dataset.isOa = toolData.isOA ? '1' : '0';
-        div.dataset.isWp = toolData.isWP ? '1' : '0';
+        div.dataset.isVwl = toolData.isVwl ? '1' : '0';
         div.dataset.isCustom = isCustomToolData(toolData) ? '1' : '0';
         if(toolData.text) {
             div.dataset.text = toolData.text;
@@ -1764,9 +1765,9 @@
             const allowEdit = isCustomToolData(toolData) && origin === 'cockpit';
             const statusBadges = `
                 ${toolData.isAi ? '<span class="status-badge badge-ai">KI</span>' : ''}
-                ${toolData.isLib ? '<span class="status-badge badge-lib">Lizenz</span>' : ''}
+                ${toolData.isLib ? '<span class="status-badge badge-lib">Uni</span>' : ''}
+                ${toolData.isVwl ? '<span class="status-badge badge-vwl">VWL</span>' : ''}
                 ${toolData.isOA ? '<span class="status-badge badge-oa">Open Access</span>' : ''}
-                ${toolData.isWP ? '<span class="status-badge badge-wp">Working papers</span>' : ''}
             `;
 
             const categoryList = Array.isArray(categoriesForTool) && categoriesForTool.length
@@ -2295,7 +2296,7 @@
                     isAi: card.dataset.isAi === '1' || card.dataset.isAi === 'true',
                     isLib: card.dataset.isLib === '1' || card.dataset.isLib === 'true',
                     isOA: card.dataset.isOa === '1' || card.dataset.isOa === 'true',
-                    isWP: card.dataset.isWp === '1' || card.dataset.isWp === 'true',
+                    isVwl: card.dataset.isVwl === '1' || card.dataset.isVwl === 'true',
                     isCustom: card.dataset.isCustom === '1' || card.dataset.isCustom === 'true',
                     type: card.dataset.type || 'tool',
                     text: card.dataset.text || ''
@@ -2348,7 +2349,7 @@
                         isAi: !!savedItem.isAi,
                         isLib: !!savedItem.isLib,
                         isOA: !!savedItem.isOA,
-                        isWP: !!savedItem.isWP
+                        isVwl: !!savedItem.isVwl
                     };
                 }
 
@@ -2361,7 +2362,7 @@
                     isAi: mergedTool.isAi,
                     isLib: mergedTool.isLib,
                     isOA: mergedTool.isOA,
-                    isWP: mergedTool.isWP
+                    isVwl: mergedTool.isVwl
                 };
                 phase.appendChild(createToolElement(restoredTool, 'cockpit'));
             });
