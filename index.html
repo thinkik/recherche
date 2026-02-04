@@ -303,7 +303,7 @@
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
                 <h3><i class="fas fa-plane-departure"></i> Mein Recherche-Cockpit</h3>
                 <div class="no-print cockpit-actions">
-                    <div class="dropdown">
+                    <div class="dropdown" id="noteDropdown">
                         <button id="noteDropdownButton" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-note-sticky"></i>
                             <span>Notiz hinzufügen</span>
@@ -2729,7 +2729,7 @@
                 position: 'right'
             },
             {
-                element: document.querySelector('#noteDropdownButton'),
+                element: document.querySelector('#noteDropdown'),
                 title: 'Notizen hinzufügen',
                 intro: 'Erstellen Sie Notizen und Fragen direkt pro Phase oder für den gesamten Prozess.',
                 position: 'bottom'
