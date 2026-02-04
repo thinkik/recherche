@@ -76,6 +76,34 @@
         .introjs-progress { background: #e7f1ff; }
         .introjs-progressbar { background: #0d6efd; }
         .introjs-button:focus-visible { outline: 3px solid #0a58ca; outline-offset: 2px; }
+        .introjs-helperLayer {
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
+        .introjs-arrow {
+            border-width: 12px !important;
+        }
+        .introjs-arrow.top { border-bottom-color: #0d6efd !important; }
+        .introjs-arrow.bottom { border-top-color: #0d6efd !important; }
+        .introjs-arrow.left { border-right-color: #0d6efd !important; }
+        .introjs-arrow.right { border-left-color: #0d6efd !important; }
+        .introjs-tooltip {
+            position: relative;
+        }
+        .introjs-tooltip::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #0d6efd;
+            border-radius: 50%;
+            box-shadow: 0 0 0 6px rgba(13, 110, 253, 0.25);
+        }
+        .introjs-tooltip.introjs-bottom::after { top: -22px; left: 24px; }
+        .introjs-tooltip.introjs-top::after { bottom: -22px; left: 24px; }
+        .introjs-tooltip.introjs-left::after { right: -22px; top: 24px; }
+        .introjs-tooltip.introjs-right::after { left: -22px; top: 24px; }
         .introjs-tooltipbuttons {
             display: flex;
             align-items: center;
