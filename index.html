@@ -265,6 +265,12 @@
             body { background: white; -webkit-print-color-adjust: exact; }
             .tool-link { display: inline-flex !important; align-items: center; gap: 4px; color: #0d6efd !important; text-decoration: underline !important; visibility: visible !important; opacity: 1 !important; }
         }
+
+        .tooltip-inner {
+            word-break: normal;
+            overflow-wrap: normal;
+            hyphens: none;
+        }
     </style>
 </head>
 <body>
@@ -1043,8 +1049,8 @@
         { id: 't13', name: 'Writefull', cats: ['Writers'], url: 'https://writefull.com', isAi: true, info: 'Akademische Sprachprüfung' },
         { id: 't14', name: 'Paperpal', cats: ['Writers'], url: 'https://paperpal.com', isAi: true, info: 'Echtzeit-Schreibfeedback' },
         { id: 't15', name: 'DeepL Write', cats: ['Writers'], url: 'https://www.deepl.com/write', isAi: true, info: 'Sprachoptimierung' },
-        { id: 't18', name: 'Zotero', cats: ['Organizers'], url: 'https://www.zotero.org', isAi: false, info: 'Literaturverwaltung (Open Source)' },
-        { id: 't19', name: 'Citavi', cats: ['Organizers'], url: 'https://www.citavi.com', isAi: false, info: 'Literaturverwaltung' },
+        { id: 't18', name: 'Zotero', cats: ['Organizers'], url: 'https://www.zotero.org', isAi: false, isLib: true, info: 'Literaturverwaltung' },
+        { id: 't19', name: 'Citavi', cats: ['Organizers'], url: 'https://www.citavi.com', isAi: false, isLib: true, info: 'Literaturverwaltung' },
         { id: 't20', name: 'Scite_', cats: ['Evaluators', 'Finders', 'Connectors'], url: 'https://scite.ai', isAi: true, info: 'KI-Tool für wissenschaftliche Literaturrecherche.', isLib: true },
         { id: 't21', name: 'Consensus', cats: ['Evaluators', 'Finders'], url: 'https://consensus.app', isAi: true, info: 'KI-Tool für wissenschaftliche Literaturrecherche.', isLib: true },
         { id: 't22', name: 'STW Thesaurus for Economics', cats: ['Keywords'], url: 'https://zbw.eu/stw/version/latest/about.de.html', isAi: false, info: 'Kontrolliertes Vokabular für wirtschaftswissenschaftliche Begriffe (ZBW).' },
