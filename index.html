@@ -282,7 +282,7 @@
     <div class="row">
         <div class="col-md-3 hangar-area d-flex flex-column">
             <h5 class="mb-3"><i class="fas fa-warehouse"></i> Hangar</h5>
-            <p class="text-muted small" style="line-height: 1.2;">Ziehen Sie die Instrumente in die 6 Phasen.</p>
+            <p class="text-muted small" style="line-height: 1.2;">Ziehe die Instrumente in die 5 Phasen.</p>
 
             <div class="no-print mb-3">
                 <label class="form-label visually-hidden" for="toolSearchInput">Tools durchsuchen</label>
@@ -1002,7 +1002,7 @@
     const EXPORT_SCHEMA_VERSION = '1.0';
 
     const categories = {
-        'Assistants': { icon: 'fa-lightbulb', info: 'KI-Co-Piloten, die beim Brainstorming, Strukturieren und beim ersten Aufschlag von Textbausteinen unterstützen.' },
+        'Assistants': { icon: 'fa-lightbulb', info: 'Allrounder-Chatbots für Recherche, Brainstorming & Feedback.' },
         'Keywords': { icon: 'fa-key', info: 'Wortlisten, Thesauri und Vorlagen, die passende Suchbegriffe und Synonyme für die Recherche vorbereiten.' },
         'Finders': { icon: 'fa-search', info: 'Suchmaschinen, Datenbanken und Kataloge, mit denen Sie geeignete Quellen aufspüren und Trefferlisten filtern.' },
         'Connectors': { icon: 'fa-project-diagram', info: 'Tools zur Visualisierung und Vernetzung von Literatur, um Forschungsstränge und Schlüsselpublikationen sichtbar zu machen.' },
@@ -1023,9 +1023,9 @@
     };
 
     const initialTools = [
-        { id: 't1', name: 'ChatGPT', cats: ['Assistants'], url: 'https://chat.openai.com', isAi: true, info: 'Brainstorming & Gliederung' },
-        { id: 't1b', name: 'Microsoft Copilot', cats: ['Assistants'], url: 'https://m365.cloud.microsoft/', isAi: true, info: 'Microsoft 365 Arbeitsassistent' },
-        { id: 't1c', name: 'Gemini', cats: ['Assistants'], url: 'https://deepmind.google/models/gemini/', isAi: true, info: 'Google DeepMind KI-Assistent' },
+        { id: 't1', name: 'ChatGPT', cats: ['Assistants'], url: 'https://chat.openai.com', isAi: true, info: 'Allrounder-Chatbot für Brainstorming & Feedback' },
+        { id: 't1b', name: 'Microsoft Copilot', cats: ['Assistants'], url: 'https://m365.cloud.microsoft/', isAi: true, isLib: true, info: 'Allrounder-Chatbot für Brainstorming & Feedback' },
+        { id: 't1c', name: 'Gemini', cats: ['Assistants'], url: 'https://deepmind.google/models/gemini/', isAi: true, info: 'Allrounder-Chatbot für Brainstorming & Feedback' },
         { id: 't2', name: 'Scispace', cats: ['Finders', 'Analyzers', 'Writers'], url: 'https://scispace.com/', isAi: true, info: 'KI-Schreibassistent' },
         { id: 't4', name: 'Swisscovery RZS Uni/PH', cats: ['Finders'], url: 'https://rzs.swisscovery.slsp.ch/discovery/search?vid=41SLSP_RZS:VU07', isAi: false, info: 'Bibliothekskatalog Schweiz', isLib: true },
         { id: 't5', name: 'Elicit', cats: ['Finders'], url: 'https://elicit.org', isAi: true, info: 'Findet Paper und extrahiert Kernaussagen' },
