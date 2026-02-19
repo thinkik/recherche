@@ -176,13 +176,38 @@
             color: #495057;
             border: 1px solid #dee2e6;
             border-radius: 10px;
-            padding: 8px 12px;
+            padding: 10px 12px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
             font-size: 0.85rem;
-            display: inline-flex;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: min(380px, calc(100vw - 2rem));
+            z-index: 1100;
+        }
+
+        .license-badge-section-title {
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: 2px;
+        }
+
+        .license-badge p,
+        .license-badge ul {
+            margin: 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .license-badge li + li {
+            margin-top: 2px;
+        }
+
+        .license-badge-topline {
+            display: flex;
             align-items: center;
             gap: 8px;
-            z-index: 1100;
+            flex-wrap: wrap;
         }
 
         .license-badge a,
@@ -291,10 +316,29 @@
 <div id="toast-container" class="toast-container no-print" aria-live="polite" aria-atomic="true" role="region" aria-label="Systembenachrichtigungen"></div>
 
 <div class="license-badge no-print" aria-label="Unihinweis">
-    <i class="fas fa-balance-scale"></i>
-    <span>Uni: <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a></span>
-    <span class="badge-separator">|</span>
-    <button type="button" class="btn btn-link p-0 align-baseline" data-bs-toggle="modal" data-bs-target="#privacyModal">Datenschutz</button>
+    <div class="license-badge-topline">
+        <i class="fas fa-balance-scale"></i>
+        <span>Uni: <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a></span>
+        <span class="badge-separator">|</span>
+        <button type="button" class="btn btn-link p-0 align-baseline" data-bs-toggle="modal" data-bs-target="#privacyModal">Datenschutz</button>
+    </div>
+    <div>
+        <div class="license-badge-section-title">Impressum</div>
+        <p>Team Fachreferat Wirtschaft der ZHB Luzern</p>
+        <p>E-Mail: <a href="mailto:wirtschaft@zhbluzern.ch">wirtschaft@zhbluzern.ch</a></p>
+        <p>Stefan Eicher Engel</p>
+        <p>Sandra Müller</p>
+    </div>
+    <div>
+        <div class="license-badge-section-title">Quellenangaben</div>
+        <ul>
+            <li><a href="https://ki-campus.org/lernangebote/kurse/prompt-labor-generative-ki-der-hochschullehre-anwendungen" target="_blank" rel="noreferrer noopener">KI-Campus, Prompt-Labor: Generative KI in der Hochschullehre – Anwendungen</a></li>
+            <li><a href="https://uni-tuebingen.de/securedl/sdl-eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NzE1MDc5MzMsImV4cCI6MTc3MTU5NzkzMywidXNlciI6MCwiZ3JvdXBzIjpbMCwtMV0sImZpbGUiOiJmaWxlYWRtaW4vVW5pX1R1ZWJpbmdlbi9FaW5yaWNodHVuZ2VuL1VuaXZlcnNpdGFldHNiaWJsaW90aGVrL0Rva3VtZW50ZS9MZXJuZW5fQXJiZWl0ZW4vMjAyNV8wNl9BSV9SZXNlYXJjaF9Ub29sX092ZXJ2aWV3LnBkZiIsInBhZ2UiOjI2ODA5OH0.hUtW6zSr-6wjQ3o8LBh_6gPXpTgkXn7o7SAkb8jwyko/2025_06_AI_Research_Tool_Overview.pdf" target="_blank" rel="noreferrer noopener">Lelde Baumgarten, AI Research Tool Overview</a></li>
+            <li><a href="https://www.econbiz.de/eb/fileadmin/ik_broschuere/schreibe_deine_beste_hausarbeit_booklet.pdf" target="_blank" rel="noreferrer noopener">ZBW, Schreibe Deine beste Hausarbeit in Wirtschaftswissenschaften</a></li>
+            <li><a href="https://www.werkzeugkasten-ik.ch/" target="_blank" rel="noreferrer noopener">ZHB Luzern, Werkzeugkasten Informationskompetenz</a></li>
+            <li><a href="https://www.pearltrees.com/poloek_ik" target="_blank" rel="noreferrer noopener">ZHB Luzern, Linksammlung: Tools &amp; Tipps für die Literaturrecherche in VWL</a></li>
+        </ul>
+    </div>
 </div>
 
 <div class="container-fluid">
@@ -460,7 +504,6 @@
                     <div class="small mb-1 fw-semibold text-primary">Uni- und KI-Hinweis</div>
                     <ul class="small mb-0 ps-3">
                         <li><strong>Badges erkennen:</strong> Tools mit einem grünen „Uni“-Badge sind lizenzierte Angebote Ihrer Hochschule; der Zugriff ist i.d.R. nur im Campus-WLAN oder über VPN möglich. Ein lila „KI“-Badge kennzeichnet KI-gestützte Tools. Einige Tools tragen mehrere Badges.</li>
-                        <li><strong>Verantwortungsvoll entscheiden:</strong> KI-Modelle können halluzinieren oder fehlerhafte Quellen angeben. Nutzen Sie KI-Tools nur, wenn Sie Fakten sorgfältig prüfen, Rechte klären und Ergebnisse transparent kennzeichnen.</li>
                         <li><strong>Reflektierter Umgang mit KI nutzen:</strong> Der Button „Reflektierter Umgang mit KI“ führt zu einem KI-Leitfaden und Reflexionsfragen. Der CRAAP-Test steht als eigener Button bereit, um Quellen systematisch zu prüfen.</li>
                         
                     </ul>
@@ -643,12 +686,8 @@
                                 </ul>
                                 <div class="small text-muted mb-2">Hilfen:</div>
                                 <ul class="small text-muted mb-0">
-                                    <li>
-                                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="pill" data-bs-target="#ki-reflexion-fragen" role="tab" aria-controls="ki-reflexion-fragen" aria-selected="false">KI-Reflexion – Fragen</button>
-                                    </li>
-                                    <li>
-                                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#craapModal">CRAAP-Test</button>
-                                    </li>
+                                    <li>KI-Reflexion – Fragen</li>
+                                    <li>CRAAP-Test</li>
                                 </ul>
                             </div>
 
