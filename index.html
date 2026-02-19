@@ -52,7 +52,6 @@
         .status-badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 8px; }
         .badge-ai { background: #f3e8ff; color: #6f42c1; border: 1px solid #e0c3ff; }
         .badge-lib { background: #e8fff3; color: #0f5132; border: 1px solid #b6e2c8; }
-        .badge-oa { background: #fff4e5; color: #d35400; border: 1px solid #f6d7b0; }
         .badge-vwl { background: #e8f2ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
         .badge-bwl { background: #e8f2ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
         .tool-link { color: #495057; margin-left: auto; padding: 2px 6px; border-radius: 4px; transition: 0.2s; }
@@ -273,6 +272,17 @@
             overflow-wrap: normal;
             hyphens: none;
             word-break: keep-all;
+        }
+
+        .tooltip-inner ul,
+        .tooltip-inner ol {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+        }
+
+        .tooltip-inner li + li {
+            margin-top: 4px;
         }
     </style>
 </head>
@@ -845,7 +855,7 @@
                 <h6 class="fw-bold mt-4">5) Lokale Speicherung im Browser (Local Storage) – transparent aufgeschlüsselt</h6>
                 <p>Das Tool speichert Zustände ausschließlich in Ihrem Browser (Local Storage). Dabei werden insbesondere folgende Schlüssel genutzt:</p>
                 <ul>
-                    <li><strong>cockpitState_v3</strong>: Speichert das Cockpit-Board (welche Tools in welcher Phase liegen, Notizen, Tool-Metadaten wie Name/Beschreibung/URL/Kategorien, Badges wie „KI“/„Uni“/„VWL“/„Open Access“, Status-Attribute wie „custom tool“/„open access“ etc.).</li>
+                    <li><strong>cockpitState_v3</strong>: Speichert das Cockpit-Board (welche Tools in welcher Phase liegen, Notizen, Tool-Metadaten wie Name/Beschreibung/URL/Kategorien, Badges wie „KI“/„Uni“/„VWL“, Status-Attribute wie „custom tool“ etc.).</li>
                     <li><strong>cockpitDeleted_v1</strong>: Speichert gelöschte Tools/Notizen, damit diese im Bereich „Gelöschte Tools &amp; Notizen“ wiederhergestellt werden können.</li>
                     <li><strong>customTools</strong>: Speichert von Ihnen selbst hinzugefügte Tools (Name, URL, Beschreibung, Kategorien, Badges).</li>
                     <li><strong>tourCompleted</strong>: Speichert, ob die Guided Tour bereits abgeschlossen/übersprungen wurde (damit sie nicht bei jedem Start automatisch läuft).</li>
@@ -983,7 +993,7 @@
         { id: 'lic41', name: 'The Economist', url: 'https://www.pressreader.com/de/magazines/m/the-economist-eu', info: 'Digitale Magazin-Ausgabe von The Economist über PressReader; nützlich für wirtschaftspolitische Kommentare und Hintergrundberichte.', cats: ['Finders'], isLib: true, isVwl: true },
         { id: 'lic42', name: 'Consensus', url: 'https://dbis.ur.de/ZHBLU/resources/104879', info: 'KI-gestütztes Tool zur Suche nach wissenschaftlichem Konsens in Studien.', cats: ['Evaluators', 'Finders'], isLib: true, isAi: true },
         { id: 'lic43', name: 'Eurostat', url: 'https://dbis.ur.de/ZHBLU/resources/5004', info: 'Statistikportal der EU mit amtlichen Daten zu Wirtschaft, Gesellschaft und Umwelt.', cats: ['Finders'], isLib: true },
-        { id: 'lic44', name: 'Finaeon', url: 'https://dbis.ur.de/ZHBLU/resources/106198', info: 'Datenbank und Lernplattform für Finanzwissen, Märkte und Unternehmensdaten.', cats: ['Finders'], isLib: true },
+        { id: 'lic44', name: 'Finaneon', url: 'https://dbis.ur.de/ZHBLU/resources/12584', info: 'Datenbank und Lernplattform für Finanzwissen, Märkte und Unternehmensdaten.', cats: ['Finders'], isLib: true },
         { id: 'lic45', name: 'International Monetary Fund eLibrary', url: 'https://dbis.ur.de/ZHBLU/resources/4697', info: 'Publikationsplattform des IWF mit Reports, Working Papers und Datensammlungen.', cats: ['Finders'], isLib: true },
         { id: 'lic46', name: 'OECD', url: 'https://dbis.ur.de/ZHBLU/resources/830', info: 'Zugang zu OECD-Publikationen, Berichten und statistischen Ressourcen.', cats: ['Finders'], isLib: true },
         { id: 'lic47', name: 'SSRN', url: 'https://dbis.ur.de/ZHBLU/resources/8359', info: 'Repository für Working Papers und Preprints aus Wirtschafts- und Sozialwissenschaften.', cats: ['Finders'], isLib: true },
@@ -1597,7 +1607,6 @@
         if(db.isAi) badges.push('<span class="status-badge badge-ai">KI</span>');
         if(db.isVwl) badges.push('<span class="status-badge badge-vwl">VWL</span>');
         if(db.isBwl) badges.push('<span class="status-badge badge-bwl">BWL</span>');
-        if(db.isOA) badges.push('<span class="status-badge badge-oa">Open Access</span>');
         badgeEl.innerHTML = badges.join(' ');
     }
 
@@ -1702,7 +1711,6 @@
                 ${toolData.isLib ? '<span class="status-badge badge-lib">Uni</span>' : ''}
                 ${toolData.isVwl ? '<span class="status-badge badge-vwl">VWL</span>' : ''}
                 ${toolData.isBwl ? '<span class="status-badge badge-bwl">BWL</span>' : ''}
-                ${toolData.isOA ? '<span class="status-badge badge-oa">Open Access</span>' : ''}
             `;
 
             const categoryList = Array.isArray(categoriesForTool) && categoriesForTool.length
