@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recherche-Cockpit | Version 2.0</title>
-    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/vendor/fontawesome/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/vendor/introjs/introjs.min.css">
-    <script src="assets/vendor/introjs/intro.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js"></script>
     
     <style>
         /* === Layout === */
@@ -864,15 +864,16 @@
                 </ul>
                 <p>GitHub dokumentiert, dass bei GitHub Pages die IP-Adresse protokolliert und zu Sicherheitszwecken gespeichert wird. Weitere Informationen: <a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank" rel="noreferrer noopener">GitHub Privacy Statement</a>.</p>
 
-                <h6 class="fw-bold mt-4">4) Bibliotheken (lokal eingebunden, ohne CDN-Abruf)</h6>
-                <p>Die für das Recherche-Cockpit benötigten Bibliotheken werden lokal aus diesem Repository geladen (Self-Hosting). Beim Seitenaufruf werden dafür keine Requests an externe CDN-Anbieter ausgelöst.</p>
-                <p>Aktuell lokal eingebunden:</p>
+                <h6 class="fw-bold mt-4">4) Externe Bibliotheken/CDNs (Einbindung von Drittanbietern)</h6>
+                <p>Damit die Seite performant funktioniert, werden einige Bibliotheken von externen Content-Delivery-Netzwerken (CDNs) geladen. Beim Laden dieser Dateien erhält der jeweilige CDN-Anbieter technisch bedingt u.&nbsp;a. Ihre IP-Adresse sowie Request-Metadaten.</p>
+                <p>Aktuell werden eingebunden:</p>
                 <ul>
-                    <li>Bootstrap (lokale Datei im Repository)</li>
-                    <li>Font Awesome (lokale Dateien im Repository)</li>
-                    <li>Intro.js (lokale Dateien im Repository)</li>
+                    <li>Bootstrap über <a href="https://www.jsdelivr.com/" target="_blank" rel="noreferrer noopener">jsDelivr</a></li>
+                    <li>Font Awesome über <a href="https://cdnjs.cloudflare.com/" target="_blank" rel="noreferrer noopener">cdnjs.cloudflare.com</a> (Cloudflare)</li>
+                    <li>Intro.js über <a href="https://unpkg.com/" target="_blank" rel="noreferrer noopener">unpkg.com</a> (CDN-Abruf)</li>
                 </ul>
-                <p class="mb-0">Damit entfällt die vorherige direkte Datenübermittlung an CDN-Infrastrukturen (z.&nbsp;B. IP-Adresse und Request-Metadaten beim Nachladen von CSS/JS).</p>
+                <p class="mb-0">Hinweis: jsDelivr weist explizit darauf hin, dass bei CDN-Traffic Drittanbieter Zugriff auf IP-Adresse u.&nbsp;a. Informationen haben können (Sub-Prozessoren). Für cdnjs gilt die <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noreferrer noopener">Cloudflare-Datenschutzerklärung</a>.</p>
+                <p class="mt-2">Datenschutz-Optimierung (optional, aber empfehlenswert): Wenn Sie Datenübermittlungen an CDNs minimieren möchten, können diese Bibliotheken auch lokal in der HTML-Datei bzw. im Repo mit ausgeliefert werden (Self-Hosting). Dadurch entfallen CDN-Requests beim Seitenaufruf.</p>
 
                 <h6 class="fw-bold mt-4">5) Lokale Speicherung im Browser (Local Storage) – transparent aufgeschlüsselt</h6>
                 <p>Das Tool speichert Zustände ausschließlich in Ihrem Browser (Local Storage). Dabei werden insbesondere folgende Schlüssel genutzt:</p>
@@ -904,7 +905,7 @@
                 <p class="mb-0"><strong>Wichtiger Hinweis bei KI-Tools:</strong> Geben Sie keine sensiblen personenbezogenen Daten oder urheberrechtlich geschützten Volltexte ein, wenn Sie nicht sicher sind, wie der Anbieter diese verarbeitet.</p>
 
                 <h6 class="fw-bold mt-4">8) Cookies &amp; Tracking</h6>
-                <p>Das Recherche-Cockpit selbst setzt keine Tracking-Cookies und nutzt keine Web-Analytics (z.&nbsp;B. Google Analytics/Matomo). Technisch notwendige Cookies können durch den Hosting-Anbieter GitHub gesetzt werden (z.&nbsp;B. für Sicherheits-/Performance-Zwecke); Details dazu finden Sie in den jeweiligen Datenschutzerklärungen.</p>
+                <p>Das Recherche-Cockpit selbst setzt keine Tracking-Cookies und nutzt keine Web-Analytics (z.&nbsp;B. Google Analytics/Matomo). Technisch notwendige Cookies können durch GitHub oder CDN-Anbieter gesetzt werden (z.&nbsp;B. für Sicherheits-/Performance-Zwecke); Details dazu finden Sie in den jeweiligen Datenschutzerklärungen.</p>
 
                 <h6 class="fw-bold mt-4">9) Rechtsgrundlagen</h6>
                 <p>Für die Bearbeitung von Personendaten durch die ZHB gelten die einschlägigen Datenschutzbestimmungen (u.&nbsp;a. kantonales Recht; ggf. DSGVO, falls anwendbar). Da das Cockpit Ihre Inhalte primär lokal speichert, fällt der Großteil der Datenbearbeitung in Ihre eigene Browser-Umgebung.</p>
@@ -961,7 +962,7 @@
     </div>
 </div>
 
-<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     // === STATE & KONFIGURATION ===
     const EXPORT_SCHEMA_VERSION = '1.0';
