@@ -21,6 +21,12 @@ Das Recherche-Cockpit ist ein interaktives Board, um Recherche-Tools und Notizen
 
 Das Cockpit speichert den aktuellen Stand, benutzerdefinierte Tools sowie gelöschte Einträge lokal im Browser (LocalStorage). Zum Teilen oder Sichern steht der JSON-Export zur Verfügung.
 
+## Compliance-Hinweis (Rechtsraum)
+
+Das Recherche-Cockpit ist primär auf die **Schweiz (CH)** ausgerichtet (Trägerin/Herausgeberin: ZHB Luzern). Pflichtangaben und rechtliche Hinweise werden daher vorrangig nach schweizerischem Rechtsrahmen gepflegt.
+
+Bezüge zu **DE/EU** (z.&nbsp;B. DSGVO) werden nur ergänzend aufgenommen, wenn sie für konkrete Funktionen oder Nutzungsfälle zusätzlich relevant sind.
+
 ## Lizenz
 
 - **Eigene Inhalte und eigener Quelltext** dieses Repositories (soweit nicht anders gekennzeichnet) stehen unter **CC BY 4.0**. Details: `LICENSE`.
