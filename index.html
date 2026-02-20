@@ -121,7 +121,6 @@
         .introjs-tooltipbuttons .introjs-donebutton { order: 3; }
 
         /* === Modal === */
-        .tool-link .d-print-inline { color: #0d6efd !important; }
         .orientation-highlight {
             outline: 3px solid #0d6efd;
             outline-offset: 3px;
@@ -1797,7 +1796,6 @@
                 ${allowEdit ? '<button type="button" class="edit-custom-btn" title="Bearbeiten"><i class="fas fa-pen"></i></button>' : ''}
                 <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="tool-link" onclick="event.stopPropagation()" title="Tool öffnen" aria-label="Tool öffnen: ${safeName}">
                     <i class="fas fa-external-link-alt"></i>
-                    <span class="d-none d-print-inline small text-decoration-underline text-primary">${safeUrl}</span>
                 </a>
             `;
 
