@@ -27,6 +27,10 @@ Das Recherche-Cockpit ist primär auf die **Schweiz (CH)** ausgerichtet (Träger
 
 Bezüge zu **DE/EU** (z.&nbsp;B. DSGVO) werden nur ergänzend aufgenommen, wenn sie für konkrete Funktionen oder Nutzungsfälle zusätzlich relevant sind.
 
+## Betriebs-Hinweis für Betreiber
+
+Prüfen Sie in regelmäßigen Abständen die im Cockpit hinterlegten externen Links sowie die zugehörigen Datenschutz- und Nutzungsrichtlinien (insbesondere bei KI-Diensten), und aktualisieren Sie Hinweise/Verlinkungen bei Änderungen zeitnah.
+
 ## Lizenz
 
 - **Eigene Inhalte und eigener Quelltext** dieses Repositories (soweit nicht anders gekennzeichnet) stehen unter **CC BY 4.0**. Details: `LICENSE`.
