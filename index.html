@@ -1994,11 +1994,16 @@
             new bootstrap.Tooltip(tooltipTriggerEl, {
                 html: tooltipTriggerEl.getAttribute('data-bs-html') === 'true',
                 trigger: 'hover focus',
-                placement: 'right',
                 container: 'body',
                 boundary: document.body,
                 fallbackPlacements: ['left', 'top', 'bottom'],
-                offset: [8, 0]
+                offset: [8, 0],
+                popperConfig(defaultCfg) {
+                    return {
+                        ...defaultCfg,
+                        strategy: 'fixed'
+                    };
+                }
             });
         });
     }
