@@ -1969,8 +1969,6 @@
         requestAnimationFrame(adjustToggle);
     }
 
-    const toolInfoTooltipStates = new WeakMap();
-
     function initTooltips() {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.forEach((tooltipTriggerEl) => {
@@ -1998,111 +1996,37 @@
                 existingTooltip.dispose();
             }
 
-            if(isToolInfoIcon && !toolInfoTooltipStates.has(tooltipTriggerEl)) {
-                const state = { lastClientX: null, lastClientY: null, rafPending: false, tooltipInstance: null };
-                const updateTooltipPosition = () => {
-                    if(state.rafPending) return;
-                    state.rafPending = true;
-                    requestAnimationFrame(() => {
-                        state.rafPending = false;
-                        if(state.tooltipInstance && state.tooltipInstance._isShown()) {
-                            state.tooltipInstance.update();
-                        }
-                    });
-                };
-
-                tooltipTriggerEl.addEventListener('mouseenter', (event) => {
-                    state.lastClientX = event.clientX;
-                    state.lastClientY = event.clientY;
-                });
-
-                tooltipTriggerEl.addEventListener('mousemove', (event) => {
-                    state.lastClientX = event.clientX;
-                    state.lastClientY = event.clientY;
-                    updateTooltipPosition();
-                });
-
-                tooltipTriggerEl.addEventListener('mouseleave', () => {
-                    state.lastClientX = null;
-                    state.lastClientY = null;
-                });
-
-                toolInfoTooltipStates.set(tooltipTriggerEl, state);
-            }
-
-            const toolInfoState = isToolInfoIcon ? toolInfoTooltipStates.get(tooltipTriggerEl) : null;
-
-            const tooltipInstance = new bootstrap.Tooltip(tooltipTriggerEl, {
+            new bootstrap.Tooltip(tooltipTriggerEl, {
                 html: tooltipTriggerEl.getAttribute('data-bs-html') === 'true',
                 trigger: 'hover focus',
-                container: 'body',
+                container: document.body,
                 boundary: document.body,
-                fallbackPlacements: ['top', 'bottom', 'right'],
                 offset: [0, 8],
                 popperConfig(defaultCfg) {
-                    if(!isToolInfoIcon || !toolInfoState) {
-                        return {
-                            ...defaultCfg,
-                            strategy: 'fixed'
-                        };
-                    }
-
-                    const virtualReference = {
-                        contextElement: tooltipTriggerEl,
-                        getBoundingClientRect() {
-                            if(toolInfoState.lastClientX !== null && toolInfoState.lastClientY !== null) {
-                                const x = toolInfoState.lastClientX;
-                                const y = toolInfoState.lastClientY;
-                                return {
-                                    width: 0,
-                                    height: 0,
-                                    top: y,
-                                    right: x,
-                                    bottom: y,
-                                    left: x,
-                                    x,
-                                    y
-                                };
-                            }
-
-                            const rect = tooltipTriggerEl.getBoundingClientRect();
-                            const x = rect.left + rect.width / 2;
-                            const y = rect.top + rect.height / 2;
-                            return {
-                                width: 0,
-                                height: 0,
-                                top: y,
-                                right: x,
-                                bottom: y,
-                                left: x,
-                                x,
-                                y
-                            };
-                        }
-                    };
-
                     return {
                         ...defaultCfg,
                         strategy: 'fixed',
                         modifiers: [
                             ...(defaultCfg.modifiers || []),
                             {
-                                name: 'virtualReference',
-                                enabled: true,
-                                phase: 'beforeRead',
-                                fn({ state }) {
-                                    state.elements.reference = virtualReference;
-                                    state.rects.reference = virtualReference.getBoundingClientRect();
+                                name: 'computeStyles',
+                                options: {
+                                    adaptive: false,
+                                    gpuAcceleration: false
+                                }
+                            },
+                            {
+                                name: 'preventOverflow',
+                                options: {
+                                    boundary: document.body,
+                                    altBoundary: true,
+                                    padding: 8
                                 }
                             }
                         ]
                     };
                 }
             });
-
-            if(toolInfoState) {
-                toolInfoState.tooltipInstance = tooltipInstance;
-            }
         });
     }
 
