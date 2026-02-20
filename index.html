@@ -390,7 +390,7 @@
                 <div class="mt-3 deleted-wrapper">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <div class="fw-bold"><i class="fas fa-trash-undo me-2"></i>Gelöschte Tools &amp; Notizen</div>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="restoreAllDeleted()" title="Alle zurückholen" aria-label="Alle gelöschten Tools wiederherstellen">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="restoreAllDeleted()" data-bs-toggle="tooltip" data-bs-title="Alle zurückholen" aria-label="Alle gelöschten Tools wiederherstellen">
                             <i class="fas fa-undo"></i>
                         </button>
                     </div>
@@ -1504,13 +1504,16 @@
             const restoreBtn = document.createElement('button');
             restoreBtn.className = 'btn btn-sm btn-outline-success';
             restoreBtn.innerHTML = '<i class="fas fa-undo"></i>';
-            restoreBtn.title = 'Tool zurück in den Hangar';
+            restoreBtn.setAttribute('data-bs-toggle', 'tooltip');
+            restoreBtn.setAttribute('data-bs-title', 'Tool zurück in den Hangar');
             restoreBtn.setAttribute('aria-label', `Tool wiederherstellen: ${tool.name}`);
             restoreBtn.addEventListener('click', () => restoreDeletedTool(index));
 
             item.appendChild(restoreBtn);
             container.appendChild(item);
         });
+
+        initTooltips(container);
     }
 
     function saveDeletedState() {
@@ -1821,7 +1824,7 @@
                 <div class="flex-grow-1 tool-card-body">
                     <div class="d-flex tool-title-row">
                         <div class="fw-bold tool-title note-title">${displayTitle}</div>
-                        <button type="button" class="edit-custom-btn edit-note-btn" title="Notiz bearbeiten">
+                        <button type="button" class="edit-custom-btn edit-note-btn" data-bs-toggle="tooltip" data-bs-title="Notiz bearbeiten">
                             <i class="fas fa-pen"></i>
                         </button>
                     </div>
@@ -1871,8 +1874,8 @@
                 <button type="button" class="tool-info-btn tool-info-icon" data-bs-toggle="tooltip" aria-label="${infoLabel}">
                     <i class="fas fa-info-circle"></i>
                 </button>
-                ${allowEdit ? '<button type="button" class="edit-custom-btn" title="Bearbeiten"><i class="fas fa-pen"></i></button>' : ''}
-                <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="tool-link" onclick="event.stopPropagation()" title="Tool öffnen" aria-label="Tool öffnen: ${safeName}">
+                ${allowEdit ? '<button type="button" class="edit-custom-btn" data-bs-toggle="tooltip" data-bs-title="Bearbeiten"><i class="fas fa-pen"></i></button>' : ''}
+                <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="tool-link" onclick="event.stopPropagation()" data-bs-toggle="tooltip" data-bs-title="Tool öffnen" aria-label="Tool öffnen: ${safeName}">
                     <i class="fas fa-external-link-alt"></i>
                 </a>
             `;
@@ -1903,8 +1906,9 @@
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
         removeBtn.className = 'tool-remove-btn';
+        removeBtn.setAttribute('data-bs-toggle', 'tooltip');
+        removeBtn.setAttribute('data-bs-title', 'Tool entfernen');
         removeBtn.setAttribute('aria-label', 'Tool entfernen');
-        removeBtn.title = 'Tool entfernen';
         removeBtn.innerHTML = '<i class="fas fa-times"></i>';
         removeBtn.setAttribute('draggable', 'false');
         removeBtn.addEventListener('mousedown', (event) => event.stopPropagation());
