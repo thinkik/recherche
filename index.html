@@ -1853,8 +1853,6 @@
             const safeName = escapeHtml(toolData.name || 'Unbenanntes Tool');
             const rawInfo = toolData.info || '';
             const tooltipHtml = sanitizeTooltipHtml(rawInfo);
-            const plainInfo = stripHtml(rawInfo);
-            const safeInfo = escapeHtml(rawInfo || '');
             const safeUrl = escapeHtml(toolData.url || '#');
             const infoLabel = `Zusatzinformation zu ${safeName}`;
 
@@ -1867,7 +1865,7 @@
                     </div>
                     <div class="small text-muted tool-category">${categoryList}</div>
                 </div>
-                <button type="button" class="tool-info-btn tool-info-icon" data-bs-toggle="tooltip" title="${safeInfo}" aria-label="${infoLabel}">
+                <button type="button" class="tool-info-btn tool-info-icon" data-bs-toggle="tooltip" aria-label="${infoLabel}">
                     <i class="fas fa-info-circle"></i>
                 </button>
                 ${allowEdit ? '<button type="button" class="edit-custom-btn" title="Bearbeiten"><i class="fas fa-pen"></i></button>' : ''}
@@ -1880,7 +1878,8 @@
             if(infoIcon) {
                 infoIcon.setAttribute('data-bs-title', tooltipHtml);
                 infoIcon.setAttribute('data-bs-html', 'true');
-                infoIcon.setAttribute('title', plainInfo);
+                infoIcon.setAttribute('data-bs-placement', 'auto');
+                infoIcon.removeAttribute('title');
             }
 
             if(allowEdit) {
@@ -1969,44 +1968,20 @@
     }
 
     function initTooltips() {
-        document.querySelectorAll('.tooltip').forEach(t => t.remove());
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.forEach((tooltipTriggerEl) => {
-            let tooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
-
-            if(tooltip) {
-                const tooltipContent = tooltipTriggerEl.getAttribute('data-bs-title')
-                    || tooltipTriggerEl.getAttribute('title')
-                    || '';
-                tooltip.setContent({ '.tooltip-inner': tooltipContent });
-            } else {
-                tooltip = new bootstrap.Tooltip(tooltipTriggerEl, {
-                    html: tooltipTriggerEl.getAttribute('data-bs-html') === 'true',
-                    trigger: 'manual',
-                    container: 'body'
-                });
+            const existingTooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+            if(existingTooltip) {
+                existingTooltip.dispose();
             }
 
-            if(tooltipTriggerEl.dataset.tooltipBound === 'true') return;
-
-            const showTooltip = () => {
-                const instance = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
-                if(instance) instance.show();
-            };
-            const hideTooltip = () => {
-                const instance = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
-                if(instance) instance.hide();
-            };
-
-            tooltipTriggerEl.addEventListener('focus', showTooltip);
-            tooltipTriggerEl.addEventListener('blur', hideTooltip);
-            tooltipTriggerEl.addEventListener('mouseenter', showTooltip);
-            tooltipTriggerEl.addEventListener('mouseleave', hideTooltip);
-            tooltipTriggerEl.addEventListener('keydown', (event) => {
-                if(event.key === 'Escape') hideTooltip();
+            new bootstrap.Tooltip(tooltipTriggerEl, {
+                html: tooltipTriggerEl.getAttribute('data-bs-html') === 'true',
+                trigger: 'hover focus',
+                container: 'body',
+                boundary: document.body,
+                fallbackPlacements: ['top', 'right', 'bottom', 'left']
             });
-
-            tooltipTriggerEl.dataset.tooltipBound = 'true';
         });
     }
 
