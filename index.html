@@ -1980,6 +1980,15 @@
             const bsTitle = el.getAttribute('data-bs-title') || '';
             const fallbackContent = el.getAttribute('data-tooltip-content') || '';
             const tooltipContent = fallbackContent || stripHtml(bsTitle).trim();
+            const offsetAttr = el.getAttribute('data-bs-offset') || '';
+            const parsedOffset = offsetAttr
+                .split(',')
+                .map((value) => Number(value.trim()))
+                .filter((value) => !Number.isNaN(value));
+            const offset = parsedOffset.length >= 2 ? [parsedOffset[0], parsedOffset[1]] : [0, 8];
+            const containerOption = el.getAttribute('data-bs-container') || document.body;
+            const boundaryOption = el.getAttribute('data-bs-boundary') || document.body;
+            const strategyOption = el.getAttribute('data-bs-strategy') || 'absolute';
 
             if(isToolInfoIcon && !el.getAttribute('data-bs-placement')) {
                 el.setAttribute('data-bs-placement', 'top');
@@ -2000,13 +2009,14 @@
             new bootstrap.Tooltip(el, {
                 html: el.getAttribute('data-bs-html') === 'true',
                 trigger: 'hover focus',
-                container: document.body,
-                boundary: document.body,
-                offset: [0, 8],
+                placement: el.getAttribute('data-bs-placement') || 'top',
+                container: containerOption,
+                boundary: boundaryOption,
+                offset,
                 popperConfig(defaultCfg) {
                     return {
                         ...defaultCfg,
-                        strategy: 'fixed',
+                        strategy: strategyOption,
                         modifiers: [
                             ...(defaultCfg.modifiers || []),
                             {
@@ -2019,7 +2029,7 @@
                             {
                                 name: 'preventOverflow',
                                 options: {
-                                    boundary: document.body,
+                                    boundary: boundaryOption,
                                     altBoundary: true,
                                     padding: 8
                                 }
