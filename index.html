@@ -231,6 +231,21 @@
             color: #adb5bd;
         }
 
+        .external-services-note {
+            border-top: 1px solid #e9ecef;
+            padding-top: 8px;
+            font-size: 0.82rem;
+            line-height: 1.35;
+            color: #495057;
+        }
+
+        .external-services-note button {
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 0;
+            vertical-align: baseline;
+        }
+
         @media (max-width: 576px) {
             .toast-container { left: 0.75rem; right: 0.75rem; top: auto; bottom: 1rem; align-items: flex-end; }
             .toast-item { width: 100%; max-width: none; }
@@ -322,6 +337,16 @@
         <button type="button" class="btn btn-link p-0 align-baseline" data-bs-toggle="modal" data-bs-target="#privacyModal">Datenschutz</button>
         <span class="badge-separator">|</span>
         <button type="button" class="btn btn-link p-0 align-baseline" data-bs-toggle="modal" data-bs-target="#legalNoticeModal">Impressum &amp; Quellenangaben</button>
+    </div>
+    <div class="external-services-note">
+        <i class="fas fa-shield-halved me-1" aria-hidden="true"></i>
+        Externe Dienste: Vor jedem Klick Hinweise zur Datenweitergabe beachten.
+        <button type="button" class="btn btn-link p-0 align-baseline"
+                data-bs-toggle="modal"
+                data-bs-target="#privacyModal"
+                data-scroll-target="externalServicesNotice">
+            Details anzeigen
+        </button>
     </div>
 </div>
 
@@ -904,21 +929,28 @@
                 </ul>
                 <p class="mb-0"><strong>Wichtiger Hinweis bei KI-Tools:</strong> Geben Sie keine sensiblen personenbezogenen Daten oder urheberrechtlich geschützten Volltexte ein, wenn Sie nicht sicher sind, wie der Anbieter diese verarbeitet.</p>
 
-                <h6 class="fw-bold mt-4">8) Cookies &amp; Tracking</h6>
+                <h6 class="fw-bold mt-4" id="externalServicesNotice">8) Wichtiger Hinweis zu externen Diensten (beim Klick auf Tool-Links)</h6>
+                <ul>
+                    <li><strong>Datenübermittlung an Drittdienste beim Klick:</strong> Sobald Sie einen externen Tool-Link öffnen, gelten die Datenschutz- und Nutzungsbedingungen des jeweiligen Dienstes. Dabei können technische Nutzungsdaten und ggf. Inhalteingaben an Drittdienste übermittelt werden.</li>
+                    <li><strong>Eigenverantwortung der Nutzenden:</strong> Die Nutzung externer Dienste erfolgt in eigener Verantwortung. Prüfen Sie vor der Nutzung die jeweils aktuellen Richtlinien, Speicherorte und Zugriffsrechte des Anbieters.</li>
+                    <li><strong>Verbot kritischer Eingaben in KI-Diensten:</strong> Geben Sie keine sensiblen personenbezogenen Daten, vertraulichen Informationen oder urheberrechtlich problematischen Inhalte in KI-Dienste ein. Solche Eingaben sind zu unterlassen und können zu rechtlichen Konsequenzen (inkl. Abmahnungen) führen.</li>
+                </ul>
+
+                <h6 class="fw-bold mt-4">9) Cookies &amp; Tracking</h6>
                 <p>Das Recherche-Cockpit selbst setzt keine Tracking-Cookies und nutzt keine Web-Analytics (z.&nbsp;B. Google Analytics/Matomo). Technisch notwendige Cookies können durch GitHub gesetzt werden (z.&nbsp;B. für Sicherheits-/Performance-Zwecke); Details dazu finden Sie in der GitHub-Datenschutzerklärung.</p>
 
-                <h6 class="fw-bold mt-4">9) Rechtsgrundlagen</h6>
+                <h6 class="fw-bold mt-4">10) Rechtsgrundlagen</h6>
                 <p>Für Datenbearbeitungen durch die ZHB im Rahmen dieses Angebots gelten die einschlägigen datenschutzrechtlichen Bestimmungen (insb. kantonales Datenschutzrecht; soweit anwendbar ergänzend DSG/DSGVO). Je nach Verarbeitungskontext stützen wir uns auf folgende Grundlagen:</p>
                 <ul>
                     <li><strong>Hosting-Logs / technische Bereitstellung (Ziff. 3):</strong> Berechtigtes Interesse bzw. öffentliche Aufgabe an einem sicheren und stabilen Betrieb des Webangebots (IT-Sicherheit, Missbrauchsabwehr, Fehleranalyse).</li>
                     <li><strong>Lokaler Storage im Browser (Ziff. 5):</strong> Technische Erforderlichkeit zur Bereitstellung der von Ihnen aktiv genutzten Funktionen (Speichern Ihres Board-Status direkt auf Ihrem Endgerät); Rechtsgrundlage ist die Funktionserfüllung des Tools auf Ihre Veranlassung.</li>
                     <li><strong>Export/Import/PDF (Ziff. 6):</strong> Verarbeitung auf Ihre ausdrückliche Aktion hin (Nutzerinitiative; lokale Verarbeitung auf dem Endgerät).</li>
                     <li><strong>Externe Linkaufrufe (Ziff. 7):</strong> Datenübermittlung an den jeweiligen Drittanbieter erst durch Ihren aktiven Klick (Einwilligung/selbstbestimmte Nutzung des externen Dienstes).</li>
-                    <li><strong>Kontaktaufnahme per E-Mail (Ziff. 10):</strong> Bearbeitung zur Beantwortung Ihres Anliegens und zur Erfüllung gesetzlicher Pflichten im Datenschutzkontext.</li>
+                    <li><strong>Kontaktaufnahme per E-Mail (Ziff. 11):</strong> Bearbeitung zur Beantwortung Ihres Anliegens und zur Erfüllung gesetzlicher Pflichten im Datenschutzkontext.</li>
                 </ul>
                 <p class="mb-0">Soweit Daten bei GitHub verarbeitet werden, erfolgt dies in deren Verantwortungsbereich nach den dort genannten Rechtsgrundlagen und Transfermechanismen.</p>
 
-                <h6 class="fw-bold mt-4">10) Ihre Rechte / Kontakt</h6>
+                <h6 class="fw-bold mt-4">11) Ihre Rechte / Kontakt</h6>
                 <p>Sie haben – im Rahmen des anwendbaren Datenschutzrechts – insbesondere folgende Rechte: Auskunft, Berichtigung, Löschung, Einschränkung der Bearbeitung, Widerspruch sowie (soweit anwendbar) Datenherausgabe/-übertragbarkeit. Zusätzlich besteht ein Beschwerderecht bei der zuständigen Aufsichtsbehörde.</p>
                 <p><strong>Operativer Kontaktweg für Datenschutzanfragen:</strong><br>
                     1) Bitte senden Sie Ihr Anliegen mit dem Betreff „Datenschutzanfrage Recherche-Cockpit“ an <a href="mailto:wirtschaft@zhbluzern.ch">wirtschaft@zhbluzern.ch</a>.<br>
@@ -926,7 +958,7 @@
                     3) Die Anfrage wird intern an die zuständige Datenschutzstelle bzw. den/die Datenschutzbeauftragte:n der Institution weitergeleitet, sofern dies für die Bearbeitung erforderlich ist.</p>
                 <p>Für rein lokale Daten (Notizen/Board-Setup) ist der effektivste Weg weiterhin die Löschung im Browser (Ziff. 5), da diese Daten grundsätzlich nicht auf ZHB-Servern vorliegen.</p>
 
-                <h6 class="fw-bold mt-4">11) Änderungen</h6>
+                <h6 class="fw-bold mt-4">12) Änderungen</h6>
                 <p class="mb-0">Diese Datenschutzerklärung kann angepasst werden, wenn sich Funktionen (z.&nbsp;B. zusätzliche Speichermechanismen, neue lokale oder externe Integrationen, Analytics) ändern. Die jeweils aktuelle Version sollte auf der Website abrufbar sein.</p>
             </div>
             <div class="modal-footer">
@@ -984,6 +1016,26 @@
 
 <script src="js/bootstrap.bundle.min.js"></script>
 <script>
+    document.querySelectorAll('[data-scroll-target]').forEach((trigger) => {
+        trigger.addEventListener('click', () => {
+            const modalSelector = trigger.getAttribute('data-bs-target');
+            const targetId = trigger.getAttribute('data-scroll-target');
+            if (!modalSelector || !targetId) return;
+            const modal = document.querySelector(modalSelector);
+            if (!modal) return;
+
+            const scrollToTarget = () => {
+                const target = modal.querySelector(`#${targetId}`);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                modal.removeEventListener('shown.bs.modal', scrollToTarget);
+            };
+
+            modal.addEventListener('shown.bs.modal', scrollToTarget);
+        });
+    });
+
     // === STATE & KONFIGURATION ===
     const EXPORT_SCHEMA_VERSION = '1.0';
 
