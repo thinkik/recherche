@@ -1626,6 +1626,8 @@
                 });
             });
         });
+
+        initTooltips(pool);
     }
 
     function populateCategoryOptions() {
@@ -1687,7 +1689,7 @@
         });
 
         setCategoryFilter(currentCategoryFilter, { render: false });
-        initTooltips();
+        initTooltips(menu);
     }
 
     function setCategoryFilter(catKey, { render = true } = {}) {
@@ -1914,8 +1916,6 @@
 
         setTimeout(() => applyCollapsibleTitle(div), 0);
 
-        setTimeout(() => initTooltips(), 100);
-
         div.addEventListener('dragstart', (e) => {
             const transferData = { ...toolData, uniqueId: uniqueId, origin: origin };
             e.dataTransfer.setData("text/plain", JSON.stringify(transferData));
@@ -1969,35 +1969,32 @@
         requestAnimationFrame(adjustToggle);
     }
 
-    function initTooltips() {
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.forEach((tooltipTriggerEl) => {
-            const isToolInfoIcon = tooltipTriggerEl.classList.contains('tool-info-icon');
-            const bsTitle = tooltipTriggerEl.getAttribute('data-bs-title') || '';
-            const fallbackContent = tooltipTriggerEl.getAttribute('data-tooltip-content') || '';
+    function initTooltips(root = document) {
+        const tooltipTriggerList = root.querySelectorAll('[data-bs-toggle="tooltip"]');
+        tooltipTriggerList.forEach((el) => {
+            const isToolInfoIcon = el.classList.contains('tool-info-icon');
+            const bsTitle = el.getAttribute('data-bs-title') || '';
+            const fallbackContent = el.getAttribute('data-tooltip-content') || '';
             const tooltipContent = fallbackContent || stripHtml(bsTitle).trim();
 
-            if(isToolInfoIcon && !tooltipTriggerEl.getAttribute('data-bs-placement')) {
-                tooltipTriggerEl.setAttribute('data-bs-placement', 'top');
+            if(isToolInfoIcon && !el.getAttribute('data-bs-placement')) {
+                el.setAttribute('data-bs-placement', 'top');
             }
 
             if(tooltipContent) {
-                tooltipTriggerEl.setAttribute('data-tooltip-content', tooltipContent);
+                el.setAttribute('data-tooltip-content', tooltipContent);
                 if(!bsTitle) {
-                    tooltipTriggerEl.setAttribute('data-bs-title', tooltipContent);
+                    el.setAttribute('data-bs-title', tooltipContent);
                 }
             }
 
-            tooltipTriggerEl.removeAttribute('title');
-            tooltipTriggerEl.removeAttribute('data-bs-original-title');
+            el.removeAttribute('title');
+            el.removeAttribute('data-bs-original-title');
 
-            const existingTooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
-            if(existingTooltip) {
-                existingTooltip.dispose();
-            }
+            bootstrap.Tooltip.getInstance(el)?.dispose();
 
-            new bootstrap.Tooltip(tooltipTriggerEl, {
-                html: tooltipTriggerEl.getAttribute('data-bs-html') === 'true',
+            new bootstrap.Tooltip(el, {
+                html: el.getAttribute('data-bs-html') === 'true',
                 trigger: 'hover focus',
                 container: document.body,
                 boundary: document.body,
@@ -2077,12 +2074,14 @@
                 uniqueId: 'c-' + Date.now() + Math.random().toString(16).slice(2)
             }, 'cockpit');
             target.insertBefore(newTool, referenceEl);
+            initTooltips(target);
 
             saveState();
         } else {
             const existingEl = document.getElementById(data.uniqueId);
             if(existingEl) {
                 target.insertBefore(existingEl, referenceEl);
+                initTooltips(target);
                 saveState();
             }
         }
@@ -2189,6 +2188,7 @@
 
         const card = createToolElement(noteData, 'cockpit');
         target.appendChild(card);
+        initTooltips(target);
         saveState();
 
         if(textModal) {
@@ -2312,6 +2312,7 @@
 
             const refreshedCard = createToolElement(updatedData, origin);
             parent.replaceChild(refreshedCard, card);
+            initTooltips(parent);
         });
     }
 
@@ -2479,6 +2480,8 @@
                 };
                 phase.appendChild(createToolElement(restoredTool, 'cockpit'));
             });
+
+            initTooltips(phase);
         });
     }
 
@@ -2668,6 +2671,10 @@
 
         renderHangar();
         loadState();
+        dropTargets.forEach(targetId => {
+            const phase = document.getElementById(targetId);
+            if(phase) initTooltips(phase);
+        });
 
         const titleInput = document.getElementById('cockpitTitleInput');
         if(titleInput) {
@@ -2687,7 +2694,10 @@
         populateLicensedDbSelect();
         loadState();
         loadDeletedState();
-        initTooltips();
+        dropTargets.forEach(targetId => {
+            const phase = document.getElementById(targetId);
+            if(phase) initTooltips(phase);
+        });
 
         const savePdfButton = document.getElementById('savePdfButton');
         if(savePdfButton) {
