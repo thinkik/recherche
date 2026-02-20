@@ -23,4 +23,7 @@ Das Cockpit speichert den aktuellen Stand, benutzerdefinierte Tools sowie gelös
 
 ## Lizenz
 
-Dieses Projekt verweist auf die Lizenz **CC BY 4.0**. Details stehen im UI unter dem Lizenzhinweis.
+- **Eigene Inhalte und eigener Quelltext** dieses Repositories (soweit nicht anders gekennzeichnet) stehen unter **CC BY 4.0**. Details: `LICENSE`.
+- **Drittanbieter-Bibliotheken und -Assets** unterliegen ihren jeweiligen Lizenzen (u. a. MIT, SIL OFL 1.1, CC BY 4.0). Details: `THIRD_PARTY_LICENSES.md`.
+
+Die Attributionen sind zusätzlich im UI unter „Impressum & Quellenangaben“ aufgeführt.
