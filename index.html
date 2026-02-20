@@ -1991,9 +1991,11 @@
             new bootstrap.Tooltip(tooltipTriggerEl, {
                 html: tooltipTriggerEl.getAttribute('data-bs-html') === 'true',
                 trigger: 'hover focus',
+                placement: 'right',
                 container: 'body',
                 boundary: document.body,
-                fallbackPlacements: ['top', 'right', 'bottom', 'left']
+                fallbackPlacements: ['left', 'top', 'bottom'],
+                offset: [8, 0]
             });
         });
     }
