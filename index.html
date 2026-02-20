@@ -1663,7 +1663,6 @@
             const safeLabel = escapeHtml(label);
             const safeInfo = escapeHtml(info || '');
             button.dataset.bsTitle = safeInfo;
-            button.setAttribute('title', stripHtml(safeInfo));
             button.setAttribute('data-tooltip-content', stripHtml(safeInfo));
             button.innerHTML = `
                 <i class="fas ${iconClass} text-primary mt-1"></i>
@@ -1880,7 +1879,6 @@
             if(infoIcon) {
                 const tooltipText = stripHtml(tooltipHtml).trim();
                 infoIcon.setAttribute('data-bs-title', tooltipHtml);
-                infoIcon.setAttribute('title', tooltipText);
                 infoIcon.setAttribute('data-tooltip-content', tooltipText);
                 infoIcon.setAttribute('data-bs-html', 'true');
                 infoIcon.setAttribute('data-bs-placement', 'auto');
@@ -1975,13 +1973,18 @@
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.forEach((tooltipTriggerEl) => {
             const bsTitle = tooltipTriggerEl.getAttribute('data-bs-title') || '';
-            const fallbackContent = tooltipTriggerEl.getAttribute('data-tooltip-content') || tooltipTriggerEl.getAttribute('title') || '';
+            const fallbackContent = tooltipTriggerEl.getAttribute('data-tooltip-content') || '';
             const tooltipContent = fallbackContent || stripHtml(bsTitle).trim();
 
             if(tooltipContent) {
-                tooltipTriggerEl.setAttribute('title', tooltipContent);
                 tooltipTriggerEl.setAttribute('data-tooltip-content', tooltipContent);
+                if(!bsTitle) {
+                    tooltipTriggerEl.setAttribute('data-bs-title', tooltipContent);
+                }
             }
+
+            tooltipTriggerEl.removeAttribute('title');
+            tooltipTriggerEl.removeAttribute('data-bs-original-title');
 
             const existingTooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
             if(existingTooltip) {
