@@ -1763,8 +1763,13 @@
             button.addEventListener('click', () => {
                 setCategoryFilter(catKey);
 
-                const dropdown = bootstrap.Dropdown.getOrCreateInstance(trigger);
+                const dropdown = bootstrap.Dropdown.getInstance(trigger) || new bootstrap.Dropdown(trigger);
                 dropdown.hide();
+
+                trigger.blur();
+                trigger.setAttribute('aria-expanded', 'false');
+                trigger.closest('.dropdown')?.classList.remove('show');
+                menu.classList.remove('show');
             });
 
             li.appendChild(button);
