@@ -185,6 +185,61 @@
             z-index: 1100;
         }
 
+        .license-badge-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .license-badge-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #212529;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .license-badge-collapse-btn {
+            border: 1px solid #dee2e6;
+            background: #f8f9fa;
+            color: #495057;
+            border-radius: 999px;
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .license-badge-collapse-btn:hover,
+        .license-badge-collapse-btn:focus-visible {
+            background: #e9ecef;
+            color: #212529;
+        }
+
+        .license-badge-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .license-badge.license-badge--collapsed {
+            max-width: fit-content;
+            padding: 8px;
+            gap: 0;
+        }
+
+        .license-badge.license-badge--collapsed .license-badge-content {
+            display: none;
+        }
+
+        .license-badge.license-badge--collapsed .license-badge-title {
+            font-size: 0.8rem;
+        }
+
         .license-badge-section-title {
             font-weight: 700;
             color: #212529;
@@ -329,24 +384,32 @@
 
 <div id="toast-container" class="toast-container no-print" aria-live="polite" aria-atomic="true" role="region" aria-label="Systembenachrichtigungen"></div>
 
-<div class="license-badge no-print" aria-label="Unihinweis">
-    <div class="license-badge-topline">
-        <i class="fas fa-balance-scale"></i>
-        <span>Uni: <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a></span>
-        <span class="badge-separator">|</span>
-        <button type="button" class="btn btn-link p-0 align-baseline" data-bs-toggle="modal" data-bs-target="#privacyModal">Datenschutz</button>
-        <span class="badge-separator">|</span>
-        <button type="button" class="btn btn-link p-0 align-baseline" data-bs-toggle="modal" data-bs-target="#legalNoticeModal">Impressum &amp; Quellenangaben</button>
-    </div>
-    <div class="external-services-note">
-        <i class="fas fa-shield-halved me-1" aria-hidden="true"></i>
-        Externe Dienste: Vor jedem Klick Hinweise zur Datenweitergabe beachten.
-        <button type="button" class="btn btn-link p-0 align-baseline"
-                data-bs-toggle="modal"
-                data-bs-target="#privacyModal"
-                data-scroll-target="externalServicesNotice">
-            Details anzeigen
+<div id="licenseBadge" class="license-badge no-print" aria-label="Unihinweis">
+    <div class="license-badge-header">
+        <span class="license-badge-title"><i class="fas fa-balance-scale" aria-hidden="true"></i> Hinweise</span>
+        <button id="licenseBadgeToggle" type="button" class="license-badge-collapse-btn" aria-controls="licenseBadgeContent" aria-expanded="true" aria-label="Hinweisfeld minimieren">
+            <i class="fas fa-chevron-down" aria-hidden="true"></i>
         </button>
+    </div>
+    <div id="licenseBadgeContent" class="license-badge-content">
+        <div class="license-badge-topline">
+            <i class="fas fa-balance-scale"></i>
+            <span>Uni: <a href="https://creativecommons.org/licenses/by/4.0/deed.de" target="_blank" rel="noopener">CC BY 4.0</a></span>
+            <span class="badge-separator">|</span>
+            <button type="button" class="btn btn-link p-0 align-baseline" data-bs-toggle="modal" data-bs-target="#privacyModal">Datenschutz</button>
+            <span class="badge-separator">|</span>
+            <button type="button" class="btn btn-link p-0 align-baseline" data-bs-toggle="modal" data-bs-target="#legalNoticeModal">Impressum &amp; Quellenangaben</button>
+        </div>
+        <div class="external-services-note">
+            <i class="fas fa-shield-halved me-1" aria-hidden="true"></i>
+            Externe Dienste: Vor jedem Klick Hinweise zur Datenweitergabe beachten.
+            <button type="button" class="btn btn-link p-0 align-baseline"
+                    data-bs-toggle="modal"
+                    data-bs-target="#privacyModal"
+                    data-scroll-target="externalServicesNotice">
+                Details anzeigen
+            </button>
+        </div>
     </div>
 </div>
 
@@ -1136,6 +1199,7 @@
     const LEGACY_CATEGORY_MAP = { 'Verwaltung': 'Organizers' };
     const dropTargets = ['phase-1', 'phase-2', 'phase-3', 'phase-5', 'phase-6'];
     const CUSTOM_TOOLS_KEY = 'customTools';
+    const LICENSE_BADGE_COLLAPSED_KEY = 'licenseBadgeCollapsed';
     const MAX_IMPORT_FILE_SIZE_BYTES = 2 * 1024 * 1024;
     const ORIENTATION_HIGHLIGHT_CLASS = 'orientation-highlight';
 
@@ -2766,9 +2830,40 @@
         showToast('Beispiel-Cockpit geladen.', 'success');
     }
 
+    function setLicenseBadgeCollapsed(collapsed) {
+        const badge = document.getElementById('licenseBadge');
+        const toggle = document.getElementById('licenseBadgeToggle');
+        if(!badge || !toggle) return;
+
+        badge.classList.toggle('license-badge--collapsed', collapsed);
+        toggle.setAttribute('aria-expanded', String(!collapsed));
+        toggle.setAttribute('aria-label', collapsed ? 'Hinweisfeld anzeigen' : 'Hinweisfeld minimieren');
+        const icon = toggle.querySelector('i');
+        if(icon) {
+            icon.classList.toggle('fa-chevron-down', !collapsed);
+            icon.classList.toggle('fa-chevron-up', collapsed);
+        }
+
+        localStorage.setItem(LICENSE_BADGE_COLLAPSED_KEY, collapsed ? '1' : '0');
+    }
+
+    function initLicenseBadgeToggle() {
+        const badge = document.getElementById('licenseBadge');
+        const toggle = document.getElementById('licenseBadgeToggle');
+        if(!badge || !toggle) return;
+
+        const isCollapsed = localStorage.getItem(LICENSE_BADGE_COLLAPSED_KEY) === '1';
+        setLicenseBadgeCollapsed(isCollapsed);
+        toggle.addEventListener('click', () => {
+            const nextState = !badge.classList.contains('license-badge--collapsed');
+            setLicenseBadgeCollapsed(nextState);
+        });
+    }
+
     // === INITIALISIERUNG ===
     document.addEventListener('DOMContentLoaded', () => {
         toastContainer = document.getElementById('toast-container');
+        initLicenseBadgeToggle();
         loadCustomTools();
         renderHangar();
         populateCategoryOptions();
