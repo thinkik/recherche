@@ -1697,7 +1697,12 @@
                     <span class="d-block fw-semibold">${safeLabel}</span>
                 </span>
             `;
-            button.addEventListener('click', () => setCategoryFilter(catKey));
+            button.addEventListener('click', () => {
+                setCategoryFilter(catKey);
+
+                const dropdown = bootstrap.Dropdown.getOrCreateInstance(trigger);
+                dropdown.hide();
+            });
 
             li.appendChild(button);
             menu.appendChild(li);
