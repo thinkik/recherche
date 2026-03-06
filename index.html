@@ -1697,7 +1697,23 @@
                     <span class="d-block fw-semibold">${safeLabel}</span>
                 </span>
             `;
-            button.addEventListener('click', () => setCategoryFilter(catKey));
+            button.addEventListener('click', () => {
+                setCategoryFilter(catKey);
+
+                const dropdownRoot = trigger.closest('.dropdown');
+                const closeDropdownManually = () => {
+                    trigger.setAttribute('aria-expanded', 'false');
+                    menu.classList.remove('show');
+                    if(dropdownRoot) dropdownRoot.classList.remove('show');
+                };
+
+                if(window.bootstrap && bootstrap.Dropdown) {
+                    const dropdown = bootstrap.Dropdown.getOrCreateInstance(trigger);
+                    dropdown.hide();
+                }
+
+                closeDropdownManually();
+            });
 
             li.appendChild(button);
             menu.appendChild(li);
