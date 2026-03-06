@@ -1337,6 +1337,8 @@
         const toolData = buildToolDataFromCard(cardEl);
         if(!toolData) return;
 
+        disposeTooltipsWithin(cardEl);
+
         cardEl.remove();
 
 
@@ -1354,7 +1356,10 @@
                 const index = initialTools.findIndex(t => t.id === toolData.id);
                 if(index >= 0) initialTools.splice(index, 1);
                 document.querySelectorAll(`[data-base-id="${toolData.id}"]`).forEach(el => {
-                    if(el !== cardEl) el.remove();
+                    if(el !== cardEl) {
+                        disposeTooltipsWithin(el);
+                        el.remove();
+                    }
                 });
                 saveCustomTools();
             }
@@ -1362,6 +1367,23 @@
         }
 
         showToast("Tool entfernt (in 'Gelöschte Tools & Notizen' wiederherstellbar).", 'info');
+    }
+
+    function disposeTooltipsWithin(rootEl) {
+        if(!rootEl) return;
+
+        const tooltipElements = [];
+        if(rootEl.matches?.('[data-bs-toggle="tooltip"]')) {
+            tooltipElements.push(rootEl);
+        }
+        rootEl.querySelectorAll?.('[data-bs-toggle="tooltip"]').forEach((el) => tooltipElements.push(el));
+
+        tooltipElements.forEach((el) => {
+            const instance = bootstrap.Tooltip.getInstance(el);
+            if(!instance) return;
+            instance.hide();
+            instance.dispose();
+        });
     }
 
     // === TOASTS ===
